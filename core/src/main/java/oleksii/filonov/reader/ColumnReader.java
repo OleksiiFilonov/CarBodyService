@@ -1,9 +1,9 @@
 package oleksii.filonov.reader;
 
-import java.io.File;
+import org.apache.poi.ss.usermodel.Sheet;
 
 public interface ColumnReader {
 
-	String[] getUniqueColumnValues(File fileToRead, String columnMarker);
+	String[] getUniqueColumnValues(Sheet sheetToRead, String columnMarker);
 
 }
