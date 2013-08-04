@@ -19,7 +19,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.junit.Before;
 import org.junit.Test;
 
-public class FormExcelDocumentsTest {
+public class XSSFBuilderTest {
 
 	private static final String LINKED_SHEET_NAME = "Body";
 	private static String BODY_ID_MARKER = "Номер кузова";
@@ -86,4 +86,5 @@ public class FormExcelDocumentsTest {
 		final Row thirdVinRow = rows.next();
 		assertNull(thirdVinRow.getCell(1));
 	}
+
 }
