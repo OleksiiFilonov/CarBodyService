@@ -10,14 +10,14 @@ public interface DataBuilder {
 
 	void createDocument();
 
-	void createMainSheetWithName(String string);
+	void createLinkedSheetWithName(String string);
 
-	void writeBodyIdsColumnToMainPage(String[] bodyIds);
+	void writeBodyIdsColumnToLinkedSheet(String bodyColumnMarker, String[] bodyIds);
 
-	void saveToFile(File resultFile) throws IOException;
+	void saveToFile(File fileToSave) throws IOException;
 
 	Map<String, Cell> getBodyIdCellMap();
 
-	void linkExistingBodyIds(File file);
+	void linkExistingBodyIds(String vinColumnMarker, File campaignSource);
 
 }

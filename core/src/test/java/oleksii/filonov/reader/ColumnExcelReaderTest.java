@@ -20,11 +20,10 @@ public class ColumnExcelReaderTest {
 	private static final String[] COMPAIGN_SOURCE = new String[] { "src", "test", "resources", "Campaign.xlsx" };
 
 	private static final String WRONG_COLUMN_MARKER = "noSuchColumnName";
-
-	private final ColumnReader columnExcelReader = new ColumnExcelReader();
-
-	private static String BODY_ID_MARKER = "Номер кузова";
+	private static final String BODY_ID_MARKER = "Номер кузова";
 	private static final String VIN_MARKER = "VIN";
+
+	private final ColumnExcelReader columnExcelReader = new ColumnExcelReader();
 
 	private Sheet bodyIdSheet;
 
@@ -32,6 +31,7 @@ public class ColumnExcelReaderTest {
 	public void setUp() throws InvalidFormatException, IOException {
 		final Workbook clientWB = WorkbookFactory.create(Paths.get(".", BODY_ID_SOURCE).toFile());
 		bodyIdSheet = clientWB.getSheetAt(0);
+		columnExcelReader.setColumnReaderHelper(new ColumnReaderHelper());
 	}
 
 	@Test
@@ -49,7 +49,6 @@ public class ColumnExcelReaderTest {
 			columnExcelReader.getUniqueColumnValues(bodyIdSheet, columnToRead);
 			fail(String.format("The test shouldn't find the column \"%s\" in source file", columnToRead));
 		} catch (final ReadDataException exc) {
-
 		}
 	}
 
@@ -70,7 +69,6 @@ public class ColumnExcelReaderTest {
 		assertEquals("The tenth vin on a last sheet is wrong", "KMHSH81BDAU645940", lastVins[9]);
 		assertEquals("The last vin on a last sheet is wrong", "KMHSH81XDBU775331", lastVins[lastVins.length - 1]);
 		for (int sheetIndex = 2; sheetIndex < numbersOfSheet; sheetIndex++) {
-			System.out.println("----Sheet number " + sheetIndex);
 			final Sheet vinSheet = compaignWB.getSheetAt(sheetIndex);
 			columnExcelReader.getUniqueColumnValues(vinSheet, VIN_MARKER);
 		}
