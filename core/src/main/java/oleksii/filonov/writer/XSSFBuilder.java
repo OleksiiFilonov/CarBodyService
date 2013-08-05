@@ -18,23 +18,30 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Hyperlink;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class XSSFBuilder implements DataBuilder {
 
+	private static final int DEFAULT_COLUMN_SIZE = 16;
 	private static final int OFFSET = 1;
-
 	private static final int BODY_ID_COLUMN_INDEX = 0;
+	private static char[] COLUMN_INDEXES = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
+			'P', 'Q', 'R', 'S', 'T', 'Y', 'V', 'W', 'X', 'Y', 'Z' };
+
+	private static final XSSFColor RED = new XSSFColor(new java.awt.Color(255, 153, 51));
+	private static final XSSFColor GREEN = new XSSFColor(new java.awt.Color(51, 255, 51));
 
 	private XSSFWorkbook workBook;
-	private CellStyle notFoundCellStyle;
-	private CellStyle foundCellStyle;
+	private XSSFCellStyle notFoundCellStyle;
+	private XSSFCellStyle foundCellStyle;
 	private CreationHelper createHelper;
 
 	private XSSFSheet mainSheet;
@@ -58,25 +65,26 @@ public class XSSFBuilder implements DataBuilder {
 
 	private void initFoundCellStyle() {
 		foundCellStyle = workBook.createCellStyle();
-		foundCellStyle.setFillBackgroundColor(IndexedColors.GREEN.getIndex());
+		foundCellStyle.setFillBackgroundColor(GREEN);
 		foundCellStyle.setFillPattern(CellStyle.BIG_SPOTS);
 	}
 
 	private void initNotFoundCellStyle() {
 		notFoundCellStyle = workBook.createCellStyle();
-		notFoundCellStyle.setFillBackgroundColor(IndexedColors.LIGHT_ORANGE.getIndex());
+		notFoundCellStyle.setFillBackgroundColor(RED);
 		notFoundCellStyle.setFillPattern(CellStyle.BIG_SPOTS);
 	}
 
 	@Override
 	public void writeBodyIdsColumnToLinkedSheet(final String bodyColumnMarker, final String[] bodyIds) {
 		final Row bodyIdRow = mainSheet.createRow(0);
+		mainSheet.setDefaultColumnWidth(DEFAULT_COLUMN_SIZE);
 		final Cell titleCell = bodyIdRow.createCell(BODY_ID_COLUMN_INDEX, CELL_TYPE_STRING);
 		titleCell.setCellValue(bodyColumnMarker);
 		final Map<String, Cell> bodyIdCellMap = new HashMap<>(bodyIds.length);
 		for (int rowIndex = 1; rowIndex <= bodyIds.length; rowIndex++) {
 			final String bodyId = bodyIds[rowIndex - 1];
-			final Cell bodyIdCell = mainSheet.createRow(rowIndex).createCell(0, CELL_TYPE_STRING);
+			final XSSFCell bodyIdCell = mainSheet.createRow(rowIndex).createCell(0, CELL_TYPE_STRING);
 			bodyIdCell.setCellStyle(notFoundCellStyle);
 			bodyIdCell.setCellValue(bodyId);
 			bodyIdCellMap.put(bodyId, bodyIdCell);
@@ -115,10 +123,11 @@ public class XSSFBuilder implements DataBuilder {
 								++cellIndex;
 							}
 							final Cell linkToVin = bodyIdRow.createCell(cellIndex, Cell.CELL_TYPE_STRING);
-							linkToVin.setCellValue(vinSheet.getSheetName() + "!B" + (vinRow.getRowNum() + OFFSET));
+							linkToVin.setCellValue(vinSheet.getSheetName() + "!" + COLUMN_INDEXES[vinColumnIndex]
+									+ (vinRow.getRowNum() + OFFSET));
 							final Hyperlink cellHyperlink = createHelper.createHyperlink(Hyperlink.LINK_FILE);
 							cellHyperlink.setAddress(campaignSource.getAbsolutePath() + "#'" + vinSheet.getSheetName()
-									+ "'.B" + (vinCell.getRowIndex() + OFFSET));
+									+ "'." + COLUMN_INDEXES[vinColumnIndex] + (vinCell.getRowIndex() + OFFSET));
 							cellHyperlink.setLabel(vinSheet.getSheetName());
 							linkToVin.setHyperlink(cellHyperlink);
 						}
