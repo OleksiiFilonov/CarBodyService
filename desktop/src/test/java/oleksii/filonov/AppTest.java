@@ -1,7 +1,5 @@
 package oleksii.filonov;
 
-import oleksii.filonov.writer.XSSFBuilder;
-
 import org.junit.Test;
 
 /**
@@ -9,8 +7,7 @@ import org.junit.Test;
  */
 public class AppTest {
 
-	@Test
-	public void testName() {
-		final XSSFBuilder xssfBuilder = new XSSFBuilder();
-	}
+    @Test
+    public void testName() {
+    }
 }

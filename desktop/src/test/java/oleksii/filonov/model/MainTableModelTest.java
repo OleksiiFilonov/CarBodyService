@@ -1,8 +1,13 @@
 package oleksii.filonov.model;
 
+import static oleksii.filonov.model.RecordStatus.FOUND;
+import static oleksii.filonov.model.RecordStatus.UNDEFINED;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
@@ -12,6 +17,7 @@ import com.google.common.collect.Lists;
 
 public class MainTableModelTest {
 
+    private static final String LINK_TO_PAGE = "linkToPage";
     private static final String TEST_BODY_ID = "KH0000000001";
     private MainTableModel mainTableModel;
 
@@ -65,13 +71,27 @@ public class MainTableModelTest {
     }
 
     @Test
-    public void whenBodyIdColumnEdited_ThenReferencesAreCleared() {
+    public void whenBodyIdColumnChanged_ThenReferencesAreClearedAndStatusIsUndefined() {
         final Record testRecord = new Record();
-        testRecord.getReferences().add("reference");
+        testRecord.getReferences().add(LINK_TO_PAGE);
+        testRecord.setStatus(FOUND);
         this.mainTableModel.getRecords().add(testRecord);
         this.mainTableModel.setValueAt(TEST_BODY_ID, 0, 0);
         assertEquals(TEST_BODY_ID, testRecord.getBodyId());
         assertNull("The references were not reset", testRecord.findReference(0));
+        assertThat(UNDEFINED, equalTo(testRecord.getStatus()));
+    }
+
+    @Test
+    public void whenBodyIdColumnNotChanged_ThenReferencesNotClearedAndStatusNotChanged() {
+        final Record testRecord = new Record(TEST_BODY_ID);
+        testRecord.getReferences().add(LINK_TO_PAGE);
+        testRecord.setStatus(FOUND);
+        this.mainTableModel.getRecords().add(testRecord);
+        this.mainTableModel.setValueAt(TEST_BODY_ID, 0, 0);
+        assertEquals(TEST_BODY_ID, testRecord.getBodyId());
+        assertThat("The link shouldn't be reseted", testRecord.findReference(0), sameInstance(LINK_TO_PAGE));
+        assertThat(testRecord.getStatus(), sameInstance(FOUND));
     }
 
 }

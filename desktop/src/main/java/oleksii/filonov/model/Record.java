@@ -6,6 +6,13 @@ import com.google.common.collect.Lists;
 
 public class Record {
 
+    public Record() {
+    }
+
+    public Record(final String bodyId) {
+        this.bodyId = bodyId;
+    }
+
     private String bodyId;
 
     private List<String> references = Lists.newArrayList();

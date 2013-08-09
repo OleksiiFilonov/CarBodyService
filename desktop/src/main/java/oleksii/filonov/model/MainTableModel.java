@@ -21,10 +21,12 @@ public class MainTableModel extends AbstractTableModel {
             throw new IllegalArgumentException(String.format("Column %s can't be editable", columnIndex));
         } else {
             final Record editedRecord = this.records.get(rowIndex);
-            editedRecord.setBodyId(bodyId.toString());
-            editedRecord.getReferences().clear();
-            editedRecord.setStatus(RecordStatus.UNDEFINED);
-            fireTableCellUpdated(rowIndex, columnIndex);
+            if(!bodyId.equals(editedRecord.getBodyId())) {
+                editedRecord.setBodyId(bodyId.toString());
+                editedRecord.getReferences().clear();
+                editedRecord.setStatus(RecordStatus.UNDEFINED);
+                fireTableCellUpdated(rowIndex, columnIndex);
+            }
         }
     }
 
