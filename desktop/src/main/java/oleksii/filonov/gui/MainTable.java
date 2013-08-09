@@ -1,8 +1,14 @@
 package oleksii.filonov.gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.JComponent;
 import javax.swing.JTable;
+import javax.swing.KeyStroke;
 import javax.swing.table.TableCellRenderer;
 
+import oleksii.filonov.listeners.PasteListener;
 import oleksii.filonov.model.MainTableModel;
 import oleksii.filonov.model.Record;
 import oleksii.filonov.model.RecordStatus;
@@ -19,6 +25,11 @@ public class MainTable extends JTable {
         mainTableModel.getRecords().add(createRecord("KMHBT51DBBU022001", "'10C029'!B2", RecordStatus.FOUND));
         mainTableModel.getRecords().add(createRecord("KMHBT51DBBU022002", "'10C129'!B2", RecordStatus.NOT_FOUND));
         mainTableModel.getRecords().add(createRecord("KMHBT51DBBU022003", "'10C229'!B2", RecordStatus.UNDEFINED));
+        final KeyStroke strokeCtrlV = KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK, false);
+        final KeyStroke strokeCtrlIns = KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, ActionEvent.CTRL_MASK, false);
+        final PasteListener pasteListener = new PasteListener(this);
+        registerKeyboardAction(pasteListener, "PasteV", strokeCtrlV, JComponent.WHEN_FOCUSED);
+        registerKeyboardAction(pasteListener, "PasteInsert", strokeCtrlIns, JComponent.WHEN_FOCUSED);
     }
 
     @Override
