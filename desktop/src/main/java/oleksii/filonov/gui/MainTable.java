@@ -22,9 +22,10 @@ public class MainTable extends JTable {
     public MainTable(final MainTableModel mainTableModel) {
         super(mainTableModel);
         getTableHeader().setReorderingAllowed(false);
-        mainTableModel.getRecords().add(createRecord("KMHBT51DBBU022001", "'10C029'!B2", RecordStatus.FOUND));
-        mainTableModel.getRecords().add(createRecord("KMHBT51DBBU022002", "'10C129'!B2", RecordStatus.NOT_FOUND));
-        mainTableModel.getRecords().add(createRecord("KMHBT51DBBU022003", "'10C229'!B2", RecordStatus.UNDEFINED));
+        mainTableModel.getRecords().add(createRecord("KMHBT51DBBU022001", "'10C029'!B2", null, RecordStatus.FOUND));
+        mainTableModel.getRecords().add(
+                createRecord("KMHBT51DBBU022002", "'10C129'!B2", "'10C129'!B3", RecordStatus.NOT_FOUND));
+        mainTableModel.getRecords().add(createRecord("KMHBT51DBBU022003", "'10C229'!B2", null, RecordStatus.UNDEFINED));
         final KeyStroke strokeCtrlV = KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK, false);
         final KeyStroke strokeCtrlIns = KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, ActionEvent.CTRL_MASK, false);
         final PasteListener pasteListener = new PasteListener(this);
@@ -46,10 +47,11 @@ public class MainTable extends JTable {
         }
     }
 
-    private Record createRecord(final String bodyId, final String link, final RecordStatus status) {
+    private Record createRecord(final String bodyId, final String linkFirst, final String linkSecond,
+            final RecordStatus status) {
         final Record record = new Record();
         record.setBodyId(bodyId);
-        record.addReference(link);
+        record.addReference(linkFirst);
         record.setStatus(status);
         return record;
     }

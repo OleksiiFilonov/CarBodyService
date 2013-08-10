@@ -9,9 +9,15 @@ import com.google.common.collect.Lists;
 
 public class MainTableModel extends AbstractTableModel {
 
+    private static final String ID_COLUMN_TITLE = "Body Id";
+
+    private static final String COLUMN_LINK_TITLE = "Link";
+
+    private static final String[] INITIAL_COLUMN_NAMES = new String[] { ID_COLUMN_TITLE, COLUMN_LINK_TITLE };
+
     private static final long serialVersionUID = 1L;
 
-    private final ArrayList<String> columnNames = Lists.newArrayList("Body Id", "Link");
+    private final ArrayList<String> columnNames = Lists.newArrayList(INITIAL_COLUMN_NAMES);
 
     private final List<Record> records = Lists.newArrayList();
 
@@ -78,6 +84,22 @@ public class MainTableModel extends AbstractTableModel {
 
     public List<Record> getRecords() {
         return this.records;
+    }
+
+    public void addRow(final Record record) {
+        getRecords().add(record);
+    }
+
+    public void addColumn() {
+        this.columnNames.add(COLUMN_LINK_TITLE);
+        fireTableStructureChanged();
+    }
+
+    public void removeColumn() {
+        if(INITIAL_COLUMN_NAMES.length < this.columnNames.size()) {
+            this.columnNames.remove(this.columnNames.size() - 1);
+        }
+        fireTableStructureChanged();
     }
 
 }

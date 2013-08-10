@@ -18,7 +18,8 @@ import com.google.common.collect.Lists;
 public class MainTableModelTest {
 
     private static final String LINK_TO_PAGE = "linkToPage";
-    private static final String TEST_BODY_ID = "KH0000000001";
+    private static final String INITIAL_BODY_ID = "KH0000000001";
+    private static final String CHANGED_BODY_ID = "KH0000000002";
     private MainTableModel mainTableModel;
 
     @Before
@@ -67,31 +68,66 @@ public class MainTableModelTest {
     @Test(expected = IllegalArgumentException.class)
     public void linkIdColumnIsNotEditable() {
         this.mainTableModel.getRecords().add(new Record());
-        this.mainTableModel.setValueAt(TEST_BODY_ID, 0, 1);
+        this.mainTableModel.setValueAt(INITIAL_BODY_ID, 0, 1);
     }
 
     @Test
     public void whenBodyIdColumnChanged_ThenReferencesAreClearedAndStatusIsUndefined() {
-        final Record testRecord = new Record();
-        testRecord.getReferences().add(LINK_TO_PAGE);
-        testRecord.setStatus(FOUND);
+        final Record testRecord = createRecord(INITIAL_BODY_ID, LINK_TO_PAGE, FOUND);
         this.mainTableModel.getRecords().add(testRecord);
-        this.mainTableModel.setValueAt(TEST_BODY_ID, 0, 0);
-        assertEquals(TEST_BODY_ID, testRecord.getBodyId());
+        this.mainTableModel.setValueAt(CHANGED_BODY_ID, 0, 0);
+        assertEquals(CHANGED_BODY_ID, testRecord.getBodyId());
         assertNull("The references were not reset", testRecord.findReference(0));
         assertThat(UNDEFINED, equalTo(testRecord.getStatus()));
     }
 
     @Test
     public void whenBodyIdColumnNotChanged_ThenReferencesNotClearedAndStatusNotChanged() {
-        final Record testRecord = new Record(TEST_BODY_ID);
-        testRecord.getReferences().add(LINK_TO_PAGE);
-        testRecord.setStatus(FOUND);
+        final Record testRecord = createRecord(INITIAL_BODY_ID, LINK_TO_PAGE, FOUND);
         this.mainTableModel.getRecords().add(testRecord);
-        this.mainTableModel.setValueAt(TEST_BODY_ID, 0, 0);
-        assertEquals(TEST_BODY_ID, testRecord.getBodyId());
+        this.mainTableModel.setValueAt(INITIAL_BODY_ID, 0, 0);
+        assertEquals(INITIAL_BODY_ID, testRecord.getBodyId());
         assertThat("The link shouldn't be reseted", testRecord.findReference(0), sameInstance(LINK_TO_PAGE));
         assertThat(testRecord.getStatus(), sameInstance(FOUND));
+    }
+
+    @Test
+    public void addRow() {
+        final int initialRowCount = this.mainTableModel.getRowCount();
+        this.mainTableModel.addRow(new Record(INITIAL_BODY_ID));
+        final int insertRowIndex = initialRowCount;
+        assertThat(this.mainTableModel.getRowCount(), equalTo(initialRowCount + 1));
+        assertThat(this.mainTableModel.getValueAt(insertRowIndex, 0), equalTo(INITIAL_BODY_ID));
+    }
+
+    @Test
+    public void addColumn() {
+        final int initialColumnCount = this.mainTableModel.getColumnCount();
+        this.mainTableModel.addColumn();
+        assertThat(this.mainTableModel.getColumnCount(), equalTo(initialColumnCount + 1));
+    }
+
+    @Test
+    public void removeColumn() {
+        final int initialColumnCount = this.mainTableModel.getColumnCount();
+        this.mainTableModel.addColumn();
+        this.mainTableModel.removeColumn();
+        assertThat(this.mainTableModel.getColumnCount(), equalTo(initialColumnCount));
+    }
+
+    @Test
+    public void removeColumnIfOnlyMoreThenBodyAndOneLinkExist() {
+        final int initialColumnCount = this.mainTableModel.getColumnCount();
+        this.mainTableModel.removeColumn();
+        assertThat(this.mainTableModel.getColumnCount(), equalTo(initialColumnCount));
+    }
+
+    private Record createRecord(final String bodyId, final String link, final RecordStatus status) {
+        final Record record = new Record();
+        record.setBodyId(bodyId);
+        record.addReference(link);
+        record.setStatus(status);
+        return record;
     }
 
 }
