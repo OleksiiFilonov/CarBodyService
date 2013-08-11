@@ -23,9 +23,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class PasteListenerTest {
 
-    private static final int SECOND_COLUMN = 1;
     private static final int FIRST_ROW = 0;
+    private static final int SECOND_ROW = 1;
     private static final int FIRST_COLUMN = 0;
+    private static final int SECOND_COLUMN = 1;
     private static final String ONE_LINE_BUFFER = "KH0000000002";
     private static final String BODY_ID_FIRST_LINE = "KH0000000003";
     private static final String BODY_ID_SECOND_LINE = "KH0000000004";
@@ -77,20 +78,21 @@ public class PasteListenerTest {
     }
 
     @Test
-    public void Insert3StringsWithEmptyLine_ThenSelectedCellReplacedAnd1RowAdded() {
+    public void Insert3StringsWithEmptyLine_ThenSelectedCellReplacedAnd1RowAddedAfterCurrentlySelectedRow() {
         final ActionEvent pasteEvent = mock(ActionEvent.class);
         final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         final StringSelection clipbordString = new StringSelection(THREE_LINE_BUFFER);
         clipboard.setContents(clipbordString, clipbordString);
+        this.tableModel.getRecords().add(this.initialRecord);
         when(this.table.getSelectedColumn()).thenReturn(FIRST_COLUMN);
         when(this.table.getSelectedRow()).thenReturn(FIRST_ROW);
         final int initRowCount = this.table.getRowCount();
         this.pasteListener.actionPerformed(pasteEvent);
         assertThat("The row hasn't been inserted in the table", this.table.getRowCount(), equalTo(initRowCount + 1));
-        final String firstRowbodyId = this.tableModel.getRecords().get(0).getBodyId();
-        assertThat(firstRowbodyId, equalTo(BODY_ID_FIRST_LINE));
-        final String secondRowbodyId = this.tableModel.getRecords().get(1).getBodyId();
-        assertThat(secondRowbodyId, equalTo(BODY_ID_SECOND_LINE));
+        final String firstInsertedBodyId = this.table.getModel().getValueAt(FIRST_ROW, FIRST_COLUMN);
+        assertThat(firstInsertedBodyId, equalTo(BODY_ID_FIRST_LINE));
+        final String secondInsertedBodyId = this.table.getModel().getValueAt(SECOND_ROW, FIRST_COLUMN);
+        assertThat(secondInsertedBodyId, equalTo(BODY_ID_SECOND_LINE));
     }
 
 }

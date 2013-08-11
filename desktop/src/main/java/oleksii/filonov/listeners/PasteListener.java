@@ -11,8 +11,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.CellEditor;
-
 import oleksii.filonov.gui.MainTable;
 import oleksii.filonov.model.Record;
 
@@ -20,6 +18,7 @@ import com.google.common.base.Strings;
 
 public class PasteListener implements ActionListener {
 
+    private static final int FIRST_INS_ROW_INDEX = 1;
     private final MainTable table;
 
     public PasteListener(final MainTable table) {
@@ -38,17 +37,15 @@ public class PasteListener implements ActionListener {
                 final List<String> lines = removeEmptyLines(clipboardContent.split("\n"));
                 if(!lines.isEmpty()) {
                     this.table.setValueAt(lines.get(0), rowSelected, colSelected);
-                    int i = 1;
+                    int i = FIRST_INS_ROW_INDEX;
                     for(; i < lines.size(); ++i) {
                         if(!Strings.isNullOrEmpty(lines.get(i))) {
-                            this.table.getModel().addRow(new Record(lines.get(i)));
-                            if(this.table.getEditingRow() == (rowSelected + i)
-                                    && this.table.getEditingColumn() == colSelected) {
-                                final CellEditor editor = this.table.getCellEditor();
-                                editor.cancelCellEditing();
-                                this.table.editCellAt(rowSelected + i, colSelected);
-                            }
+                            this.table.getModel().addRow(new Record(lines.get(i)), rowSelected + i);
                         }
+                    }
+                    if(i > FIRST_INS_ROW_INDEX) {
+                        this.table.getModel().fireTableRowsInserted(rowSelected + FIRST_INS_ROW_INDEX,
+                                rowSelected + i - FIRST_INS_ROW_INDEX);
                     }
                     this.table.repaint();
                 }

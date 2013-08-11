@@ -86,8 +86,8 @@ public class MainTableModel extends AbstractTableModel {
         return this.records;
     }
 
-    public void addRow(final Record record) {
-        getRecords().add(record);
+    public void addRow(final Record record, final int rowIndex) {
+        getRecords().add(rowIndex, record);
     }
 
     public void addColumn() {
