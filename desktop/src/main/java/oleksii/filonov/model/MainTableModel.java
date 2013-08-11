@@ -102,4 +102,8 @@ public class MainTableModel extends AbstractTableModel {
         fireTableStructureChanged();
     }
 
+    public void removeRows(final int rowSelected, final int selectedRowsCount) {
+        this.records.subList(rowSelected, rowSelected + selectedRowsCount).clear();
+    }
+
 }

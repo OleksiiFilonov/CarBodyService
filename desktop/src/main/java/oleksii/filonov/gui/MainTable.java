@@ -25,7 +25,6 @@ public class MainTable extends JTable {
     public MainTable(final MainTableModel mainTableModel) {
         super(mainTableModel);
         getTableHeader().setReorderingAllowed(false);
-        setCellSelectionEnabled(true);
         mainTableModel.getRecords().add(createRecord("KMHBT51DBBU022001", "'10C029'!B2", null, RecordStatus.FOUND));
         mainTableModel.getRecords().add(
                 createRecord("KMHBT51DBBU022002", "'10C129'!B2", "'10C129'!B3", RecordStatus.NOT_FOUND));
