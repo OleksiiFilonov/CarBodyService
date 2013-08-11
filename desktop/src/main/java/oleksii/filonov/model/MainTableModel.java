@@ -1,6 +1,7 @@
 package oleksii.filonov.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
@@ -86,6 +87,10 @@ public class MainTableModel extends AbstractTableModel {
         return this.records;
     }
 
+    public void addRow(final Record record) {
+        getRecords().add(record);
+    }
+
     public void addRow(final Record record, final int rowIndex) {
         getRecords().add(rowIndex, record);
     }
@@ -106,4 +111,10 @@ public class MainTableModel extends AbstractTableModel {
         this.records.subList(rowSelected, rowSelected + selectedRowsCount).clear();
     }
 
+    public void removeAllRows() {
+        this.records.clear();
+        this.columnNames.clear();
+        this.columnNames.addAll(Arrays.asList(INITIAL_COLUMN_NAMES));
+        fireTableStructureChanged();
+    }
 }

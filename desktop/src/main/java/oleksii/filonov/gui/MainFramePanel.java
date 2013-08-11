@@ -18,7 +18,9 @@ public class MainFramePanel extends JPanel {
         setLayout(new BorderLayout(0, 0));
         final TopButtonsPanel topButtonsPanel = new TopButtonsPanel();
         add(topButtonsPanel, BorderLayout.NORTH);
-        final JScrollPane scrollPane = new JScrollPane(new MainTable(new MainTableModel()));
+        final ComponentsLocator locator = ComponentsLocator.getInstanse();
+        locator.setTable(new MainTable(new MainTableModel()));
+        final JScrollPane scrollPane = new JScrollPane(locator.getTable());
         add(scrollPane, BorderLayout.CENTER);
         add(new JButton("+"), BorderLayout.SOUTH);
     }

@@ -8,11 +8,10 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
-public class ColumnExcelReader implements ColumnReader {
+public class ColumnExcelReader {
 
     private ColumnReaderHelper columnReaderHelper;
 
-    @Override
     public String[] getUniqueColumnValues(final Sheet sheetToRead, final String columnMarker) {
         final List<String> result = new ArrayList<>();
         final Iterator<Row> rows = sheetToRead.rowIterator();
