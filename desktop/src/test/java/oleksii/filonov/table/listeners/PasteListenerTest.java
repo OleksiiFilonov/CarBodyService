@@ -1,4 +1,4 @@
-package oleksii.filonov.listeners;
+package oleksii.filonov.table.listeners;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import oleksii.filonov.gui.MainTable;
 import oleksii.filonov.model.MainTableModel;
 import oleksii.filonov.model.Record;
+import oleksii.filonov.table.listeners.PasteListener;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package oleksii.filonov.listeners;
+package oleksii.filonov.table.listeners;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

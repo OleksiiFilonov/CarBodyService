@@ -1,4 +1,4 @@
-package oleksii.filonov.listeners;
+package oleksii.filonov.table.listeners;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;

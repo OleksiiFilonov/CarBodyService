@@ -9,12 +9,12 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.table.TableCellRenderer;
 
-import oleksii.filonov.listeners.DeleteListener;
-import oleksii.filonov.listeners.InsertListener;
-import oleksii.filonov.listeners.PasteListener;
 import oleksii.filonov.model.MainTableModel;
 import oleksii.filonov.model.Record;
 import oleksii.filonov.model.RecordStatus;
+import oleksii.filonov.table.listeners.DeleteListener;
+import oleksii.filonov.table.listeners.InsertListener;
+import oleksii.filonov.table.listeners.PasteListener;
 
 public class MainTable extends JTable {
 
