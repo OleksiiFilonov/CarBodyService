@@ -33,22 +33,7 @@ public class PasteListener implements ActionListener {
         final int rowSelected = this.table.getSelectedRow();
         if(content != null && this.table.isCellEditable(rowSelected, colSelected)) {
             try {
-                final String clipboardContent = content.getTransferData(DataFlavor.stringFlavor).toString();
-                final List<String> lines = removeEmptyLines(clipboardContent.split("\n"));
-                if(!lines.isEmpty()) {
-                    this.table.setValueAt(lines.get(0), rowSelected, colSelected);
-                    int i = FIRST_INS_ROW_INDEX;
-                    for(; i < lines.size(); ++i) {
-                        if(!Strings.isNullOrEmpty(lines.get(i))) {
-                            this.table.getModel().addRow(new Record(lines.get(i)), rowSelected + i);
-                        }
-                    }
-                    if(i > FIRST_INS_ROW_INDEX) {
-                        this.table.getModel().fireTableRowsInserted(rowSelected + FIRST_INS_ROW_INDEX,
-                                rowSelected + i - FIRST_INS_ROW_INDEX);
-                    }
-                    this.table.repaint();
-                }
+                processClipboard(content, colSelected, rowSelected);
             } catch(final UnsupportedFlavorException e) {
                 // String have to be the standard flavor
                 System.err.println("UNSUPPORTED FLAVOR EXCEPTION " + e.getLocalizedMessage());
@@ -56,6 +41,26 @@ public class PasteListener implements ActionListener {
                 // The data is consumed?
                 System.err.println("DATA CONSUMED EXCEPTION " + e.getLocalizedMessage());
             }
+        }
+    }
+
+    private void processClipboard(final Transferable content, final int colSelected, final int rowSelected)
+            throws UnsupportedFlavorException, IOException {
+        final String clipboardContent = content.getTransferData(DataFlavor.stringFlavor).toString();
+        final List<String> lines = removeEmptyLines(clipboardContent.split("\n"));
+        if(!lines.isEmpty()) {
+            this.table.setValueAt(lines.get(0), rowSelected, colSelected);
+            int i = FIRST_INS_ROW_INDEX;
+            for(; i < lines.size(); ++i) {
+                if(!Strings.isNullOrEmpty(lines.get(i))) {
+                    this.table.getModel().addRow(new Record(lines.get(i)), rowSelected + i);
+                }
+            }
+            if(i > FIRST_INS_ROW_INDEX) {
+                this.table.getModel().fireTableRowsInserted(rowSelected + FIRST_INS_ROW_INDEX,
+                        rowSelected + i - FIRST_INS_ROW_INDEX);
+            }
+            this.table.repaint();
         }
     }
 

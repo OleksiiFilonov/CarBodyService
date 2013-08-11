@@ -94,7 +94,7 @@ public class MainTableModelTest {
     @Test
     public void addRow() {
         final int initialRowCount = this.mainTableModel.getRowCount();
-        this.mainTableModel.addRow(new Record(INITIAL_BODY_ID));
+        this.mainTableModel.addRow(new Record(INITIAL_BODY_ID), 0);
         final int insertRowIndex = initialRowCount;
         assertThat(this.mainTableModel.getRowCount(), equalTo(initialRowCount + 1));
         assertThat(this.mainTableModel.getValueAt(insertRowIndex, 0), equalTo(INITIAL_BODY_ID));
