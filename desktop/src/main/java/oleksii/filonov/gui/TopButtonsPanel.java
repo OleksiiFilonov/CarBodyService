@@ -6,7 +6,10 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import oleksii.filonov.buttons.listeners.CalculateLinksListener;
+import oleksii.filonov.buttons.listeners.OpenCampaignFileListener;
 import oleksii.filonov.buttons.listeners.OpenClientsFileListener;
+import oleksii.filonov.buttons.listeners.SaveLinkedResultsListener;
 
 public class TopButtonsPanel extends JPanel {
 
@@ -18,12 +21,15 @@ public class TopButtonsPanel extends JPanel {
         final JButton loadClients = new JButton("Open Clients");
         add(loadClients);
         loadClients.addActionListener(new OpenClientsFileListener(fileChooser, this));
-        final JButton loadCompaigns = new JButton("Open Compaign");
-        add(loadCompaigns);
-        final JButton calculate = new JButton("Calculate");
-        add(calculate);
+        final JButton loadCampaigns = new JButton("Open Compaign");
+        add(loadCampaigns);
+        loadCampaigns.addActionListener(new OpenCampaignFileListener(fileChooser, this));
+        final JButton calculateLinks = new JButton("Calculate");
+        add(calculateLinks);
+        calculateLinks.addActionListener(new CalculateLinksListener(fileChooser));
         final JButton saveResults = new JButton("Save Results");
         add(saveResults);
+        saveResults.addActionListener(new SaveLinkedResultsListener(fileChooser, this));
     }
 
 }
