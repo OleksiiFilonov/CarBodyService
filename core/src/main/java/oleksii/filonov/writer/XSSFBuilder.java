@@ -111,32 +111,40 @@ public class XSSFBuilder implements DataBuilder {
                 final Sheet vinSheet = compaignWB.getSheetAt(sheetIndex);
                 final Iterator<Row> vinRows = vinSheet.rowIterator();
                 final int vinColumnIndex = this.columnReaderHelper.findColumnIndex(vinRows, vinColumnMarker);
-                while(vinRows.hasNext()) {
-                    final Row vinRow = vinRows.next();
-                    final Cell vinCell = vinRow.getCell(vinColumnIndex);
-                    if(this.columnReaderHelper.isStringType(vinCell)) {
-                        final Cell bodyIdCell = getBodyIdCellMap().get(vinCell.getStringCellValue());
-                        if(bodyIdCell != null) {
-                            bodyIdCell.setCellStyle(this.foundCellStyle);
-                            final Row bodyIdRow = bodyIdCell.getRow();
-                            int cellIndex = 1;
-                            while(bodyIdRow.getCell(cellIndex) != null) {
-                                ++cellIndex;
-                            }
-                            final Cell linkToVin = bodyIdRow.createCell(cellIndex, Cell.CELL_TYPE_STRING);
-                            linkToVin.setCellValue(linkToCell(vinCell));
-                            final XSSFHyperlink cellHyperlink = this.createHelper.createHyperlink(Hyperlink.LINK_FILE);
-                            cellHyperlink.setAddress(campaignSource.getName() + "#" + linkToCell(vinCell));
-                            cellHyperlink.setLabel(vinSheet.getSheetName());
-                            linkToVin.setHyperlink(cellHyperlink);
-                        }
-                    }
-                }
+                traceRows(campaignSource, vinRows, vinColumnIndex);
             }
         } catch(InvalidFormatException | IOException e) {
             throw new ReadDataException(e);
         }
 
+    }
+
+    private void traceRows(final File campaignSource, final Iterator<Row> vinRows, final int vinColumnIndex) {
+        while(vinRows.hasNext()) {
+            final Row vinRow = vinRows.next();
+            final Cell vinCell = vinRow.getCell(vinColumnIndex);
+            if(this.columnReaderHelper.isStringType(vinCell)) {
+                final Cell bodyIdCell = getBodyIdCellMap().get(vinCell.getStringCellValue());
+                if(bodyIdCell != null) {
+                    addLinkCell(campaignSource, vinCell, bodyIdCell);
+                }
+            }
+        }
+    }
+
+    private void addLinkCell(final File campaignSource, final Cell vinCell, final Cell bodyIdCell) {
+        bodyIdCell.setCellStyle(this.foundCellStyle);
+        final Row bodyIdRow = bodyIdCell.getRow();
+        int cellIndex = 1;
+        while(bodyIdRow.getCell(cellIndex) != null) {
+            ++cellIndex;
+        }
+        final Cell linkToVin = bodyIdRow.createCell(cellIndex, Cell.CELL_TYPE_STRING);
+        linkToVin.setCellValue(linkToCell(vinCell));
+        final XSSFHyperlink cellHyperlink = this.createHelper.createHyperlink(Hyperlink.LINK_FILE);
+        cellHyperlink.setAddress(campaignSource.getName() + "#" + linkToCell(vinCell));
+        cellHyperlink.setLabel(vinCell.getSheet().getSheetName());
+        linkToVin.setHyperlink(cellHyperlink);
     }
 
     private String linkToCell(final Cell vinCell) {

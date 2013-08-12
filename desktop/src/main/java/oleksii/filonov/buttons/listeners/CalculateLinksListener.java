@@ -15,7 +15,9 @@ public class CalculateLinksListener implements ActionListener {
 
     @Override
     public void actionPerformed(final ActionEvent e) {
-        // TODO Auto-generated method stub
+        // TODO get body Id's from header
+        // trace over Campaign
+        // get result in list
 
     }
 
