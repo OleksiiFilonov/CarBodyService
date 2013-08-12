@@ -3,6 +3,7 @@ package oleksii.filonov.writer;
 import java.io.IOException;
 import java.nio.file.Paths;
 
+import oleksii.filonov.reader.CampaignProcessor;
 import oleksii.filonov.reader.ColumnExcelReader;
 import oleksii.filonov.reader.ColumnReaderHelper;
 
@@ -25,19 +26,25 @@ public class XSSFBuilderIntegrationTest {
 
 	private Sheet bodyIdSheet;
 
-	private final ColumnReaderHelper columnReaderHelper = new ColumnReaderHelper();
+	private ColumnReaderHelper columnReaderHelper;
 
-	private final XSSFBuilder excelBuilder = new XSSFBuilder();
+	private XSSFBuilder excelBuilder;
 
-	private final ColumnExcelReader columnExcelReader = new ColumnExcelReader();
+	private ColumnExcelReader columnExcelReader;
+
+	private CampaignProcessor campaignProcessor;
 
 	@Before
 	public void setUp() throws InvalidFormatException, IOException {
-		excelBuilder.setColumnReaderHelper(columnReaderHelper);
-		columnExcelReader.setColumnReaderHelper(columnReaderHelper);
+		columnReaderHelper = new ColumnReaderHelper();
+		campaignProcessor = new CampaignProcessor();
+		campaignProcessor.setColumnReaderHelper(columnReaderHelper);
+		excelBuilder = new XSSFBuilder();
+		excelBuilder.setCampaignProcessor(campaignProcessor);
 		final Workbook clientWB = WorkbookFactory.create(Paths.get(".", BODY_ID_SOURCE).toFile());
 		bodyIdSheet = clientWB.getSheetAt(0);
-		columnExcelReader.setColumnReaderHelper(new ColumnReaderHelper());
+		columnExcelReader = new ColumnExcelReader();
+		columnExcelReader.setColumnReaderHelper(columnReaderHelper);
 	}
 
 	@Test

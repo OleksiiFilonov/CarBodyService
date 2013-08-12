@@ -1,24 +1,23 @@
 package oleksii.filonov.buttons.listeners;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
+import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 
 import oleksii.filonov.gui.MainFileChooser;
 
-public class CalculateLinksListener implements ActionListener {
+public class CalculateLinksListener extends FileChooserListener {
 
-    private final MainFileChooser fileChooser;
+	public CalculateLinksListener(final MainFileChooser fileChooser, final JComponent parentComponent) {
+		super(fileChooser, parentComponent);
+	}
 
-    public CalculateLinksListener(final MainFileChooser fileChooser) {
-        this.fileChooser = fileChooser;
-    }
-
-    @Override
-    public void actionPerformed(final ActionEvent e) {
-        // TODO get body Id's from header
-        // trace over Campaign
-        // get result in list
-
-    }
-
+	@Override
+	public void actionPerformed(final ActionEvent event) {
+		if (getFileChooser().getCampaignFile() == null) {
+			JOptionPane.showMessageDialog(getParentComponent(), "Пожалуйста укажите файл Кампании");
+		} else {
+		}
+	}
 }

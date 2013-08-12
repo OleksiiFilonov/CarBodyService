@@ -13,23 +13,23 @@ import oleksii.filonov.buttons.listeners.SaveLinkedResultsListener;
 
 public class TopButtonsPanel extends JPanel {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    public TopButtonsPanel() {
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-        final MainFileChooser fileChooser = new MainFileChooser(Paths.get("").toFile());
-        final JButton loadClients = new JButton("Open Clients");
-        add(loadClients);
-        loadClients.addActionListener(new OpenClientsFileListener(fileChooser, this));
-        final JButton loadCampaigns = new JButton("Open Compaign");
-        add(loadCampaigns);
-        loadCampaigns.addActionListener(new OpenCampaignFileListener(fileChooser, this));
-        final JButton calculateLinks = new JButton("Calculate");
-        add(calculateLinks);
-        calculateLinks.addActionListener(new CalculateLinksListener(fileChooser));
-        final JButton saveResults = new JButton("Save Results");
-        add(saveResults);
-        saveResults.addActionListener(new SaveLinkedResultsListener(fileChooser, this));
-    }
+	public TopButtonsPanel() {
+		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		final MainFileChooser fileChooser = new MainFileChooser(Paths.get("").toFile());
+		final JButton loadClients = new JButton("Open Clients");
+		add(loadClients);
+		loadClients.addActionListener(new OpenClientsFileListener(fileChooser, this));
+		final JButton loadCampaigns = new JButton("Open Compaign");
+		add(loadCampaigns);
+		loadCampaigns.addActionListener(new OpenCampaignFileListener(fileChooser, this));
+		final JButton calculateLinks = new JButton("Calculate");
+		add(calculateLinks);
+		calculateLinks.addActionListener(new CalculateLinksListener(fileChooser, this));
+		final JButton saveResults = new JButton("Save Results");
+		add(saveResults);
+		saveResults.addActionListener(new SaveLinkedResultsListener(fileChooser, this));
+	}
 
 }
