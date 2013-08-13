@@ -5,7 +5,6 @@ import java.io.File;
 
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 
 import oleksii.filonov.gui.MainFileChooser;
 
@@ -17,14 +16,10 @@ public class OpenCampaignFileListener extends FileChooserListener {
 
 	@Override
 	public void actionPerformed(final ActionEvent e) {
-		if (getFileChooser().getCampaignFile() == null) {
-			JOptionPane.showMessageDialog(getParentComponent(), "Пожалуйста укажите файл Кампании");
-		} else {
-			final int returnValue = getFileChooser().showOpenDialog(getParentComponent());
-			if (returnValue == JFileChooser.APPROVE_OPTION) {
-				final File selectedFile = getFileChooser().getSelectedFile();
-				getFileChooser().setCampaignFile(selectedFile);
-			}
+		final int returnValue = getFileChooser().showOpenDialog(getParentComponent());
+		if (returnValue == JFileChooser.APPROVE_OPTION) {
+			final File selectedFile = getFileChooser().getSelectedFile();
+			getFileChooser().setCampaignFile(selectedFile);
 		}
 	}
 

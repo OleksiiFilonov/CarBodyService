@@ -18,16 +18,16 @@ public class TopButtonsPanel extends JPanel {
 	public TopButtonsPanel() {
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		final MainFileChooser fileChooser = new MainFileChooser(Paths.get("").toFile());
-		final JButton loadClients = new JButton("Open Clients");
+		final JButton loadClients = new JButton("Загрузить клиетов");
 		add(loadClients);
 		loadClients.addActionListener(new OpenClientsFileListener(fileChooser, this));
-		final JButton loadCampaigns = new JButton("Open Compaign");
+		final JButton loadCampaigns = new JButton("Загрузить Кампании");
 		add(loadCampaigns);
 		loadCampaigns.addActionListener(new OpenCampaignFileListener(fileChooser, this));
-		final JButton calculateLinks = new JButton("Calculate");
+		final JButton calculateLinks = new JButton("Поиск ...");
 		add(calculateLinks);
 		calculateLinks.addActionListener(new CalculateLinksListener(fileChooser, this));
-		final JButton saveResults = new JButton("Save Results");
+		final JButton saveResults = new JButton("Сохранить результаты");
 		add(saveResults);
 		saveResults.addActionListener(new SaveLinkedResultsListener(fileChooser, this));
 	}
