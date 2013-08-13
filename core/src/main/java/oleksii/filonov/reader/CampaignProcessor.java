@@ -30,8 +30,9 @@ public class CampaignProcessor {
 
 	public ListMultimap<String, String> linkBodyIdWithCampaigns(final String[] bodyIds, final File campaignFile,
 			final String vinColumnMarker) {
+		final String[] bodyIdsToProcess = Arrays.copyOf(bodyIds, bodyIds.length);
 		final ListMultimap<String, String> result = LinkedListMultimap.create(bodyIds.length);
-		Arrays.sort(bodyIds);
+		Arrays.sort(bodyIdsToProcess);
 		try {
 			final Workbook compaignWB = WorkbookFactory.create(campaignFile);
 			final int numbersOfSheet = compaignWB.getNumberOfSheets();
@@ -43,9 +44,9 @@ public class CampaignProcessor {
 					final Row vinRow = vinRows.next();
 					final Cell vinCell = vinRow.getCell(vinColumnIndex);
 					if (columnReaderHelper.isStringType(vinCell)) {
-						final int bodyIndex = Arrays.binarySearch(bodyIds, vinCell.getStringCellValue());
+						final int bodyIndex = Arrays.binarySearch(bodyIdsToProcess, vinCell.getStringCellValue());
 						if (bodyIndex > -1) {
-							final String foundBodyId = bodyIds[bodyIndex];
+							final String foundBodyId = bodyIdsToProcess[bodyIndex];
 							result.put(foundBodyId, linkToCell(vinCell));
 							maxReferenceNumber = Math.max(maxReferenceNumber, result.get(foundBodyId).size());
 						}

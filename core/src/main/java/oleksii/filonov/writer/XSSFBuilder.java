@@ -5,10 +5,7 @@ import static org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
-
-import oleksii.filonov.reader.CampaignProcessor;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.FillPatternType;
@@ -41,10 +38,6 @@ public class XSSFBuilder implements DataBuilder {
 
 	private Cell[] bodyIdCells;
 
-	private String[] bodyIds;
-
-	private CampaignProcessor campaignProcessor;
-
 	@Override
 	public void createDocument() {
 		workBook = new XSSFWorkbook();
@@ -58,21 +51,8 @@ public class XSSFBuilder implements DataBuilder {
 		createHelper = workBook.getCreationHelper();
 	}
 
-	private void initFoundCellStyle() {
-		foundCellStyle = workBook.createCellStyle();
-		foundCellStyle.setFillForegroundColor(GREEN);
-		foundCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-	}
-
-	private void initNotFoundCellStyle() {
-		notFoundCellStyle = workBook.createCellStyle();
-		notFoundCellStyle.setFillForegroundColor(RED);
-		notFoundCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-	}
-
 	@Override
 	public void writeBodyIdsColumnToLinkedSheet(final String bodyColumnMarker, final String[] bodyIds) {
-		this.bodyIds = bodyIds;
 		final Row bodyIdRow = mainSheet.createRow(0);
 		mainSheet.setDefaultColumnWidth(DEFAULT_COLUMN_SIZE);
 		final Cell titleCell = bodyIdRow.createCell(BODY_ID_COLUMN_INDEX, CELL_TYPE_STRING);
@@ -95,15 +75,18 @@ public class XSSFBuilder implements DataBuilder {
 	}
 
 	@Override
-	public void linkExistingBodyIds(final String vinColumnMarker, final File campaignSource) {
-		final ListMultimap<String, String> linkedBodies = campaignProcessor.linkBodyIdWithCampaigns(
-				Arrays.copyOf(bodyIds, bodyIds.length), campaignSource, vinColumnMarker);
+	public Cell[] getBodyIdCells() {
+		return bodyIdCells;
+	}
+
+	@Override
+	public void linkExistingBodyIds(final ListMultimap<String, String> linkedBodies, final String pathToCampaignFile) {
 		for (final Cell bodyIdCell : bodyIdCells) {
 			final List<String> links = linkedBodies.get(bodyIdCell.getStringCellValue());
 			if (!links.isEmpty()) {
 				bodyIdCell.setCellStyle(foundCellStyle);
 				final Row bodyIdRow = bodyIdCell.getRow();
-				writeLinksForFoundCell(campaignSource, links, bodyIdRow);
+				writeLinksForFoundCell(pathToCampaignFile, links, bodyIdRow);
 				int cellIndex = 1;
 				while (bodyIdRow.getCell(cellIndex) != null) {
 					++cellIndex;
@@ -112,24 +95,26 @@ public class XSSFBuilder implements DataBuilder {
 		}
 	}
 
-	private void writeLinksForFoundCell(final File campaignSource, final List<String> links, final Row bodyIdRow) {
+	private void writeLinksForFoundCell(final String pathToCampaignFile, final List<String> links, final Row bodyIdRow) {
 		for (int i = 0; i < links.size(); i++) {
 			final Cell linkToVin = bodyIdRow.createCell(i + 1, Cell.CELL_TYPE_STRING);
 			linkToVin.setCellValue(links.get(i));
 			final XSSFHyperlink cellHyperlink = createHelper.createHyperlink(Hyperlink.LINK_FILE);
-			cellHyperlink.setAddress(campaignSource.getName() + "#" + links.get(i));
+			cellHyperlink.setAddress(pathToCampaignFile + "#" + links.get(i));
 			cellHyperlink.setLabel(links.get(i));
 			linkToVin.setHyperlink(cellHyperlink);
 		}
 	}
 
-	@Override
-	public Cell[] getBodyIdCells() {
-		return bodyIdCells;
+	private void initFoundCellStyle() {
+		foundCellStyle = workBook.createCellStyle();
+		foundCellStyle.setFillForegroundColor(GREEN);
+		foundCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 	}
 
-	public void setCampaignProcessor(final CampaignProcessor campaignProcessor) {
-		this.campaignProcessor = campaignProcessor;
+	private void initNotFoundCellStyle() {
+		notFoundCellStyle = workBook.createCellStyle();
+		notFoundCellStyle.setFillForegroundColor(RED);
+		notFoundCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 	}
-
 }

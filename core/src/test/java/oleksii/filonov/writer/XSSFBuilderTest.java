@@ -3,6 +3,7 @@ package oleksii.filonov.writer;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Iterator;
@@ -18,6 +19,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.google.common.collect.ListMultimap;
 
 public class XSSFBuilderTest {
 
@@ -35,6 +38,7 @@ public class XSSFBuilderTest {
 	private static final String[] RESULT_FILE = new String[] { "src", "test", "resources", "result.xlsx" };
 	private static final String[] LINKED_RESULT_FILE = new String[] { "src", "test", "resources", "resultLinks.xlsx" };
 	private static final String[] COMPAIGN_FILE = new String[] { "src", "test", "resources", "Campaign.xlsx" };
+	private static final File CAMPAIGN_FILE = Paths.get("", COMPAIGN_FILE).toFile();
 
 	private ColumnReaderHelper columnReaderHelper;
 	private CampaignProcessor campaignProcessor;
@@ -47,7 +51,6 @@ public class XSSFBuilderTest {
 		columnReaderHelper = new ColumnReaderHelper();
 		campaignProcessor = new CampaignProcessor();
 		campaignProcessor.setColumnReaderHelper(columnReaderHelper);
-		excelBuilder.setCampaignProcessor(campaignProcessor);
 		excelBuilder.createDocument();
 		excelBuilder.createLinkedSheetWithName(LINKED_SHEET_NAME);
 	}
@@ -64,9 +67,12 @@ public class XSSFBuilderTest {
 
 	@Test
 	public void formResultFileWitLinks() throws IOException, InvalidFormatException {
-		excelBuilder.writeBodyIdsColumnToLinkedSheet(BODY_ID_MARKER, new String[] { REAL_BODY_ID_FIRST_SHEET_ROW_ONE,
-				REAL_BODY_ID_FIRST_SHEET_ROW_TEN, NO_SUCH_BODY_ID_FIRST_SHEET_ROW_TEN });
-		excelBuilder.linkExistingBodyIds(VIN_MARKER, Paths.get("", COMPAIGN_FILE).toFile());
+		final String[] bodyIds = new String[] { REAL_BODY_ID_FIRST_SHEET_ROW_ONE, REAL_BODY_ID_FIRST_SHEET_ROW_TEN,
+				NO_SUCH_BODY_ID_FIRST_SHEET_ROW_TEN };
+		excelBuilder.writeBodyIdsColumnToLinkedSheet(BODY_ID_MARKER, bodyIds);
+		final ListMultimap<String, String> bodyIdLinks = campaignProcessor.linkBodyIdWithCampaigns(bodyIds,
+				CAMPAIGN_FILE, VIN_MARKER);
+		excelBuilder.linkExistingBodyIds(bodyIdLinks, CAMPAIGN_FILE.getName());
 		excelBuilder.saveToFile(Paths.get("", LINKED_RESULT_FILE).toFile());
 		final Cell[] bodyIdCells = excelBuilder.getBodyIdCells();
 		assertEquals(REAL_BODY_ID_FIRST_SHEET_ROW_ONE, bodyIdCells[0].getStringCellValue());

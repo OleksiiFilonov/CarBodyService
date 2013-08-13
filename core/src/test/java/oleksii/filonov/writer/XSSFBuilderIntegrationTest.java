@@ -1,5 +1,6 @@
 package oleksii.filonov.writer;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 
@@ -14,6 +15,8 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.common.collect.ListMultimap;
+
 public class XSSFBuilderIntegrationTest {
 
 	private static final String LINKED_SHEET_NAME = "Body";
@@ -22,6 +25,7 @@ public class XSSFBuilderIntegrationTest {
 
 	private static final String[] LINKED_RESULT_FILE = new String[] { "src", "test", "resources", "resultLinks.xlsx" };
 	private static final String[] COMPAIGN_FILE = new String[] { "src", "test", "resources", "Campaign.xlsx" };
+	private static final File CAMPAIGN_FILE = Paths.get(".", COMPAIGN_FILE).toFile();
 	private static final String[] BODY_ID_SOURCE = new String[] { "src", "test", "resources", "Clients.xls" };
 
 	private Sheet bodyIdSheet;
@@ -40,7 +44,6 @@ public class XSSFBuilderIntegrationTest {
 		campaignProcessor = new CampaignProcessor();
 		campaignProcessor.setColumnReaderHelper(columnReaderHelper);
 		excelBuilder = new XSSFBuilder();
-		excelBuilder.setCampaignProcessor(campaignProcessor);
 		final Workbook clientWB = WorkbookFactory.create(Paths.get(".", BODY_ID_SOURCE).toFile());
 		bodyIdSheet = clientWB.getSheetAt(0);
 		columnExcelReader = new ColumnExcelReader();
@@ -53,7 +56,9 @@ public class XSSFBuilderIntegrationTest {
 		excelBuilder.createLinkedSheetWithName(LINKED_SHEET_NAME);
 		final String[] uniqueBodyIds = columnExcelReader.getUniqueColumnValues(bodyIdSheet, BODY_ID_MARKER);
 		excelBuilder.writeBodyIdsColumnToLinkedSheet(BODY_ID_MARKER, uniqueBodyIds);
-		excelBuilder.linkExistingBodyIds(VIN_MARKER, Paths.get(".", COMPAIGN_FILE).toFile());
+		final ListMultimap<String, String> linkedBodyIdWithCampaigns = campaignProcessor.linkBodyIdWithCampaigns(
+				uniqueBodyIds, CAMPAIGN_FILE, VIN_MARKER);
+		excelBuilder.linkExistingBodyIds(linkedBodyIdWithCampaigns, CAMPAIGN_FILE.getName());
 		excelBuilder.saveToFile(Paths.get("", LINKED_RESULT_FILE).toFile());
 
 	}

@@ -5,6 +5,8 @@ import java.io.IOException;
 
 import org.apache.poi.ss.usermodel.Cell;
 
+import com.google.common.collect.ListMultimap;
+
 public interface DataBuilder {
 
 	void createDocument();
@@ -17,6 +19,6 @@ public interface DataBuilder {
 
 	public Cell[] getBodyIdCells();
 
-	void linkExistingBodyIds(String vinColumnMarker, File campaignSource);
+	void linkExistingBodyIds(ListMultimap<String, String> linkedBodies, String pathToCampaignFile);
 
 }
