@@ -17,7 +17,7 @@ public class App {
             }
 
             private void createAndShowGUI() {
-                final MainFrame frame = new MainFrame("Body Ids");
+                final MainFrame frame = new MainFrame("Демо Версия");
                 frame.pack();
                 frame.setVisible(true);
             }
