@@ -1,12 +1,15 @@
 package oleksii.filonov.writer;
 
 import com.google.common.collect.ListMultimap;
-import oleksii.filonov.TestConstants;
 import oleksii.filonov.reader.CampaignProcessor;
 import oleksii.filonov.reader.ColumnExcelReader;
 import oleksii.filonov.reader.ColumnReaderHelper;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,6 +18,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
+
+import static oleksii.filonov.TestConstants.LINKED_RESULT_FILE;
+import static oleksii.filonov.TestConstants.TARGET_RESOURCE;
 
 public class XSSFBuilderIntegrationTest {
 
@@ -38,8 +44,8 @@ public class XSSFBuilderIntegrationTest {
 
 	@Before
 	public void setUp() throws InvalidFormatException, IOException {
-        if(!Files.exists(TestConstants.TARGET_RESOURCE)) {
-            Files.createDirectory(TestConstants.TARGET_RESOURCE);
+        if(!Files.exists(TARGET_RESOURCE)) {
+            Files.createDirectory(TARGET_RESOURCE);
         }
 		columnReaderHelper = new ColumnReaderHelper();
 		campaignProcessor = new CampaignProcessor();
@@ -60,12 +66,12 @@ public class XSSFBuilderIntegrationTest {
 		final ListMultimap<String, String> linkedBodyIdWithCampaigns = campaignProcessor.linkBodyIdWithCampaigns(
 				uniqueBodyIds, CAMPAIGN_FILE, VIN_MARKER);
 		excelBuilder.linkExistingBodyIds(linkedBodyIdWithCampaigns, CAMPAIGN_FILE.getName());
-		excelBuilder.saveToFile(TestConstants.LINKED_RESULT_FILE.toFile());
+		excelBuilder.saveToFile(LINKED_RESULT_FILE.toFile());
 	}
 
     @Test
     public void printHyperLinksFromResultLink() throws InvalidFormatException, IOException {
-        final Workbook clientWB = WorkbookFactory.create(TestConstants.LINKED_RESULT_FILE.toFile());
+        final Workbook clientWB = WorkbookFactory.create(LINKED_RESULT_FILE.toFile());
         final Sheet compaignSheet = clientWB.getSheetAt(0);
         final Iterator<Row> rows = compaignSheet.rowIterator();
         rows.next();

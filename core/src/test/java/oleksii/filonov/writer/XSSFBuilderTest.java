@@ -3,7 +3,6 @@ package oleksii.filonov.writer;
 import com.google.common.collect.ListMultimap;
 import oleksii.filonov.reader.CampaignProcessor;
 import oleksii.filonov.reader.ColumnReaderHelper;
-import oleksii.filonov.TestConstants;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.junit.Before;
@@ -15,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
 
+import static oleksii.filonov.TestConstants.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -42,8 +42,8 @@ public class XSSFBuilderTest {
 
 	@Before
 	public void setUp() throws IOException {
-        if(!Files.exists(TestConstants.TARGET_RESOURCE)) {
-            Files.createDirectory(TestConstants.TARGET_RESOURCE);
+        if(!Files.exists(TARGET_RESOURCE)) {
+            Files.createDirectory(TARGET_RESOURCE);
         }
 		excelBuilder = new XSSFBuilder();
 		columnReaderHelper = new ColumnReaderHelper();
@@ -56,7 +56,7 @@ public class XSSFBuilderTest {
 	@Test
 	public void fillResultFileWithBodyId() throws IOException {
 		excelBuilder.writeBodyIdsColumnToLinkedSheet(BODY_ID_MARKER, BODY_IDS);
-		excelBuilder.saveToFile(TestConstants.RESULT_FILE.toFile());
+		excelBuilder.saveToFile(RESULT_FILE.toFile());
 		final Cell[] bodyIdCells = excelBuilder.getBodyIdCells();
 		assertEquals(FIRST_BODY_ID, bodyIdCells[0].getStringCellValue());
 		assertEquals(SECOND_BODY_ID, bodyIdCells[1].getStringCellValue());
@@ -71,14 +71,14 @@ public class XSSFBuilderTest {
 		final ListMultimap<String, String> bodyIdLinks = campaignProcessor.linkBodyIdWithCampaigns(bodyIds,
 				CAMPAIGN_FILE, VIN_MARKER);
 		excelBuilder.linkExistingBodyIds(bodyIdLinks, CAMPAIGN_FILE.getName());
-		excelBuilder.saveToFile(TestConstants.LINKED_RESULT_FILE.toFile());
+		excelBuilder.saveToFile(LINKED_RESULT_FILE.toFile());
 		final Cell[] bodyIdCells = excelBuilder.getBodyIdCells();
 		assertEquals(REAL_BODY_ID_FIRST_SHEET_ROW_ONE, bodyIdCells[0].getStringCellValue());
 		checkWrittenLinkedResultFile();
 	}
 
 	private void checkWrittenLinkedResultFile() throws IOException, InvalidFormatException {
-		final Workbook linkedResultWB = WorkbookFactory.create(TestConstants.LINKED_RESULT_FILE.toFile());
+		final Workbook linkedResultWB = WorkbookFactory.create(LINKED_RESULT_FILE.toFile());
 		final Sheet linkedResultSheet = linkedResultWB.getSheet(LINKED_SHEET_NAME);
 		final Iterator<Row> rows = linkedResultSheet.iterator();
 		final int bodyIdColumnIndex = columnReaderHelper.findColumnIndex(rows, BODY_ID_MARKER);
