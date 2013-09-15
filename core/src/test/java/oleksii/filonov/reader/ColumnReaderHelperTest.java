@@ -1,25 +1,19 @@
 package oleksii.filonov.reader;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import oleksii.filonov.TestConstants;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.*;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Iterator;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ColumnReaderHelperTest {
 
@@ -46,7 +40,7 @@ public class ColumnReaderHelperTest {
     }
 
     @Test
-    public void willNotFindBodyIdColumnIndex() {
+    public void shouldNotFindBodyIdColumnIndex() {
         final String columnToRead = WRONG_COLUMN_MARKER;
         try {
             this.columnReaderHelper.findColumnIndex(this.bodyIdSheet.iterator(), columnToRead);
@@ -91,20 +85,5 @@ public class ColumnReaderHelperTest {
         }
     }
 
-    @Test
-    public void printHyperLinksFromResultLink() throws InvalidFormatException, IOException {
-        final String[] RESULT_LINK_FILE = new String[] { "src", "test", "resources", "resultLinks.xlsx" };
-        final Workbook clientWB = WorkbookFactory.create(Paths.get("", RESULT_LINK_FILE).toFile());
-        final Sheet compaignSheet = clientWB.getSheetAt(0);
-        final Iterator<Row> rows = compaignSheet.rowIterator();
-        rows.next();
-        final int columnIndex = 1;
-        while(rows.hasNext()) {
-            final Row row = rows.next();
-            final Cell cell = row.getCell(columnIndex);
-            if(this.columnReaderHelper.isStringType(cell)) {
-                System.out.println(cell.getRowIndex() + ":" + cell.getHyperlink().getAddress());
-            }
-        }
-    }
+
 }

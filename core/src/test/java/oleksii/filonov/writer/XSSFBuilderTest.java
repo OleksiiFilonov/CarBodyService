@@ -1,30 +1,26 @@
 package oleksii.filonov.writer;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.Iterator;
-
+import com.google.common.collect.ListMultimap;
 import oleksii.filonov.reader.CampaignProcessor;
 import oleksii.filonov.reader.ColumnReaderHelper;
-
+import oleksii.filonov.TestConstants;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.ListMultimap;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Iterator;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class XSSFBuilderTest {
 
-	private static final String LINKED_SHEET_NAME = "Body";
+    private static final String LINKED_SHEET_NAME = "Body";
 	private static final String BODY_ID_MARKER = "Номер кузова";
 	private static final String VIN_MARKER = "VIN";
 
@@ -35,9 +31,8 @@ public class XSSFBuilderTest {
 	private static final String REAL_BODY_ID_FIRST_SHEET_ROW_TEN = "KMHEC41CBBA240950";
 	private static final String NO_SUCH_BODY_ID_FIRST_SHEET_ROW_TEN = "KMH00000000000000";
 	private static final String[] BODY_IDS = new String[] { FIRST_BODY_ID, SECOND_BODY_ID, THIRD_BODY_ID };
-	private static final String[] RESULT_FILE = new String[] { "src", "test", "resources", "result.xlsx" };
-	private static final String[] LINKED_RESULT_FILE = new String[] { "src", "test", "resources", "resultLinks.xlsx" };
-	private static final String[] COMPAIGN_FILE = new String[] { "src", "test", "resources", "Campaign.xlsx" };
+
+    private static final String[] COMPAIGN_FILE = new String[] { "src", "test", "resources", "Campaign.xlsx" };
 	private static final File CAMPAIGN_FILE = Paths.get("", COMPAIGN_FILE).toFile();
 
 	private ColumnReaderHelper columnReaderHelper;
@@ -46,7 +41,10 @@ public class XSSFBuilderTest {
 	private XSSFBuilder excelBuilder;
 
 	@Before
-	public void setUp() {
+	public void setUp() throws IOException {
+        if(!Files.exists(TestConstants.TARGET_RESOURCE)) {
+            Files.createDirectory(TestConstants.TARGET_RESOURCE);
+        }
 		excelBuilder = new XSSFBuilder();
 		columnReaderHelper = new ColumnReaderHelper();
 		campaignProcessor = new CampaignProcessor();
@@ -58,7 +56,7 @@ public class XSSFBuilderTest {
 	@Test
 	public void fillResultFileWithBodyId() throws IOException {
 		excelBuilder.writeBodyIdsColumnToLinkedSheet(BODY_ID_MARKER, BODY_IDS);
-		excelBuilder.saveToFile(Paths.get("", RESULT_FILE).toFile());
+		excelBuilder.saveToFile(TestConstants.RESULT_FILE.toFile());
 		final Cell[] bodyIdCells = excelBuilder.getBodyIdCells();
 		assertEquals(FIRST_BODY_ID, bodyIdCells[0].getStringCellValue());
 		assertEquals(SECOND_BODY_ID, bodyIdCells[1].getStringCellValue());
@@ -73,14 +71,14 @@ public class XSSFBuilderTest {
 		final ListMultimap<String, String> bodyIdLinks = campaignProcessor.linkBodyIdWithCampaigns(bodyIds,
 				CAMPAIGN_FILE, VIN_MARKER);
 		excelBuilder.linkExistingBodyIds(bodyIdLinks, CAMPAIGN_FILE.getName());
-		excelBuilder.saveToFile(Paths.get("", LINKED_RESULT_FILE).toFile());
+		excelBuilder.saveToFile(TestConstants.LINKED_RESULT_FILE.toFile());
 		final Cell[] bodyIdCells = excelBuilder.getBodyIdCells();
 		assertEquals(REAL_BODY_ID_FIRST_SHEET_ROW_ONE, bodyIdCells[0].getStringCellValue());
 		checkWrittenLinkedResultFile();
 	}
 
 	private void checkWrittenLinkedResultFile() throws IOException, InvalidFormatException {
-		final Workbook linkedResultWB = WorkbookFactory.create(Paths.get("", LINKED_RESULT_FILE).toFile());
+		final Workbook linkedResultWB = WorkbookFactory.create(TestConstants.LINKED_RESULT_FILE.toFile());
 		final Sheet linkedResultSheet = linkedResultWB.getSheet(LINKED_SHEET_NAME);
 		final Iterator<Row> rows = linkedResultSheet.iterator();
 		final int bodyIdColumnIndex = columnReaderHelper.findColumnIndex(rows, BODY_ID_MARKER);
