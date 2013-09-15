@@ -79,11 +79,7 @@ public class MainTableModel extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(final int rowIndex, final int columnIndex) {
-        if(columnIndex == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return columnIndex == 0;
     }
 
     @Override

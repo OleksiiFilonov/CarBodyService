@@ -13,7 +13,7 @@ import com.google.common.collect.ListMultimap;
 public class CampaignProcessorTest {
 	private static final int MAX_FOUND_LINKS = 3;
 
-	private static String VIN_MARKER = "VIN";
+	private static final String VIN_MARKER = "VIN";
 
 	private static final String REAL_BODY_ID_MEET_THREE_TIMES = "KMHSH81XDBU758082";
 	private static final String REAL_BODY_ID_FIRST_SHEET_ROW_ONE = "KMHEC41BABA263951";

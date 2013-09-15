@@ -25,8 +25,8 @@ import com.google.common.collect.ListMultimap;
 public class XSSFBuilderTest {
 
 	private static final String LINKED_SHEET_NAME = "Body";
-	private static String BODY_ID_MARKER = "Номер кузова";
-	private static String VIN_MARKER = "VIN";
+	private static final String BODY_ID_MARKER = "Номер кузова";
+	private static final String VIN_MARKER = "VIN";
 
 	private static final String FIRST_BODY_ID = "KMHBT51DBBU022001";
 	private static final String SECOND_BODY_ID = "KMHSU81XDDU112002";

@@ -20,8 +20,8 @@ import com.google.common.collect.ListMultimap;
 public class XSSFBuilderIntegrationTest {
 
 	private static final String LINKED_SHEET_NAME = "Body";
-	private static String BODY_ID_MARKER = "Номер кузова";
-	private static String VIN_MARKER = "VIN";
+	private static final String BODY_ID_MARKER = "Номер кузова";
+	private static final String VIN_MARKER = "VIN";
 
 	private static final String[] LINKED_RESULT_FILE = new String[] { "src", "test", "resources", "resultLinks.xlsx" };
 	private static final String[] COMPAIGN_FILE = new String[] { "src", "test", "resources", "Campaign.xlsx" };

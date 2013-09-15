@@ -25,7 +25,7 @@ public class CampaignProcessor {
 	private int maxReferenceNumber;
 
 	private static final int OFFSET = 1;
-	private static char[] COLUMN_INDEXES = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
+	private static final char[] COLUMN_INDEXES = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
 			'P', 'Q', 'R', 'S', 'T', 'Y', 'V', 'W', 'X', 'Y', 'Z' };
 
 	public ListMultimap<String, String> linkBodyIdWithCampaigns(final String[] bodyIds, final File campaignFile,
