@@ -1,25 +1,18 @@
 package oleksii.filonov.writer;
 
-import static org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING;
+import com.google.common.collect.ListMultimap;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Hyperlink;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Hyperlink;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFColor;
-import org.apache.poi.xssf.usermodel.XSSFCreationHelper;
-import org.apache.poi.xssf.usermodel.XSSFHyperlink;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import com.google.common.collect.ListMultimap;
+import static org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING;
 
 public class XSSFBuilder implements DataBuilder {
 
@@ -108,13 +101,13 @@ public class XSSFBuilder implements DataBuilder {
 
 	private void initFoundCellStyle() {
 		foundCellStyle = workBook.createCellStyle();
-		foundCellStyle.setFillForegroundColor(GREEN);
+		foundCellStyle.setFillForegroundColor(RED);
 		foundCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 	}
 
 	private void initNotFoundCellStyle() {
 		notFoundCellStyle = workBook.createCellStyle();
-		notFoundCellStyle.setFillForegroundColor(RED);
+		notFoundCellStyle.setFillForegroundColor(GREEN);
 		notFoundCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 	}
 }
