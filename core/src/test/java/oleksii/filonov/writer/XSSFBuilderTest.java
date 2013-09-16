@@ -1,6 +1,7 @@
 package oleksii.filonov.writer;
 
 import com.google.common.collect.ListMultimap;
+import oleksii.filonov.TestConstants;
 import oleksii.filonov.reader.CampaignProcessor;
 import oleksii.filonov.reader.ColumnReaderHelper;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -8,13 +9,12 @@ import org.apache.poi.ss.usermodel.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Iterator;
 
-import static oleksii.filonov.TestConstants.*;
+import static oleksii.filonov.TestConstants.LINKED_RESULT_PATH;
+import static oleksii.filonov.TestConstants.TARGET_RESOURCE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -32,9 +32,6 @@ public class XSSFBuilderTest {
 	private static final String NO_SUCH_BODY_ID_FIRST_SHEET_ROW_TEN = "KMH00000000000000";
 	private static final String[] BODY_IDS = new String[] { FIRST_BODY_ID, SECOND_BODY_ID, THIRD_BODY_ID };
 
-    private static final String[] COMPAIGN_FILE = new String[] { "src", "test", "resources", "Campaign.xlsx" };
-	private static final File CAMPAIGN_FILE = Paths.get("", COMPAIGN_FILE).toFile();
-
 	private ColumnReaderHelper columnReaderHelper;
 	private CampaignProcessor campaignProcessor;
 
@@ -49,7 +46,7 @@ public class XSSFBuilderTest {
 		columnReaderHelper = new ColumnReaderHelper();
 		campaignProcessor = new CampaignProcessor();
 		campaignProcessor.setColumnReaderHelper(columnReaderHelper);
-		excelBuilder.createDocument(CAMPAIGN_FILE);
+		excelBuilder.createDocument(TestConstants.CAMPAIGN_FILE);
 		excelBuilder.createLinkedSheetWithName(LINKED_SHEET_NAME);
 	}
 
@@ -59,8 +56,8 @@ public class XSSFBuilderTest {
 				NO_SUCH_BODY_ID_FIRST_SHEET_ROW_TEN };
 		excelBuilder.writeBodyIdsColumnToLinkedSheet(BODY_ID_MARKER, bodyIds);
 		final ListMultimap<String, String> bodyIdLinks = campaignProcessor.linkBodyIdWithCampaigns(bodyIds,
-				CAMPAIGN_FILE, VIN_MARKER);
-		excelBuilder.linkExistingBodyIds(bodyIdLinks, CAMPAIGN_FILE.getName());
+				TestConstants.CAMPAIGN_FILE, VIN_MARKER);
+		excelBuilder.linkExistingBodyIds(bodyIdLinks, TestConstants.CAMPAIGN_FILE.getName());
 		excelBuilder.saveToFile(LINKED_RESULT_PATH.toFile());
 		final Cell[] bodyIdCells = excelBuilder.getBodyIdCells();
 		assertEquals(REAL_BODY_ID_FIRST_SHEET_ROW_ONE, bodyIdCells[0].getStringCellValue());

@@ -36,7 +36,7 @@ public class CampaignProcessorTest {
 	@Test
 	public void linkBodyIdWithCampaig() {
 		final ListMultimap<String, String> resultMap = processor.linkBodyIdWithCampaigns(
-                BODY_IDS, TestConstants.COMPAIGN_FILE, VIN_MARKER);
+                BODY_IDS, TestConstants.CAMPAIGN_FILE, VIN_MARKER);
 		assertThat(processor.getMaxReferenceNumber(), equalTo(MAX_FOUND_LINKS));
 
 		assertThat(resultMap.get(REAL_BODY_ID_MEET_THREE_TIMES).size(), equalTo(3));

@@ -53,13 +53,13 @@ public class XSSFBuilderIntegrationTest {
 
 	@Test
 	public void formLinkedDocument() throws IOException {
-		excelBuilder.createDocument(TestConstants.COMPAIGN_FILE);
+		excelBuilder.createDocument(TestConstants.CAMPAIGN_FILE);
 		excelBuilder.createLinkedSheetWithName(LINKED_SHEET_NAME);
 		final String[] uniqueBodyIds = columnExcelReader.getUniqueColumnValues(bodyIdSheet, BODY_ID_MARKER);
 		excelBuilder.writeBodyIdsColumnToLinkedSheet(BODY_ID_MARKER, uniqueBodyIds);
 		final ListMultimap<String, String> linkedBodyIdWithCampaigns = campaignProcessor.linkBodyIdWithCampaigns(
-				uniqueBodyIds, TestConstants.COMPAIGN_FILE, VIN_MARKER);
-		excelBuilder.linkExistingBodyIds(linkedBodyIdWithCampaigns, COMPAIGN_FILE.getName());
+				uniqueBodyIds, TestConstants.CAMPAIGN_FILE, VIN_MARKER);
+		excelBuilder.linkExistingBodyIds(linkedBodyIdWithCampaigns, CAMPAIGN_FILE.getName());
 		excelBuilder.saveToFile(LINKED_RESULT_PATH.toFile());
 	}
 
