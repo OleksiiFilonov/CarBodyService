@@ -7,9 +7,7 @@ import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.*;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 import static org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING;
@@ -27,24 +25,24 @@ public class XSSFBuilder implements DataBuilder {
 	private XSSFCellStyle notFoundCellStyle;
 	private XSSFCellStyle foundCellStyle;
     private XSSFCellStyle linkCellStyle;
-	private XSSFCreationHelper createHelper;
+	private XSSFCreationHelper creationHelper;
 
 	private XSSFSheet mainSheet;
 
 	private Cell[] bodyIdCells;
 
     @Override
-	public void createDocument() {
-		workBook = new XSSFWorkbook();
+	public void createDocument(File campaignFile) throws IOException {
+		workBook = new XSSFWorkbook(new FileInputStream(campaignFile));
+		creationHelper = workBook.getCreationHelper();
+		initNotFoundCellStyle();
+		initFoundCellStyle();
+        initLinkCellStyle();
 	}
 
 	@Override
 	public void createLinkedSheetWithName(final String sheetName) {
 		mainSheet = workBook.createSheet(sheetName);
-		initNotFoundCellStyle();
-		initFoundCellStyle();
-        initLinkCellStyle();
-		createHelper = workBook.getCreationHelper();
 	}
 
 	@Override
@@ -95,7 +93,7 @@ public class XSSFBuilder implements DataBuilder {
 		for (int i = 0; i < links.size(); i++) {
 			final Cell linkToVin = bodyIdRow.createCell(i + 1, Cell.CELL_TYPE_STRING);
 			linkToVin.setCellValue(links.get(i));
-			final XSSFHyperlink cellHyperlink = createHelper.createHyperlink(Hyperlink.LINK_FILE);
+			final XSSFHyperlink cellHyperlink = creationHelper.createHyperlink(Hyperlink.LINK_FILE);
 			cellHyperlink.setAddress(pathToCampaignFile + "#" + links.get(i));
 			cellHyperlink.setLabel(links.get(i));
 			linkToVin.setHyperlink(cellHyperlink);

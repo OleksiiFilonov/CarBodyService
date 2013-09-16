@@ -1,15 +1,14 @@
 package oleksii.filonov.writer;
 
+import com.google.common.collect.ListMultimap;
+import org.apache.poi.ss.usermodel.Cell;
+
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.poi.ss.usermodel.Cell;
-
-import com.google.common.collect.ListMultimap;
-
 public interface DataBuilder {
 
-	void createDocument();
+	void createDocument(File campaignFile) throws IOException;
 
 	void createLinkedSheetWithName(String string);
 

@@ -1,16 +1,13 @@
 package oleksii.filonov.buttons.listeners;
 
-import java.awt.event.ActionEvent;
-import java.io.IOException;
-
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-
 import oleksii.filonov.gui.MainFileChooser;
 import oleksii.filonov.reader.ReadDataException;
 import oleksii.filonov.writer.DataBuilder;
 import oleksii.filonov.writer.XSSFBuilder;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.io.IOException;
 
 public class SaveLinkedResultsListener extends FileChooserListener {
 
@@ -31,7 +28,7 @@ public class SaveLinkedResultsListener extends FileChooserListener {
 			getFileChooser().setLinkedBodyFile(getFileChooser().getSelectedFile());
 			try {
 				linksCalculator.calculate(getFileChooser());
-				documentBuilder.createDocument();
+				documentBuilder.createDocument(getFileChooser().getCampaignFile());
 				documentBuilder.createLinkedSheetWithName("Body");
 				documentBuilder.writeBodyIdsColumnToLinkedSheet("Номер Кузова", linksCalculator.getBodyIds());
 				documentBuilder.linkExistingBodyIds(linksCalculator.getBodyIdLinks(), getFileChooser()

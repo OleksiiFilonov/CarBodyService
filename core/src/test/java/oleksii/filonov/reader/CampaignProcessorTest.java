@@ -1,14 +1,12 @@
 package oleksii.filonov.reader;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
-
-import java.nio.file.Paths;
-
+import com.google.common.collect.ListMultimap;
+import oleksii.filonov.TestConstants;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.ListMultimap;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
 
 public class CampaignProcessorTest {
 	private static final int MAX_FOUND_LINKS = 3;
@@ -37,8 +35,8 @@ public class CampaignProcessorTest {
 
 	@Test
 	public void linkBodyIdWithCampaig() {
-		final ListMultimap<String, String> resultMap = processor.linkBodyIdWithCampaigns(BODY_IDS,
-				Paths.get("", COMPAIGN_FILE).toFile(), VIN_MARKER);
+		final ListMultimap<String, String> resultMap = processor.linkBodyIdWithCampaigns(
+                BODY_IDS, TestConstants.COMPAIGN_FILE, VIN_MARKER);
 		assertThat(processor.getMaxReferenceNumber(), equalTo(MAX_FOUND_LINKS));
 
 		assertThat(resultMap.get(REAL_BODY_ID_MEET_THREE_TIMES).size(), equalTo(3));

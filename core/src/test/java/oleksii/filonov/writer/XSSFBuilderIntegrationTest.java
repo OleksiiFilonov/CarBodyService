@@ -1,26 +1,21 @@
 package oleksii.filonov.writer;
 
 import com.google.common.collect.ListMultimap;
+import oleksii.filonov.TestConstants;
 import oleksii.filonov.reader.CampaignProcessor;
 import oleksii.filonov.reader.ColumnExcelReader;
 import oleksii.filonov.reader.ColumnReaderHelper;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
 
-import static oleksii.filonov.TestConstants.LINKED_RESULT_FILE;
-import static oleksii.filonov.TestConstants.TARGET_RESOURCE;
+import static oleksii.filonov.TestConstants.*;
 
 public class XSSFBuilderIntegrationTest {
 
@@ -28,8 +23,7 @@ public class XSSFBuilderIntegrationTest {
 	private static final String BODY_ID_MARKER = "Номер кузова";
 	private static final String VIN_MARKER = "VIN";
 
-	private static final String[] COMPAIGN_FILE = new String[] { "src", "test", "resources", "Campaign.xlsx" };
-	private static final File CAMPAIGN_FILE = Paths.get(".", COMPAIGN_FILE).toFile();
+
 	private static final String[] BODY_ID_SOURCE = new String[] { "src", "test", "resources", "Clients.xls" };
 
 	private Sheet bodyIdSheet;
@@ -59,20 +53,20 @@ public class XSSFBuilderIntegrationTest {
 
 	@Test
 	public void formLinkedDocument() throws IOException {
-		excelBuilder.createDocument();
+		excelBuilder.createDocument(TestConstants.COMPAIGN_FILE);
 		excelBuilder.createLinkedSheetWithName(LINKED_SHEET_NAME);
 		final String[] uniqueBodyIds = columnExcelReader.getUniqueColumnValues(bodyIdSheet, BODY_ID_MARKER);
 		excelBuilder.writeBodyIdsColumnToLinkedSheet(BODY_ID_MARKER, uniqueBodyIds);
 		final ListMultimap<String, String> linkedBodyIdWithCampaigns = campaignProcessor.linkBodyIdWithCampaigns(
-				uniqueBodyIds, CAMPAIGN_FILE, VIN_MARKER);
-		excelBuilder.linkExistingBodyIds(linkedBodyIdWithCampaigns, CAMPAIGN_FILE.getName());
-		excelBuilder.saveToFile(LINKED_RESULT_FILE.toFile());
+				uniqueBodyIds, TestConstants.COMPAIGN_FILE, VIN_MARKER);
+		excelBuilder.linkExistingBodyIds(linkedBodyIdWithCampaigns, COMPAIGN_FILE.getName());
+		excelBuilder.saveToFile(LINKED_RESULT_PATH.toFile());
 	}
 
     @Test
     public void printHyperLinksFromResultLink() throws InvalidFormatException, IOException {
-        final Workbook clientWB = WorkbookFactory.create(LINKED_RESULT_FILE.toFile());
-        final Sheet compaignSheet = clientWB.getSheetAt(0);
+        final Workbook clientWB = WorkbookFactory.create(LINKED_RESULT_PATH.toFile());
+        final Sheet compaignSheet = clientWB.getSheet(LINKED_SHEET_NAME);
         final Iterator<Row> rows = compaignSheet.rowIterator();
         rows.next();
         final int columnIndex = 1;

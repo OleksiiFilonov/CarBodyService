@@ -49,18 +49,8 @@ public class XSSFBuilderTest {
 		columnReaderHelper = new ColumnReaderHelper();
 		campaignProcessor = new CampaignProcessor();
 		campaignProcessor.setColumnReaderHelper(columnReaderHelper);
-		excelBuilder.createDocument();
+		excelBuilder.createDocument(CAMPAIGN_FILE);
 		excelBuilder.createLinkedSheetWithName(LINKED_SHEET_NAME);
-	}
-
-	@Test
-	public void fillResultFileWithBodyId() throws IOException {
-		excelBuilder.writeBodyIdsColumnToLinkedSheet(BODY_ID_MARKER, BODY_IDS);
-		excelBuilder.saveToFile(RESULT_FILE.toFile());
-		final Cell[] bodyIdCells = excelBuilder.getBodyIdCells();
-		assertEquals(FIRST_BODY_ID, bodyIdCells[0].getStringCellValue());
-		assertEquals(SECOND_BODY_ID, bodyIdCells[1].getStringCellValue());
-		assertEquals(THIRD_BODY_ID, bodyIdCells[2].getStringCellValue());
 	}
 
 	@Test
@@ -71,14 +61,14 @@ public class XSSFBuilderTest {
 		final ListMultimap<String, String> bodyIdLinks = campaignProcessor.linkBodyIdWithCampaigns(bodyIds,
 				CAMPAIGN_FILE, VIN_MARKER);
 		excelBuilder.linkExistingBodyIds(bodyIdLinks, CAMPAIGN_FILE.getName());
-		excelBuilder.saveToFile(LINKED_RESULT_FILE.toFile());
+		excelBuilder.saveToFile(LINKED_RESULT_PATH.toFile());
 		final Cell[] bodyIdCells = excelBuilder.getBodyIdCells();
 		assertEquals(REAL_BODY_ID_FIRST_SHEET_ROW_ONE, bodyIdCells[0].getStringCellValue());
 		checkWrittenLinkedResultFile();
 	}
 
 	private void checkWrittenLinkedResultFile() throws IOException, InvalidFormatException {
-		final Workbook linkedResultWB = WorkbookFactory.create(LINKED_RESULT_FILE.toFile());
+		final Workbook linkedResultWB = WorkbookFactory.create(LINKED_RESULT_PATH.toFile());
 		final Sheet linkedResultSheet = linkedResultWB.getSheet(LINKED_SHEET_NAME);
 		final Iterator<Row> rows = linkedResultSheet.iterator();
 		final int bodyIdColumnIndex = columnReaderHelper.findColumnIndex(rows, BODY_ID_MARKER);
