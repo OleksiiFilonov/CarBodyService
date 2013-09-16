@@ -4,6 +4,7 @@ import oleksii.filonov.gui.MainFileChooser;
 import oleksii.filonov.reader.ReadDataException;
 import oleksii.filonov.writer.DataBuilder;
 import oleksii.filonov.writer.XSSFBuilder;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -34,14 +35,14 @@ public class SaveLinkedResultsListener extends FileChooserListener {
 				documentBuilder.linkExistingBodyIds(linksCalculator.getBodyIdLinks(), getFileChooser()
 						.getCampaignFile().getName());
 				documentBuilder.saveToFile(getFileChooser().getLinkedBodyFile());
-			} catch (final ReadDataException exc) {
+			} catch (final ReadDataException | InvalidFormatException exc) {
 				System.err.println("Error while calculation links file: " + exc.getLocalizedMessage());
 				JOptionPane.showMessageDialog(getParentComponent(), "Ошибка при поиски соответствий номеров кузовов");
 			} catch (final IOException exc) {
 				System.err.println("Error while saving body links file: " + exc.getLocalizedMessage());
 				JOptionPane.showMessageDialog(getParentComponent(), "Ошибка при сохранении файла с результатами");
 			}
-		}
+        }
 	}
 
 }

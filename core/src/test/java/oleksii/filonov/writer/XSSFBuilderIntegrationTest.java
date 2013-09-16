@@ -48,8 +48,8 @@ public class XSSFBuilderIntegrationTest {
 	}
 
 	@Test
-	public void formLinkedDocument() throws IOException {
-		excelBuilder.createDocument(TestConstants.CAMPAIGN_FILE);
+	public void formLinkedDocument() throws IOException, InvalidFormatException {
+		excelBuilder.createDocument(TestConstants.CLIENT_FILE);
 		excelBuilder.createLinkedSheetWithName(LINKED_SHEET_NAME);
 		final String[] uniqueBodyIds = columnExcelReader.getUniqueColumnValues(bodyIdSheet, BODY_ID_MARKER);
 		excelBuilder.writeBodyIdsColumnToLinkedSheet(BODY_ID_MARKER, uniqueBodyIds);

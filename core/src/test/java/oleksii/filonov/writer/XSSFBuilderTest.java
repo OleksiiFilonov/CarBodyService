@@ -38,7 +38,7 @@ public class XSSFBuilderTest {
 	private XSSFBuilder excelBuilder;
 
 	@Before
-	public void setUp() throws IOException {
+	public void setUp() throws IOException, InvalidFormatException {
         if(!Files.exists(TARGET_RESOURCE)) {
             Files.createDirectory(TARGET_RESOURCE);
         }
@@ -46,7 +46,7 @@ public class XSSFBuilderTest {
 		columnReaderHelper = new ColumnReaderHelper();
 		campaignProcessor = new CampaignProcessor();
 		campaignProcessor.setColumnReaderHelper(columnReaderHelper);
-		excelBuilder.createDocument(TestConstants.CAMPAIGN_FILE);
+		excelBuilder.createDocument(TestConstants.CLIENT_FILE);
 		excelBuilder.createLinkedSheetWithName(LINKED_SHEET_NAME);
 	}
 

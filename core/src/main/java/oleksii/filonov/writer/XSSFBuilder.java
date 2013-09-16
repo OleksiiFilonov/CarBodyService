@@ -1,13 +1,13 @@
 package oleksii.filonov.writer;
 
 import com.google.common.collect.ListMultimap;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Hyperlink;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.*;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import static org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING;
@@ -21,19 +21,19 @@ public class XSSFBuilder implements DataBuilder {
 	private static final XSSFColor YELLOW = new XSSFColor(new java.awt.Color(255, 255, 0));
 	private static final XSSFColor GREEN = new XSSFColor(new java.awt.Color(51, 255, 51));
 
-	private XSSFWorkbook workBook;
-	private XSSFCellStyle notFoundCellStyle;
-	private XSSFCellStyle foundCellStyle;
-    private XSSFCellStyle linkCellStyle;
-	private XSSFCreationHelper creationHelper;
+	private Workbook workBook;
+	private CellStyle notFoundCellStyle;
+	private CellStyle foundCellStyle;
+    private CellStyle linkCellStyle;
+	private CreationHelper creationHelper;
 
-	private XSSFSheet mainSheet;
+	private Sheet mainSheet;
 
 	private Cell[] bodyIdCells;
 
     @Override
-	public void createDocument(File campaignFile) throws IOException {
-		workBook = new XSSFWorkbook(new FileInputStream(campaignFile));
+	public void createDocument(File campaignFile) throws IOException, InvalidFormatException {
+		workBook = WorkbookFactory.create(campaignFile);
 		creationHelper = workBook.getCreationHelper();
 		initNotFoundCellStyle();
 		initFoundCellStyle();
@@ -54,7 +54,7 @@ public class XSSFBuilder implements DataBuilder {
 		bodyIdCells = new Cell[bodyIds.length];
 		for (int rowIndex = 1; rowIndex <= bodyIds.length; rowIndex++) {
 			final String bodyId = bodyIds[rowIndex - 1];
-			final XSSFCell bodyIdCell = mainSheet.createRow(rowIndex).createCell(0, CELL_TYPE_STRING);
+			final Cell bodyIdCell = mainSheet.createRow(rowIndex).createCell(0, CELL_TYPE_STRING);
 			bodyIdCell.setCellStyle(notFoundCellStyle);
 			bodyIdCell.setCellValue(bodyId);
 			bodyIdCells[rowIndex - 1] = bodyIdCell;
@@ -93,7 +93,7 @@ public class XSSFBuilder implements DataBuilder {
 		for (int i = 0; i < links.size(); i++) {
 			final Cell linkToVin = bodyIdRow.createCell(i + 1, Cell.CELL_TYPE_STRING);
 			linkToVin.setCellValue(links.get(i));
-			final XSSFHyperlink cellHyperlink = creationHelper.createHyperlink(Hyperlink.LINK_FILE);
+			final Hyperlink cellHyperlink = creationHelper.createHyperlink(Hyperlink.LINK_FILE);
 			cellHyperlink.setAddress(pathToCampaignFile + "#" + links.get(i));
 			cellHyperlink.setLabel(links.get(i));
 			linkToVin.setHyperlink(cellHyperlink);
@@ -103,19 +103,19 @@ public class XSSFBuilder implements DataBuilder {
 
 	private void initLinkCellStyle() {
 		linkCellStyle = workBook.createCellStyle();
-        linkCellStyle.setFillForegroundColor(YELLOW);
-        linkCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        linkCellStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+        linkCellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
 	}
 
     private void initFoundCellStyle() {
 		foundCellStyle = workBook.createCellStyle();
-		foundCellStyle.setFillForegroundColor(RED);
-		foundCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        foundCellStyle.setFillBackgroundColor(IndexedColors.RED.getIndex());
+		foundCellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
 	}
 
 	private void initNotFoundCellStyle() {
 		notFoundCellStyle = workBook.createCellStyle();
-		notFoundCellStyle.setFillForegroundColor(GREEN);
-		notFoundCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		notFoundCellStyle.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+		notFoundCellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
 	}
 }
