@@ -20,18 +20,20 @@ public class XSSFBuilder implements DataBuilder {
 	private static final int BODY_ID_COLUMN_INDEX = 0;
 
 	private static final XSSFColor RED = new XSSFColor(new java.awt.Color(255, 0, 0));
+	private static final XSSFColor YELLOW = new XSSFColor(new java.awt.Color(255, 255, 0));
 	private static final XSSFColor GREEN = new XSSFColor(new java.awt.Color(51, 255, 51));
 
 	private XSSFWorkbook workBook;
 	private XSSFCellStyle notFoundCellStyle;
 	private XSSFCellStyle foundCellStyle;
+    private XSSFCellStyle linkCellStyle;
 	private XSSFCreationHelper createHelper;
 
 	private XSSFSheet mainSheet;
 
 	private Cell[] bodyIdCells;
 
-	@Override
+    @Override
 	public void createDocument() {
 		workBook = new XSSFWorkbook();
 	}
@@ -41,6 +43,7 @@ public class XSSFBuilder implements DataBuilder {
 		mainSheet = workBook.createSheet(sheetName);
 		initNotFoundCellStyle();
 		initFoundCellStyle();
+        initLinkCellStyle();
 		createHelper = workBook.getCreationHelper();
 	}
 
@@ -96,10 +99,17 @@ public class XSSFBuilder implements DataBuilder {
 			cellHyperlink.setAddress(pathToCampaignFile + "#" + links.get(i));
 			cellHyperlink.setLabel(links.get(i));
 			linkToVin.setHyperlink(cellHyperlink);
+            linkToVin.setCellStyle(linkCellStyle);
 		}
 	}
 
-	private void initFoundCellStyle() {
+	private void initLinkCellStyle() {
+		linkCellStyle = workBook.createCellStyle();
+        linkCellStyle.setFillForegroundColor(YELLOW);
+        linkCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+	}
+
+    private void initFoundCellStyle() {
 		foundCellStyle = workBook.createCellStyle();
 		foundCellStyle.setFillForegroundColor(RED);
 		foundCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
