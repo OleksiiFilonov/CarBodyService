@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public interface DataBuilder {
 
-	void createDocument(File campaignFile) throws IOException;
+	void createDocument(File clientsFile) throws IOException;
 
 	void createLinkedSheetWithName(String string);
 

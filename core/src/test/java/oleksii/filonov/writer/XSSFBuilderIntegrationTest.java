@@ -12,7 +12,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Iterator;
 
 import static oleksii.filonov.TestConstants.*;
@@ -23,10 +22,7 @@ public class XSSFBuilderIntegrationTest {
 	private static final String BODY_ID_MARKER = "Номер кузова";
 	private static final String VIN_MARKER = "VIN";
 
-
-	private static final String[] BODY_ID_SOURCE = new String[] { "src", "test", "resources", "Clients.xls" };
-
-	private Sheet bodyIdSheet;
+    private Sheet bodyIdSheet;
 
 	private ColumnReaderHelper columnReaderHelper;
 
@@ -45,7 +41,7 @@ public class XSSFBuilderIntegrationTest {
 		campaignProcessor = new CampaignProcessor();
 		campaignProcessor.setColumnReaderHelper(columnReaderHelper);
 		excelBuilder = new XSSFBuilder();
-		final Workbook clientWB = WorkbookFactory.create(Paths.get(".", BODY_ID_SOURCE).toFile());
+		final Workbook clientWB = WorkbookFactory.create(TestConstants.CLIENT_FILE);
 		bodyIdSheet = clientWB.getSheetAt(0);
 		columnExcelReader = new ColumnExcelReader();
 		columnExcelReader.setColumnReaderHelper(columnReaderHelper);
