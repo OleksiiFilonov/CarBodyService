@@ -1,7 +1,6 @@
 package oleksii.filonov.writer;
 
 import com.google.common.collect.ListMultimap;
-import oleksii.filonov.TestConstants;
 import oleksii.filonov.reader.CampaignProcessor;
 import oleksii.filonov.reader.ColumnExcelReader;
 import oleksii.filonov.reader.ColumnReaderHelper;
@@ -22,13 +21,9 @@ public class XSSFBuilderIntegrationTest {
 	private static final String BODY_ID_MARKER = "Номер кузова";
 	private static final String VIN_MARKER = "VIN";
 
-    private Sheet bodyIdSheet;
+    private ColumnReaderHelper columnReaderHelper;
 
-	private ColumnReaderHelper columnReaderHelper;
-
-	private XSSFBuilder excelBuilder;
-
-	private ColumnExcelReader columnExcelReader;
+    private ColumnExcelReader columnExcelReader;
 
 	private CampaignProcessor campaignProcessor;
 
@@ -40,18 +35,17 @@ public class XSSFBuilderIntegrationTest {
 		columnReaderHelper = new ColumnReaderHelper();
 		campaignProcessor = new CampaignProcessor();
 		campaignProcessor.setColumnReaderHelper(columnReaderHelper);
-		excelBuilder = new XSSFBuilder();
-		final Workbook clientWB = WorkbookFactory.create(TestConstants.CLIENT_FILE);
-		bodyIdSheet = clientWB.getSheetAt(0);
-		columnExcelReader = new ColumnExcelReader();
-		columnExcelReader.setColumnReaderHelper(columnReaderHelper);
-	}
+        columnExcelReader = new ColumnExcelReader();
+        columnExcelReader.setColumnReaderHelper(columnReaderHelper);
+    }
 
 	@Test
 	public void formLinkedDocument() throws IOException, InvalidFormatException {
-		excelBuilder.createDocument(TestConstants.CLIENT_FILE);
+        XSSFBuilder excelBuilder = new XSSFBuilder();
+        final Workbook clientWB = WorkbookFactory.create(CLIENT_FILE);
+        excelBuilder.createDocument(CLIENT_FILE);
 		excelBuilder.createLinkedSheetWithName(LINKED_SHEET_NAME);
-		final String[] uniqueBodyIds = columnExcelReader.getUniqueColumnValues(bodyIdSheet, BODY_ID_MARKER);
+		final String[] uniqueBodyIds = columnExcelReader.getUniqueColumnValues(clientWB.getSheetAt(0), BODY_ID_MARKER);
 		excelBuilder.writeBodyIdsColumnToLinkedSheet(BODY_ID_MARKER, uniqueBodyIds);
 		final ListMultimap<String, String> linkedBodyIdWithCampaigns = campaignProcessor.linkBodyIdWithCampaigns(
 				uniqueBodyIds, CAMPAIGN_FILE, VIN_MARKER);

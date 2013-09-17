@@ -22,15 +22,11 @@ public class XSSFBuilderTest {
 	private static final String BODY_ID_MARKER = "Номер кузова";
 	private static final String VIN_MARKER = "VIN";
 
-	private static final String FIRST_BODY_ID = "KMHBT51DBBU022001";
-	private static final String SECOND_BODY_ID = "KMHSU81XDDU112002";
-	private static final String THIRD_BODY_ID = "KMHEC41BBCA350003";
-	private static final String REAL_BODY_ID_FIRST_SHEET_ROW_ONE = "KMHEC41BABA263951";
+    private static final String REAL_BODY_ID_FIRST_SHEET_ROW_ONE = "KMHEC41BABA263951";
 	private static final String REAL_BODY_ID_FIRST_SHEET_ROW_TEN = "KMHEC41CBBA240950";
 	private static final String NO_SUCH_BODY_ID_FIRST_SHEET_ROW_TEN = "KMH00000000000000";
-	private static final String[] BODY_IDS = new String[] { FIRST_BODY_ID, SECOND_BODY_ID, THIRD_BODY_ID };
 
-	private ColumnReaderHelper columnReaderHelper;
+    private ColumnReaderHelper columnReaderHelper;
 	private CampaignProcessor campaignProcessor;
 
 	private XSSFBuilder excelBuilder;
@@ -49,7 +45,7 @@ public class XSSFBuilderTest {
 	}
 
 	@Test
-	public void formResultFileWitLinks() throws IOException, InvalidFormatException {
+	public void formResultFileWithLinks() throws IOException, InvalidFormatException {
 		final String[] bodyIds = new String[] { REAL_BODY_ID_FIRST_SHEET_ROW_ONE, REAL_BODY_ID_FIRST_SHEET_ROW_TEN,
 				NO_SUCH_BODY_ID_FIRST_SHEET_ROW_TEN };
 		excelBuilder.writeBodyIdsColumnToLinkedSheet(BODY_ID_MARKER, bodyIds);
@@ -57,8 +53,6 @@ public class XSSFBuilderTest {
 				CAMPAIGN_FILE, VIN_MARKER);
 		excelBuilder.linkExistingBodyIds(bodyIdLinks, CAMPAIGN_FILE.getName());
 		excelBuilder.saveToFile(LINKED_RESULT_PATH.toFile());
-		final Cell[] bodyIdCells = excelBuilder.getBodyIdCells();
-		assertEquals(REAL_BODY_ID_FIRST_SHEET_ROW_ONE, bodyIdCells[0].getStringCellValue());
 		checkWrittenLinkedResultFile();
 	}
 

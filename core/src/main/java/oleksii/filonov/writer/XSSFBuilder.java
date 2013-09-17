@@ -68,12 +68,7 @@ public class XSSFBuilder implements DataBuilder {
 		recordStream.close();
 	}
 
-	@Override
-	public Cell[] getBodyIdCells() {
-		return bodyIdCells;
-	}
-
-	@Override
+    @Override
 	public void linkExistingBodyIds(final ListMultimap<String, String> linkedBodies, final String pathToCampaignFile) {
 		for (final Cell bodyIdCell : bodyIdCells) {
 			final List<String> links = linkedBodies.get(bodyIdCell.getStringCellValue());
