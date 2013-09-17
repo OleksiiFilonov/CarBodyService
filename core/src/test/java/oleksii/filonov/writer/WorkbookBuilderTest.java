@@ -3,6 +3,7 @@ package oleksii.filonov.writer;
 import com.google.common.collect.ListMultimap;
 import oleksii.filonov.reader.CampaignProcessor;
 import oleksii.filonov.reader.ColumnReaderHelper;
+import oleksii.filonov.reader.StringCell;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.junit.Before;
@@ -40,18 +41,19 @@ public class WorkbookBuilderTest {
 		columnReaderHelper = new ColumnReaderHelper();
 		campaignProcessor = new CampaignProcessor();
 		campaignProcessor.setColumnReaderHelper(columnReaderHelper);
-		excelBuilder.createDocument(CLIENT_FILE);
-		excelBuilder.createLinkedSheetWithName(LINKED_SHEET_NAME);
+		excelBuilder.useWorkbook(WorkbookFactory.create(CLIENT_FILE));
 	}
 
 	@Test
 	public void formResultFileWithLinks() throws IOException, InvalidFormatException {
-		final String[] bodyIds = new String[] { REAL_BODY_ID_FIRST_SHEET_ROW_ONE, REAL_BODY_ID_FIRST_SHEET_ROW_TEN,
-				NO_SUCH_BODY_ID_FIRST_SHEET_ROW_TEN };
-		excelBuilder.writeBodyIdsColumnToLinkedSheet(BODY_ID_MARKER, bodyIds);
+		final Cell[] bodyIds = new Cell[] {
+                new StringCell(REAL_BODY_ID_FIRST_SHEET_ROW_ONE),
+                new StringCell(REAL_BODY_ID_FIRST_SHEET_ROW_TEN),
+                new StringCell(NO_SUCH_BODY_ID_FIRST_SHEET_ROW_TEN)
+        };
 		final ListMultimap<String, String> bodyIdLinks = campaignProcessor.linkBodyIdWithCampaigns(bodyIds,
 				CAMPAIGN_FILE, VIN_MARKER);
-		excelBuilder.linkExistingBodyIds(bodyIdLinks, CAMPAIGN_FILE.getName());
+		excelBuilder.assignTasks(bodyIds, bodyIdLinks, CAMPAIGN_FILE.getName());
 		excelBuilder.saveToFile(LINKED_RESULT_PATH.toFile());
 		checkWrittenLinkedResultFile();
 	}

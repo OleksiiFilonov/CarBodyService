@@ -29,11 +29,11 @@ public class SaveLinkedResultsListener extends FileChooserListener {
 			getFileChooser().setLinkedBodyFile(getFileChooser().getSelectedFile());
 			try {
 				linksCalculator.calculate(getFileChooser());
-				documentBuilder.createDocument(getFileChooser().getCampaignFile());
+				documentBuilder.useWorkbook(getFileChooser().getCampaignFile());
 				documentBuilder.createLinkedSheetWithName("Body");
 				documentBuilder.writeBodyIdsColumnToLinkedSheet("Номер Кузова", linksCalculator.getBodyIds());
-				documentBuilder.linkExistingBodyIds(linksCalculator.getBodyIdLinks(), getFileChooser()
-						.getCampaignFile().getName());
+				documentBuilder.assignTasks(linksCalculator.getBodyIdLinks(), getFileChooser()
+                        .getCampaignFile().getName());
 				documentBuilder.saveToFile(getFileChooser().getLinkedBodyFile());
 			} catch (final ReadDataException | InvalidFormatException exc) {
 				System.err.println("Error while calculation links file: " + exc.getLocalizedMessage());

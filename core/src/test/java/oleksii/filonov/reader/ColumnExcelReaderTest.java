@@ -1,6 +1,7 @@
 package oleksii.filonov.reader;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -34,10 +35,10 @@ public class ColumnExcelReaderTest {
 
     @Test
     public void testReadFromXLSXClientsFile() {
-        final String[] uniqueBodyIds = this.columnExcelReader.getColumnValues(this.bodyIdSheet, BODY_ID_MARKER);
-        assertEquals("The first body id is not valid", "KMHBT51DBBU022069", uniqueBodyIds[0]);
-        assertEquals("The tenth body id is not valid", "KMHST81CADU139882", uniqueBodyIds[9]);
-        assertEquals("The last body id is not valid", "KMHEC41BBCA350931", uniqueBodyIds[uniqueBodyIds.length - 1]);
+        final Cell[] uniqueBodyIds = this.columnExcelReader.getColumnValues(this.bodyIdSheet, BODY_ID_MARKER);
+        assertEquals("The first body id is not valid", "KMHBT51DBBU022069", uniqueBodyIds[0].getStringCellValue());
+        assertEquals("The tenth body id is not valid", "KMHST81CADU139882", uniqueBodyIds[9].getStringCellValue());
+        assertEquals("The last body id is not valid", "KMHEC41BBCA350931", uniqueBodyIds[uniqueBodyIds.length - 1].getStringCellValue());
     }
 
     @Test
@@ -55,17 +56,17 @@ public class ColumnExcelReaderTest {
         final Workbook campaignWB = WorkbookFactory.create(CAMPAIGN_FILE);
         final int numbersOfSheet = campaignWB.getNumberOfSheets();
         final Sheet seconSheet = campaignWB.getSheetAt(1);
-        final String[] firstVins = this.columnExcelReader.getColumnValues(seconSheet, VIN_MARKER);
+        final Cell[] firstVins = this.columnExcelReader.getColumnValues(seconSheet, VIN_MARKER);
         assertEquals("The amount of vins on the first sheet is incorrect", 505, firstVins.length);
-        assertEquals("The first vin on a first sheet is wrong", "KMHEC41BABA263951", firstVins[0]);
-        assertEquals("The tenth vin on a first sheet is wrong", "KMHEC41CBBA240950", firstVins[9]);
-        assertEquals("The last vin on a first sheet is wrong", "KMHEC41CBCA305034", firstVins[firstVins.length - 1]);
+        assertEquals("The first vin on a first sheet is wrong", "KMHEC41BABA263951", firstVins[0].getStringCellValue());
+        assertEquals("The tenth vin on a first sheet is wrong", "KMHEC41CBBA240950", firstVins[9].getStringCellValue());
+        assertEquals("The last vin on a first sheet is wrong", "KMHEC41CBCA305034", firstVins[firstVins.length - 1].getStringCellValue());
         final Sheet lastSheet = campaignWB.getSheetAt(numbersOfSheet - 1);
-        final String[] lastVins = this.columnExcelReader.getColumnValues(lastSheet, VIN_MARKER);
+        final Cell[] lastVins = this.columnExcelReader.getColumnValues(lastSheet, VIN_MARKER);
         assertEquals("The amount of vins on the last sheet is incorrect", 2130, lastVins.length);
-        assertEquals("The first vin on a last sheet is wrong", "KMHSH81BDBU693756", lastVins[0]);
-        assertEquals("The tenth vin on a last sheet is wrong", "KMHSH81BDAU645940", lastVins[9]);
-        assertEquals("The last vin on a last sheet is wrong", "KMHSH81XDBU775331", lastVins[lastVins.length - 1]);
+        assertEquals("The first vin on a last sheet is wrong", "KMHSH81BDBU693756", lastVins[0].getStringCellValue());
+        assertEquals("The tenth vin on a last sheet is wrong", "KMHSH81BDAU645940", lastVins[9].getStringCellValue());
+        assertEquals("The last vin on a last sheet is wrong", "KMHSH81XDBU775331", lastVins[lastVins.length - 1].getStringCellValue());
         for(int sheetIndex = 2; sheetIndex < numbersOfSheet; sheetIndex++) {
             final Sheet vinSheet = campaignWB.getSheetAt(sheetIndex);
             this.columnExcelReader.getColumnValues(vinSheet, VIN_MARKER);

@@ -1,6 +1,7 @@
 package oleksii.filonov.writer;
 
 import com.google.common.collect.ListMultimap;
+import oleksii.filonov.TestConstants;
 import oleksii.filonov.reader.CampaignProcessor;
 import oleksii.filonov.reader.ColumnExcelReader;
 import oleksii.filonov.reader.ColumnReaderHelper;
@@ -43,21 +44,19 @@ public class WorkbookBuilderIntegrationTest {
 	public void formLinkedDocument() throws IOException, InvalidFormatException {
         final Workbook clientWB = WorkbookFactory.create(CLIENT_FILE);
         Sheet clientSheet = clientWB.getSheetAt(0);
-        final String[] uniqueBodyIds = columnExcelReader.getColumnValues(clientSheet, BODY_ID_MARKER);
+        final Cell[] bodyIds = columnExcelReader.getColumnValues(clientSheet, BODY_ID_MARKER);
         DataBuilder excelBuilder = new WorkbookBuilder();
-        excelBuilder.createDocument(CLIENT_FILE);
-        excelBuilder.createLinkedSheetWithName(LINKED_SHEET_NAME);
-        excelBuilder.writeBodyIdsColumnToLinkedSheet(BODY_ID_MARKER, uniqueBodyIds);
+        excelBuilder.useWorkbook(clientWB);
 		final ListMultimap<String, String> linkedBodyIdWithCampaigns = campaignProcessor.linkBodyIdWithCampaigns(
-				uniqueBodyIds, CAMPAIGN_FILE, VIN_MARKER);
-		excelBuilder.linkExistingBodyIds(linkedBodyIdWithCampaigns, CAMPAIGN_FILE.getName());
+				bodyIds, TestConstants.CAMPAIGN_FILE, VIN_MARKER);
+		excelBuilder.assignTasks(bodyIds, linkedBodyIdWithCampaigns, TestConstants.CAMPAIGN_FILE.getName());
 		excelBuilder.saveToFile(LINKED_RESULT_PATH.toFile());
 	}
 
     @Test
     public void printHyperLinksFromResultLink() throws InvalidFormatException, IOException {
         final Workbook clientWB = WorkbookFactory.create(LINKED_RESULT_PATH.toFile());
-        final Sheet campaignSheet = clientWB.getSheet(LINKED_SHEET_NAME);
+        final Sheet campaignSheet = clientWB.getSheetAt(0);
         final Iterator<Row> rows = campaignSheet.rowIterator();
         rows.next();
         final int columnIndex = 1;

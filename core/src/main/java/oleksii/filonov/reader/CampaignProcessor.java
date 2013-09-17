@@ -1,19 +1,14 @@
 package oleksii.filonov.reader;
 
+import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.ListMultimap;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
-
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-
-import com.google.common.collect.LinkedListMultimap;
-import com.google.common.collect.ListMultimap;
 
 /**
  * Not thread safe!!!
@@ -28,16 +23,19 @@ public class CampaignProcessor {
 	private static final char[] COLUMN_INDEXES = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
 			'P', 'Q', 'R', 'S', 'T', 'Y', 'V', 'W', 'X', 'Y', 'Z' };
 
-	public ListMultimap<String, String> linkBodyIdWithCampaigns(final String[] bodyIds, final File campaignFile,
+	public ListMultimap<String, String> linkBodyIdWithCampaigns(final Cell[] bodyIds, final File campaignFile,
 			final String vinColumnMarker) {
-		final String[] bodyIdsToProcess = Arrays.copyOf(bodyIds, bodyIds.length);
-		final ListMultimap<String, String> result = LinkedListMultimap.create(bodyIds.length);
+		final String [] bodyIdsToProcess = new String[bodyIds.length];
+        for (int i = 0; i < bodyIds.length; ++i) {
+            bodyIdsToProcess[i] = bodyIds[i].getStringCellValue();
+        }
+        final ListMultimap<String, String> result = LinkedListMultimap.create(bodyIds.length);
 		Arrays.sort(bodyIdsToProcess);
 		try {
-			final Workbook compaignWB = WorkbookFactory.create(campaignFile);
-			final int numbersOfSheet = compaignWB.getNumberOfSheets();
+			final Workbook campaignWB = WorkbookFactory.create(campaignFile);
+			final int numbersOfSheet = campaignWB.getNumberOfSheets();
 			for (int sheetIndex = 1; sheetIndex < numbersOfSheet; sheetIndex++) {
-				final Sheet vinSheet = compaignWB.getSheetAt(sheetIndex);
+				final Sheet vinSheet = campaignWB.getSheetAt(sheetIndex);
 				final Iterator<Row> vinRows = vinSheet.rowIterator();
 				final int vinColumnIndex = columnReaderHelper.findColumnIndex(vinRows, vinColumnMarker);
 				while (vinRows.hasNext()) {

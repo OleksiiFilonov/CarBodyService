@@ -2,6 +2,7 @@ package oleksii.filonov.reader;
 
 import com.google.common.collect.ListMultimap;
 import oleksii.filonov.TestConstants;
+import org.apache.poi.ss.usermodel.Cell;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,9 +21,13 @@ public class CampaignProcessorTest {
 	private static final String NO_SUCH_BODY_ID_FIRST_SHEET_ROW_TEN = "KMH00000000000000";
 	private static final String REAL_BODY_ID_MEET_THREE_TIMES_ANOTHER = "Z94CT41CBBR015022";
 
-	private static final String[] BODY_IDS = new String[] { REAL_BODY_ID_MEET_THREE_TIMES,
-			REAL_BODY_ID_FIRST_SHEET_ROW_ONE, REAL_BODY_ID_MEET_TWICE, REAL_BODY_ID_FIRST_SHEET_ROW_TEN,
-			NO_SUCH_BODY_ID_FIRST_SHEET_ROW_TEN, REAL_BODY_ID_MEET_THREE_TIMES_ANOTHER };
+	private static final Cell[] BODY_IDS = new Cell[] {
+            new StringCell(REAL_BODY_ID_MEET_THREE_TIMES),
+            new StringCell(REAL_BODY_ID_FIRST_SHEET_ROW_ONE),
+            new StringCell(REAL_BODY_ID_MEET_TWICE),
+            new StringCell(REAL_BODY_ID_FIRST_SHEET_ROW_TEN),
+            new StringCell(NO_SUCH_BODY_ID_FIRST_SHEET_ROW_TEN),
+            new StringCell(REAL_BODY_ID_MEET_THREE_TIMES_ANOTHER) };
 	private static final String[] COMPAIGN_FILE = new String[] { "src", "test", "resources", "Campaign.xlsx" };
 
 	private CampaignProcessor processor;
@@ -61,4 +66,5 @@ public class CampaignProcessorTest {
 		assertThat(resultMap.get(REAL_BODY_ID_MEET_THREE_TIMES_ANOTHER).get(1), equalTo("'10CR08'!B1045"));
 		assertThat(resultMap.get(REAL_BODY_ID_MEET_THREE_TIMES_ANOTHER).get(2), equalTo("'20CR22'!B10264"));
 	}
+
 }
