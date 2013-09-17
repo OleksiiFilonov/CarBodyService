@@ -3,7 +3,7 @@ package oleksii.filonov.buttons.listeners;
 import oleksii.filonov.gui.MainFileChooser;
 import oleksii.filonov.reader.ReadDataException;
 import oleksii.filonov.writer.DataBuilder;
-import oleksii.filonov.writer.XSSFBuilder;
+import oleksii.filonov.writer.WorkbookBuilder;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import javax.swing.*;
@@ -19,7 +19,7 @@ public class SaveLinkedResultsListener extends FileChooserListener {
 	public SaveLinkedResultsListener(final MainFileChooser fileChooser, final JComponent parentComponent) {
 		super(fileChooser, parentComponent);
 		linksCalculator = new LinksCalculator();
-		documentBuilder = new XSSFBuilder();
+		documentBuilder = new WorkbookBuilder();
 	}
 
 	@Override

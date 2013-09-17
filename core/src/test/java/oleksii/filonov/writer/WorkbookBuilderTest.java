@@ -16,7 +16,7 @@ import static oleksii.filonov.TestConstants.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-public class XSSFBuilderTest {
+public class WorkbookBuilderTest {
 
     private static final String LINKED_SHEET_NAME = "Body";
 	private static final String BODY_ID_MARKER = "Номер кузова";
@@ -29,14 +29,14 @@ public class XSSFBuilderTest {
     private ColumnReaderHelper columnReaderHelper;
 	private CampaignProcessor campaignProcessor;
 
-	private XSSFBuilder excelBuilder;
+	private WorkbookBuilder excelBuilder;
 
 	@Before
 	public void setUp() throws IOException, InvalidFormatException {
         if(!Files.exists(TARGET_RESOURCE)) {
             Files.createDirectory(TARGET_RESOURCE);
         }
-		excelBuilder = new XSSFBuilder();
+		excelBuilder = new WorkbookBuilder();
 		columnReaderHelper = new ColumnReaderHelper();
 		campaignProcessor = new CampaignProcessor();
 		campaignProcessor.setColumnReaderHelper(columnReaderHelper);

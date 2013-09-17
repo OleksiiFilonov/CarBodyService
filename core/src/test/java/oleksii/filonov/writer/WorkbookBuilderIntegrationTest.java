@@ -15,7 +15,7 @@ import java.util.Iterator;
 
 import static oleksii.filonov.TestConstants.*;
 
-public class XSSFBuilderIntegrationTest {
+public class WorkbookBuilderIntegrationTest {
 
 	private static final String LINKED_SHEET_NAME = "Body";
 	private static final String BODY_ID_MARKER = "Номер кузова";
@@ -41,7 +41,7 @@ public class XSSFBuilderIntegrationTest {
 
 	@Test
 	public void formLinkedDocument() throws IOException, InvalidFormatException {
-        XSSFBuilder excelBuilder = new XSSFBuilder();
+        DataBuilder excelBuilder = new WorkbookBuilder();
         final Workbook clientWB = WorkbookFactory.create(CLIENT_FILE);
         excelBuilder.createDocument(CLIENT_FILE);
 		excelBuilder.createLinkedSheetWithName(LINKED_SHEET_NAME);
@@ -56,8 +56,8 @@ public class XSSFBuilderIntegrationTest {
     @Test
     public void printHyperLinksFromResultLink() throws InvalidFormatException, IOException {
         final Workbook clientWB = WorkbookFactory.create(LINKED_RESULT_PATH.toFile());
-        final Sheet compaignSheet = clientWB.getSheet(LINKED_SHEET_NAME);
-        final Iterator<Row> rows = compaignSheet.rowIterator();
+        final Sheet campaignSheet = clientWB.getSheet(LINKED_SHEET_NAME);
+        final Iterator<Row> rows = campaignSheet.rowIterator();
         rows.next();
         final int columnIndex = 1;
         while(rows.hasNext()) {

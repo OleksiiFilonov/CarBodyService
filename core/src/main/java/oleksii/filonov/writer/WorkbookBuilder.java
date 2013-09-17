@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING;
 
-public class XSSFBuilder implements DataBuilder {
+public class WorkbookBuilder implements DataBuilder {
 
 	private static final int DEFAULT_COLUMN_SIZE = 17;
 	private static final int BODY_ID_COLUMN_INDEX = 0;
