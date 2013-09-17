@@ -1,7 +1,6 @@
 package oleksii.filonov.writer;
 
 import com.google.common.collect.ListMultimap;
-import oleksii.filonov.TestConstants;
 import oleksii.filonov.reader.CampaignProcessor;
 import oleksii.filonov.reader.ColumnReaderHelper;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -13,8 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Iterator;
 
-import static oleksii.filonov.TestConstants.LINKED_RESULT_PATH;
-import static oleksii.filonov.TestConstants.TARGET_RESOURCE;
+import static oleksii.filonov.TestConstants.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -46,7 +44,7 @@ public class XSSFBuilderTest {
 		columnReaderHelper = new ColumnReaderHelper();
 		campaignProcessor = new CampaignProcessor();
 		campaignProcessor.setColumnReaderHelper(columnReaderHelper);
-		excelBuilder.createDocument(TestConstants.CLIENT_FILE);
+		excelBuilder.createDocument(CLIENT_FILE);
 		excelBuilder.createLinkedSheetWithName(LINKED_SHEET_NAME);
 	}
 
@@ -56,8 +54,8 @@ public class XSSFBuilderTest {
 				NO_SUCH_BODY_ID_FIRST_SHEET_ROW_TEN };
 		excelBuilder.writeBodyIdsColumnToLinkedSheet(BODY_ID_MARKER, bodyIds);
 		final ListMultimap<String, String> bodyIdLinks = campaignProcessor.linkBodyIdWithCampaigns(bodyIds,
-				TestConstants.CAMPAIGN_FILE, VIN_MARKER);
-		excelBuilder.linkExistingBodyIds(bodyIdLinks, TestConstants.CAMPAIGN_FILE.getName());
+				CAMPAIGN_FILE, VIN_MARKER);
+		excelBuilder.linkExistingBodyIds(bodyIdLinks, CAMPAIGN_FILE.getName());
 		excelBuilder.saveToFile(LINKED_RESULT_PATH.toFile());
 		final Cell[] bodyIdCells = excelBuilder.getBodyIdCells();
 		assertEquals(REAL_BODY_ID_FIRST_SHEET_ROW_ONE, bodyIdCells[0].getStringCellValue());

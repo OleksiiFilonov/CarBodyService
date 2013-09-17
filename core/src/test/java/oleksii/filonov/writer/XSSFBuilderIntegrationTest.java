@@ -54,7 +54,7 @@ public class XSSFBuilderIntegrationTest {
 		final String[] uniqueBodyIds = columnExcelReader.getUniqueColumnValues(bodyIdSheet, BODY_ID_MARKER);
 		excelBuilder.writeBodyIdsColumnToLinkedSheet(BODY_ID_MARKER, uniqueBodyIds);
 		final ListMultimap<String, String> linkedBodyIdWithCampaigns = campaignProcessor.linkBodyIdWithCampaigns(
-				uniqueBodyIds, TestConstants.CAMPAIGN_FILE, VIN_MARKER);
+				uniqueBodyIds, CAMPAIGN_FILE, VIN_MARKER);
 		excelBuilder.linkExistingBodyIds(linkedBodyIdWithCampaigns, CAMPAIGN_FILE.getName());
 		excelBuilder.saveToFile(LINKED_RESULT_PATH.toFile());
 	}
