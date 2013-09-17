@@ -41,12 +41,13 @@ public class WorkbookBuilderIntegrationTest {
 
 	@Test
 	public void formLinkedDocument() throws IOException, InvalidFormatException {
-        DataBuilder excelBuilder = new WorkbookBuilder();
         final Workbook clientWB = WorkbookFactory.create(CLIENT_FILE);
+        Sheet clientSheet = clientWB.getSheetAt(0);
+        final String[] uniqueBodyIds = columnExcelReader.getColumnValues(clientSheet, BODY_ID_MARKER);
+        DataBuilder excelBuilder = new WorkbookBuilder();
         excelBuilder.createDocument(CLIENT_FILE);
-		excelBuilder.createLinkedSheetWithName(LINKED_SHEET_NAME);
-		final String[] uniqueBodyIds = columnExcelReader.getUniqueColumnValues(clientWB.getSheetAt(0), BODY_ID_MARKER);
-		excelBuilder.writeBodyIdsColumnToLinkedSheet(BODY_ID_MARKER, uniqueBodyIds);
+        excelBuilder.createLinkedSheetWithName(LINKED_SHEET_NAME);
+        excelBuilder.writeBodyIdsColumnToLinkedSheet(BODY_ID_MARKER, uniqueBodyIds);
 		final ListMultimap<String, String> linkedBodyIdWithCampaigns = campaignProcessor.linkBodyIdWithCampaigns(
 				uniqueBodyIds, CAMPAIGN_FILE, VIN_MARKER);
 		excelBuilder.linkExistingBodyIds(linkedBodyIdWithCampaigns, CAMPAIGN_FILE.getName());

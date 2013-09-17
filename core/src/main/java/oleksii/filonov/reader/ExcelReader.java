@@ -19,7 +19,7 @@ public class ExcelReader {
     public String[] readFirstSheetUniqueValues(final File fileToRead, final String columnMarker) {
         try {
             Workbook workbook = WorkbookFactory.create(fileToRead);
-            return this.columnExcelReader.getUniqueColumnValues(workbook.getSheetAt(0), columnMarker);
+            return this.columnExcelReader.getColumnValues(workbook.getSheetAt(0), columnMarker);
         } catch(InvalidFormatException | IOException e) {
             throw new ReadDataException("Exception when try to read clients info from file " + fileToRead, e);
         }

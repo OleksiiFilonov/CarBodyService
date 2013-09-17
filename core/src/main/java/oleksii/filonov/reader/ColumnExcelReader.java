@@ -1,18 +1,18 @@
 package oleksii.filonov.reader;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class ColumnExcelReader {
 
     private ColumnReaderHelper columnReaderHelper;
 
-    public String[] getUniqueColumnValues(final Sheet sheetToRead, final String columnMarker) {
+    public String[] getColumnValues(final Sheet sheetToRead, final String columnMarker) {
         final List<String> result = new ArrayList<>();
         final Iterator<Row> rows = sheetToRead.rowIterator();
         final int columnIndex = this.columnReaderHelper.findColumnIndex(rows, columnMarker);
