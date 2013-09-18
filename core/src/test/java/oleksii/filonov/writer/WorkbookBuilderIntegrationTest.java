@@ -6,13 +6,15 @@ import oleksii.filonov.reader.CampaignProcessor;
 import oleksii.filonov.reader.ColumnExcelReader;
 import oleksii.filonov.reader.ColumnReaderHelper;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Iterator;
 
 import static oleksii.filonov.TestConstants.*;
 
@@ -49,23 +51,8 @@ public class WorkbookBuilderIntegrationTest {
         excelBuilder.useWorkbook(clientWB);
 		final ListMultimap<String, String> linkedBodyIdWithCampaigns = campaignProcessor.linkBodyIdWithCampaigns(
 				bodyIds, TestConstants.CAMPAIGN_FILE, VIN_MARKER);
-		excelBuilder.assignTasks(bodyIds, linkedBodyIdWithCampaigns, TestConstants.CAMPAIGN_FILE.getName());
+		excelBuilder.assignTasks(bodyIds, linkedBodyIdWithCampaigns);
 		excelBuilder.saveToFile(LINKED_RESULT_PATH.toFile());
 	}
 
-    @Test
-    public void printHyperLinksFromResultLink() throws InvalidFormatException, IOException {
-        final Workbook clientWB = WorkbookFactory.create(LINKED_RESULT_PATH.toFile());
-        final Sheet campaignSheet = clientWB.getSheetAt(0);
-        final Iterator<Row> rows = campaignSheet.rowIterator();
-        rows.next();
-        final int columnIndex = 1;
-        while(rows.hasNext()) {
-            final Row row = rows.next();
-            final Cell cell = row.getCell(columnIndex);
-            if(this.columnReaderHelper.isStringType(cell)) {
-                System.out.println(cell.getRowIndex() + ":" + cell.getHyperlink().getAddress());
-            }
-        }
-    }
 }

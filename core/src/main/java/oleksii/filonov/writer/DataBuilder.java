@@ -12,9 +12,11 @@ public interface DataBuilder {
 
 	void useWorkbook(Workbook clientWorkBook) throws IOException, InvalidFormatException;
 
-    void assignTasks(Cell[] bodyIds, ListMultimap<String, String> linkedBodies, String pathToCampaignFile);
+    void assignTasks(Cell[] bodyIds, ListMultimap<String, String> linkedBodies);
 
     void saveToFile(File fileToSave) throws IOException;
+
+    void setPathToCampaignFile(String pathToCampaignFile);
 
 
 }

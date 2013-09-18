@@ -3,7 +3,6 @@ package oleksii.filonov.writer;
 import com.google.common.collect.ListMultimap;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFColor;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,14 +11,11 @@ import java.util.List;
 
 public class WorkbookBuilder implements DataBuilder {
 
-	private static final XSSFColor RED = new XSSFColor(new java.awt.Color(255, 0, 0));
-	private static final XSSFColor YELLOW = new XSSFColor(new java.awt.Color(255, 255, 0));
-	private static final XSSFColor GREEN = new XSSFColor(new java.awt.Color(51, 255, 51));
-
 	private Workbook clientWorkbook;
 	private CellStyle foundCellStyle;
     private CellStyle linkCellStyle;
 	private CreationHelper creationHelper;
+    private String pathToCampaignFile;
 
     @Override
 	public void useWorkbook(Workbook clientWorkbook) throws IOException, InvalidFormatException {
@@ -37,13 +33,18 @@ public class WorkbookBuilder implements DataBuilder {
 	}
 
     @Override
-	public void assignTasks(final Cell[] bodyIdCells, final ListMultimap<String, String> linkedBodies, final String pathToCampaignFile) {
+    public void setPathToCampaignFile(String pathToCampaignFile) {
+        this.pathToCampaignFile = pathToCampaignFile;
+    }
+
+    @Override
+	public void assignTasks(final Cell[] bodyIdCells, final ListMultimap<String, String> linkedBodies) {
 		for (final Cell bodyIdCell : bodyIdCells) {
 			final List<String> links = linkedBodies.get(bodyIdCell.getStringCellValue());
 			if (!links.isEmpty()) {
                 final Row bodyIdRow = bodyIdCell.getRow();
                 bodyIdCell.setCellStyle(foundCellStyle);
-				writeLinksForFoundCell(pathToCampaignFile, links, bodyIdRow);
+				writeLinksForFoundCell(bodyIdCell.getColumnIndex(), links, bodyIdRow);
 				int cellIndex = 1;
 				while (bodyIdRow.getCell(cellIndex) != null) {
 					++cellIndex;
@@ -52,9 +53,9 @@ public class WorkbookBuilder implements DataBuilder {
 		}
 	}
 
-	private void writeLinksForFoundCell(final String pathToCampaignFile, final List<String> links, final Row bodyIdRow) {
+	private void writeLinksForFoundCell(final int bodyIdColumnIndex, final List<String> links, final Row bodyIdRow) {
 		for (int i = 0; i < links.size(); i++) {
-			final Cell linkToVin = bodyIdRow.createCell(i + 1, Cell.CELL_TYPE_STRING);
+			final Cell linkToVin = bodyIdRow.createCell(bodyIdColumnIndex + i + 1, Cell.CELL_TYPE_STRING);
 			linkToVin.setCellValue(links.get(i));
 			final Hyperlink cellHyperlink = creationHelper.createHyperlink(Hyperlink.LINK_FILE);
 			cellHyperlink.setAddress(pathToCampaignFile + "#" + links.get(i));
