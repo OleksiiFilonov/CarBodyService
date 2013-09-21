@@ -35,6 +35,8 @@ public class WorkbookBuilderTest {
     private static final int SECOND_LINK_COLUMN_INDEX = 9;
     private static final String ANOTHER_BODY_ID_FOUND = "anotherFoundBodyId";
     private static final String LINK_3 = "Link3";
+    private static final int FOUND_ROW_INDEX = 7;
+    private static final int SHIFT_VALUE = 1;
 
     private ColumnReaderHelper columnReaderHelper;
 	private CampaignProcessor campaignProcessor;
@@ -70,6 +72,10 @@ public class WorkbookBuilderTest {
     private Row anotherFoundRow;
     @Mock
     private Cell linkToAnotherVinCell;
+    @Mock
+    private Sheet clientSheet;
+    @Mock
+    private Row rowForHyperLink2;
 
 
     @Before
@@ -90,10 +96,7 @@ public class WorkbookBuilderTest {
         when(clientWorkbook.createCellStyle() ).thenReturn(foundCellStyle).thenReturn(linkCellStyle);
         excelBuilder.useWorkbook(clientWorkbook);
         mockFoundCellWithTwoLinksBehaviour();
-        when(foundAnotherBodyIdCell.getStringCellValue()).thenReturn(ANOTHER_BODY_ID_FOUND);
-        when(foundAnotherBodyIdCell.getRow()).thenReturn(anotherFoundRow);
-        when(foundAnotherBodyIdCell.getColumnIndex()).thenReturn(FOUN_BODY_COLUMN_INDEX);
-        when(anotherFoundRow.createCell(FIRST_LINK_COLUMN_INDEX, Cell.CELL_TYPE_STRING)).thenReturn(linkToAnotherVinCell);
+        mockAnotherFoundCellBehaviour();
         when(creationHelper.createHyperlink(Hyperlink.LINK_FILE)).thenReturn(firstHyperLink).thenReturn(secondHyperLink).thenReturn(thirdHyperLink);
         when(notFoundBodyIdCell.getStringCellValue()).thenReturn("bodyIdNotFound");
     }
@@ -102,8 +105,19 @@ public class WorkbookBuilderTest {
         when(foundBodyIdCell.getStringCellValue()).thenReturn(BODY_ID_FOUND);
         when(foundBodyIdCell.getRow()).thenReturn(foundRow);
         when(foundBodyIdCell.getColumnIndex()).thenReturn(FOUN_BODY_COLUMN_INDEX);
+        when(foundRow.getSheet()).thenReturn(clientSheet);
+        when(foundRow.getRowNum()).thenReturn(FOUND_ROW_INDEX);
         when(foundRow.createCell(FIRST_LINK_COLUMN_INDEX, Cell.CELL_TYPE_STRING)).thenReturn(firstLinkToVinCell);
-        when(foundRow.createCell(SECOND_LINK_COLUMN_INDEX, Cell.CELL_TYPE_STRING)).thenReturn(secondLinkToVin);
+        when(clientSheet.createRow(FOUND_ROW_INDEX)).thenReturn(rowForHyperLink2);
+        when(rowForHyperLink2.createCell(FIRST_LINK_COLUMN_INDEX, Cell.CELL_TYPE_STRING)).thenReturn(secondLinkToVin);
+    }
+
+    private void mockAnotherFoundCellBehaviour() {
+        when(foundAnotherBodyIdCell.getStringCellValue()).thenReturn(ANOTHER_BODY_ID_FOUND);
+        when(foundAnotherBodyIdCell.getRow()).thenReturn(anotherFoundRow);
+        when(foundAnotherBodyIdCell.getColumnIndex()).thenReturn(FOUN_BODY_COLUMN_INDEX);
+        when(anotherFoundRow.getSheet()).thenReturn(clientSheet);
+        when(anotherFoundRow.createCell(FIRST_LINK_COLUMN_INDEX, Cell.CELL_TYPE_STRING)).thenReturn(linkToAnotherVinCell);
     }
 
     @Test
@@ -119,12 +133,14 @@ public class WorkbookBuilderTest {
 
     private void verifyCreatedDocument() throws IOException {
         verify(firstLinkToVinCell).setCellValue(LINK_1);
-        verify(secondLinkToVin).setCellValue(LINK_2);
         verify(firstHyperLink).setAddress(PATH_TO_CAMPAIGN_FILE + "#" + LINK_1);
+        verify(clientSheet).shiftRows(FOUND_ROW_INDEX, clientSheet.getLastRowNum(), SHIFT_VALUE);
+        verify(secondLinkToVin).setCellValue(LINK_2);
         verify(secondHyperLink).setAddress(PATH_TO_CAMPAIGN_FILE + "#" + LINK_2);
         verify(notFoundBodyIdCell, never()).getRow();
         verify(linkToAnotherVinCell).setCellValue(LINK_3);
         verify(thirdHyperLink).setAddress(PATH_TO_CAMPAIGN_FILE + "#" + LINK_3);
+        verify(foundRow, never()).createCell(SECOND_LINK_COLUMN_INDEX, Cell.CELL_TYPE_STRING);
         verify(anotherFoundRow, never()).createCell(SECOND_LINK_COLUMN_INDEX, Cell.CELL_TYPE_STRING);
         excelBuilder.saveToFile(LINKED_RESULT_PATH.toFile());
         verify(clientWorkbook).write(any(FileOutputStream.class));
