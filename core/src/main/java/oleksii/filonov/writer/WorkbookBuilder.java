@@ -45,7 +45,7 @@ public class WorkbookBuilder implements DataBuilder {
 			if (!links.isEmpty()) {
                 bodyIdCell.setCellStyle(foundCellStyle);
                 final Row bodyIdRow = bodyIdCell.getRow();
-				writeLinksForFoundCell(bodyIdCell.getColumnIndex(), links, bodyIdRow);
+				linkBodyIdsWithVINLists(bodyIdCell.getColumnIndex(), links, bodyIdRow);
 				int cellIndex = 1;
 				while (bodyIdRow.getCell(cellIndex) != null) {
 					++cellIndex;
@@ -54,31 +54,25 @@ public class WorkbookBuilder implements DataBuilder {
 		}
 	}
 
-	private void writeLinksForFoundCell(final int bodyIdColumnIndex, final List<String> links, final Row bodyIdRow) {
+	private void linkBodyIdsWithVINLists(final int bodyIdColumnIndex, final List<String> vinListIds, final Row bodyIdRow) {
 
-        createFirstLinkToTask(bodyIdColumnIndex, links, bodyIdRow);
+        addVinListToBodyId(bodyIdColumnIndex, vinListIds.get(0), bodyIdRow);
 
         final Sheet clientSheet = bodyIdRow.getSheet();
         final int bodyIdRowRowNum = bodyIdRow.getRowNum();
-        for (int i = 1; i < links.size(); i++) {
+        for (int i = 1; i < vinListIds.size(); i++) {
             clientSheet.shiftRows(bodyIdRowRowNum + i -1, clientSheet.getLastRowNum(), SHIFT_ROW_OFFSET);
-            final Row createdRow = clientSheet.createRow(bodyIdRowRowNum + i -1);
-            final Cell linkToVin = createdRow.createCell(bodyIdColumnIndex + 1, Cell.CELL_TYPE_STRING);
-            linkToVin.setCellValue(links.get(i));
-            final Hyperlink cellHyperlink = creationHelper.createHyperlink(Hyperlink.LINK_FILE);
-            cellHyperlink.setAddress(pathToCampaignFile + "#" + links.get(i));
-            cellHyperlink.setLabel(links.get(i));
-            linkToVin.setHyperlink(cellHyperlink);
-            linkToVin.setCellStyle(linkCellStyle);
+            final Row newRow = clientSheet.createRow(bodyIdRowRowNum + i -1);
+            addVinListToBodyId(bodyIdColumnIndex, vinListIds.get(i), newRow);
 		}
 	}
 
-    private void createFirstLinkToTask(final int bodyIdColumnIndex,final List<String> links,final Row bodyIdRow) {
+    private void addVinListToBodyId(final int bodyIdColumnIndex, final String vinListId, final Row bodyIdRow) {
         final Cell linkToVin = bodyIdRow.createCell(bodyIdColumnIndex + 1, Cell.CELL_TYPE_STRING);
-        linkToVin.setCellValue(links.get(0));
+        linkToVin.setCellValue(vinListId);
         final Hyperlink cellHyperlink = creationHelper.createHyperlink(Hyperlink.LINK_FILE);
-        cellHyperlink.setAddress(pathToCampaignFile + "#" + links.get(0));
-        cellHyperlink.setLabel(links.get(0));
+        cellHyperlink.setAddress(pathToCampaignFile + "#" + vinListId);
+        cellHyperlink.setLabel(vinListId);
         linkToVin.setHyperlink(cellHyperlink);
         linkToVin.setCellStyle(linkCellStyle);
     }
