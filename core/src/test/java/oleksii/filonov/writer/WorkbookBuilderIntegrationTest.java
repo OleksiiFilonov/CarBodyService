@@ -1,22 +1,21 @@
 package oleksii.filonov.writer;
 
 import com.google.common.collect.ListMultimap;
-import oleksii.filonov.TestConstants;
 import oleksii.filonov.reader.CampaignProcessor;
 import oleksii.filonov.reader.ColumnExcelReader;
 import oleksii.filonov.reader.ColumnReaderHelper;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.*;
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Iterator;
 
 import static oleksii.filonov.TestConstants.*;
+import static org.junit.Assert.assertThat;
 
 public class WorkbookBuilderIntegrationTest {
 
@@ -44,14 +43,19 @@ public class WorkbookBuilderIntegrationTest {
 	@Test
 	public void formLinkedDocument() throws IOException, InvalidFormatException {
         final Workbook clientWB = WorkbookFactory.create(CLIENT_FILE);
-        Sheet clientSheet = clientWB.getSheetAt(0);
+        final Sheet clientSheet = clientWB.getSheetAt(0);
         final Cell[] bodyIds = columnExcelReader.getColumnValues(clientSheet, BODY_ID_MARKER);
         DataBuilder excelBuilder = new WorkbookBuilder();
         excelBuilder.useWorkbook(clientWB);
 		final ListMultimap<String, String> linkedBodyIdWithCampaigns = campaignProcessor.linkBodyIdWithCampaigns(
-				bodyIds, TestConstants.CAMPAIGN_FILE, VIN_MARKER);
+				bodyIds, CAMPAIGN_FILE, VIN_MARKER);
 		excelBuilder.assignTasks(bodyIds, linkedBodyIdWithCampaigns);
 		excelBuilder.saveToFile(LINKED_RESULT_PATH.toFile());
-	}
+        final Workbook workbookForVerification = WorkbookFactory.create(CLIENT_FILE);
+        final Sheet verifyClientSheet = workbookForVerification.getSheetAt(0);
+        final Iterator<Row> clientIterator = verifyClientSheet.rowIterator();
+        //check for cell type
+        assertThat(columnReaderHelper.findColumnIndex(clientIterator, "'10C150'!B213"), CoreMatchers.equalTo(6));
+    }
 
 }
