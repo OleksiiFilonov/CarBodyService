@@ -19,17 +19,13 @@ import java.nio.file.Files;
 import static oleksii.filonov.TestConstants.LINKED_RESULT_PATH;
 import static oleksii.filonov.TestConstants.TARGET_RESOURCE;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WorkbookBuilderTest {
 
-    private static final String LINKED_SHEET_NAME = "Body";
-	private static final String BODY_ID_MARKER = "Номер кузова";
-	private static final String VIN_MARKER = "VIN";
-
-    private static final String REAL_BODY_ID_FIRST_SHEET_ROW_ONE = "KMHEC41BABA263951";
     private static final String BODY_ID_FOUND = "bodyIdFound";
     private static final String LINK_1 = "Link1";
     private static final String LINK_2 = "Link2";
@@ -37,6 +33,8 @@ public class WorkbookBuilderTest {
     private static final int FOUN_BODY_COLUMN_INDEX = 7;
     private static final int FIRST_LINK_COLUMN_INDEX = 8;
     private static final int SECOND_LINK_COLUMN_INDEX = 9;
+    private static final String ANOTHER_BODY_ID_FOUND = "anotherFoundBodyId";
+    private static final String LINK_3 = "Link3";
 
     private ColumnReaderHelper columnReaderHelper;
 	private CampaignProcessor campaignProcessor;
@@ -64,6 +62,14 @@ public class WorkbookBuilderTest {
     private Cell secondLinkToVin;
     @Mock
     private Hyperlink secondHyperLink;
+    @Mock
+    private Hyperlink thirdHyperLink;
+    @Mock
+    private Cell foundAnotherBodyIdCell;
+    @Mock
+    private Row anotherFoundRow;
+    @Mock
+    private Cell linkToAnotherVinCell;
 
 
     @Before
@@ -83,28 +89,45 @@ public class WorkbookBuilderTest {
         when(clientWorkbook.getCreationHelper()).thenReturn(creationHelper);
         when(clientWorkbook.createCellStyle() ).thenReturn(foundCellStyle).thenReturn(linkCellStyle);
         excelBuilder.useWorkbook(clientWorkbook);
+        mockFoundCellWithTwoLinksBehaviour();
+        when(foundAnotherBodyIdCell.getStringCellValue()).thenReturn(ANOTHER_BODY_ID_FOUND);
+        when(foundAnotherBodyIdCell.getRow()).thenReturn(anotherFoundRow);
+        when(foundAnotherBodyIdCell.getColumnIndex()).thenReturn(FOUN_BODY_COLUMN_INDEX);
+        when(anotherFoundRow.createCell(FIRST_LINK_COLUMN_INDEX, Cell.CELL_TYPE_STRING)).thenReturn(linkToAnotherVinCell);
+        when(creationHelper.createHyperlink(Hyperlink.LINK_FILE)).thenReturn(firstHyperLink).thenReturn(secondHyperLink).thenReturn(thirdHyperLink);
+        when(notFoundBodyIdCell.getStringCellValue()).thenReturn("bodyIdNotFound");
+    }
+
+    private void mockFoundCellWithTwoLinksBehaviour() {
         when(foundBodyIdCell.getStringCellValue()).thenReturn(BODY_ID_FOUND);
         when(foundBodyIdCell.getRow()).thenReturn(foundRow);
         when(foundBodyIdCell.getColumnIndex()).thenReturn(FOUN_BODY_COLUMN_INDEX);
         when(foundRow.createCell(FIRST_LINK_COLUMN_INDEX, Cell.CELL_TYPE_STRING)).thenReturn(firstLinkToVinCell);
         when(foundRow.createCell(SECOND_LINK_COLUMN_INDEX, Cell.CELL_TYPE_STRING)).thenReturn(secondLinkToVin);
-        when(creationHelper.createHyperlink(Hyperlink.LINK_FILE)).thenReturn(firstHyperLink).thenReturn(secondHyperLink);
-        when(notFoundBodyIdCell.getStringCellValue()).thenReturn("bodyIdNotFound");
     }
 
     @Test
 	public void formResultFileWithLinks() throws IOException, InvalidFormatException {
-		final Cell[] bodyIds = new Cell[] {foundBodyIdCell, notFoundBodyIdCell};
+		final Cell[] bodyIds = new Cell[] {foundBodyIdCell, notFoundBodyIdCell, foundAnotherBodyIdCell};
 		final ListMultimap<String, String> bodyIdLinks = LinkedListMultimap.create();
         bodyIdLinks.put(BODY_ID_FOUND, LINK_1);
         bodyIdLinks.put(BODY_ID_FOUND, LINK_2);
+        bodyIdLinks.put(ANOTHER_BODY_ID_FOUND, LINK_3);
 		excelBuilder.assignTasks(bodyIds, bodyIdLinks);
+        verifyCreatedDocument();
+	}
+
+    private void verifyCreatedDocument() throws IOException {
         verify(firstLinkToVinCell).setCellValue(LINK_1);
         verify(secondLinkToVin).setCellValue(LINK_2);
         verify(firstHyperLink).setAddress(PATH_TO_CAMPAIGN_FILE + "#" + LINK_1);
         verify(secondHyperLink).setAddress(PATH_TO_CAMPAIGN_FILE + "#" + LINK_2);
-		excelBuilder.saveToFile(LINKED_RESULT_PATH.toFile());
+        verify(notFoundBodyIdCell, never()).getRow();
+        verify(linkToAnotherVinCell).setCellValue(LINK_3);
+        verify(thirdHyperLink).setAddress(PATH_TO_CAMPAIGN_FILE + "#" + LINK_3);
+        verify(anotherFoundRow, never()).createCell(SECOND_LINK_COLUMN_INDEX, Cell.CELL_TYPE_STRING);
+        excelBuilder.saveToFile(LINKED_RESULT_PATH.toFile());
         verify(clientWorkbook).write(any(FileOutputStream.class));
-	}
+    }
 
 }
