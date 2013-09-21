@@ -58,11 +58,11 @@ public class WorkbookBuilder implements DataBuilder {
 
         createFirstLinkToTask(bodyIdColumnIndex, links, bodyIdRow);
 
+        final Sheet clientSheet = bodyIdRow.getSheet();
+        final int bodyIdRowRowNum = bodyIdRow.getRowNum();
         for (int i = 1; i < links.size(); i++) {
-            final Sheet clientSheet = bodyIdRow.getSheet();
-            final int shiftedRowNum = bodyIdRow.getRowNum();
-            clientSheet.shiftRows(shiftedRowNum, clientSheet.getLastRowNum(), SHIFT_ROW_OFFSET);
-            final Row createdRow = clientSheet.createRow(shiftedRowNum);
+            clientSheet.shiftRows(bodyIdRowRowNum + i -1, clientSheet.getLastRowNum(), SHIFT_ROW_OFFSET);
+            final Row createdRow = clientSheet.createRow(bodyIdRowRowNum + i -1);
             final Cell linkToVin = createdRow.createCell(bodyIdColumnIndex + 1, Cell.CELL_TYPE_STRING);
             linkToVin.setCellValue(links.get(i));
             final Hyperlink cellHyperlink = creationHelper.createHyperlink(Hyperlink.LINK_FILE);
@@ -73,7 +73,7 @@ public class WorkbookBuilder implements DataBuilder {
 		}
 	}
 
-    private void createFirstLinkToTask(int bodyIdColumnIndex, List<String> links, Row bodyIdRow) {
+    private void createFirstLinkToTask(final int bodyIdColumnIndex,final List<String> links,final Row bodyIdRow) {
         final Cell linkToVin = bodyIdRow.createCell(bodyIdColumnIndex + 1, Cell.CELL_TYPE_STRING);
         linkToVin.setCellValue(links.get(0));
         final Hyperlink cellHyperlink = creationHelper.createHyperlink(Hyperlink.LINK_FILE);
