@@ -1,10 +1,6 @@
 package oleksii.filonov.buttons.listeners;
 
-import static oleksii.filonov.model.RecordStatus.FOUND;
-import static oleksii.filonov.model.RecordStatus.NOT_FOUND;
-
-import java.util.List;
-
+import com.google.common.collect.ListMultimap;
 import oleksii.filonov.gui.ComponentsLocator;
 import oleksii.filonov.gui.MainFileChooser;
 import oleksii.filonov.gui.MainTable;
@@ -12,7 +8,10 @@ import oleksii.filonov.model.Record;
 import oleksii.filonov.reader.CampaignProcessor;
 import oleksii.filonov.reader.ColumnReaderHelper;
 
-import com.google.common.collect.ListMultimap;
+import java.util.List;
+
+import static oleksii.filonov.model.RecordStatus.FOUND;
+import static oleksii.filonov.model.RecordStatus.NOT_FOUND;
 
 public class LinksCalculator {
 
@@ -32,7 +31,7 @@ public class LinksCalculator {
 		for (int i = 0; i < records.size(); i++) {
 			bodyIds[i] = records.get(i).getBodyId();
 		}
-		bodyIdLinks = processor.linkBodyIdWithCampaigns(bodyIds, fileChooser.getCampaignFile(), VIN_COLUMN_MARKER);
+		//bodyIdLinks = processor.linkBodyIdWithCampaigns(bodyIds, fileChooser.getCampaignFile(), VIN_COLUMN_MARKER);
 		table.getModel().setLinkColumnCount(processor.getMaxReferenceNumber());
 		for (final Record record : records) {
 			final List<String> links = bodyIdLinks.get(record.getBodyId());

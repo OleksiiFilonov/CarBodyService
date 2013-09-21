@@ -5,6 +5,9 @@ import oleksii.filonov.reader.ReadDataException;
 import oleksii.filonov.writer.DataBuilder;
 import oleksii.filonov.writer.WorkbookBuilder;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -29,11 +32,9 @@ public class SaveLinkedResultsListener extends FileChooserListener {
 			getFileChooser().setLinkedBodyFile(getFileChooser().getSelectedFile());
 			try {
 				linksCalculator.calculate(getFileChooser());
-				documentBuilder.useWorkbook(getFileChooser().getCampaignFile());
-				documentBuilder.createLinkedSheetWithName("Body");
-				documentBuilder.writeBodyIdsColumnToLinkedSheet("Номер Кузова", linksCalculator.getBodyIds());
-				documentBuilder.assignTasks(linksCalculator.getBodyIdLinks(), getFileChooser()
-                        .getCampaignFile().getName());
+                Workbook clientWorkBook = WorkbookFactory.create(getFileChooser().getCampaignFile());
+                documentBuilder.useWorkbook(clientWorkBook);
+				documentBuilder.assignTasks(new Cell[] {}, linksCalculator.getBodyIdLinks());
 				documentBuilder.saveToFile(getFileChooser().getLinkedBodyFile());
 			} catch (final ReadDataException | InvalidFormatException exc) {
 				System.err.println("Error while calculation links file: " + exc.getLocalizedMessage());

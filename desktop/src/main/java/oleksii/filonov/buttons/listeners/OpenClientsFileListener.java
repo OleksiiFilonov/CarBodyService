@@ -1,18 +1,16 @@
 package oleksii.filonov.buttons.listeners;
 
-import java.awt.event.ActionEvent;
-import java.io.File;
-
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-
 import oleksii.filonov.gui.ComponentsLocator;
 import oleksii.filonov.gui.MainFileChooser;
 import oleksii.filonov.gui.MainTable;
 import oleksii.filonov.model.Record;
 import oleksii.filonov.reader.ExcelReader;
 import oleksii.filonov.reader.ReadDataException;
+import org.apache.poi.ss.usermodel.Cell;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.io.File;
 
 public class OpenClientsFileListener extends FileChooserListener {
 
@@ -32,11 +30,11 @@ public class OpenClientsFileListener extends FileChooserListener {
 			final File selectedFile = getFileChooser().getSelectedFile();
 			getFileChooser().setBodyIdFile(selectedFile);
 			try {
-				final String[] bodyIds = excelReader.readFirstSheetUniqueValues(selectedFile, BODY_ID_MARKER);
+				final Cell[] bodyIds = excelReader.readFirstSheetUniqueValues(selectedFile, BODY_ID_MARKER);
 				final MainTable table = ComponentsLocator.getInstanse().getTable();
 				table.getModel().removeAllRows();
-				for (final String bodyId : bodyIds) {
-					table.getModel().addRow(new Record(bodyId));
+				for (final Cell bodyId : bodyIds) {
+					table.getModel().addRow(new Record(bodyId.getStringCellValue()));
 				}
 				table.getModel().fireTableRowsInserted(0, bodyIds.length - 1);
 			} catch (final ReadDataException exc) {

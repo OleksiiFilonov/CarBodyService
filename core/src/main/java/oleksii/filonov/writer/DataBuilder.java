@@ -18,5 +18,4 @@ public interface DataBuilder {
 
     void setPathToCampaignFile(String pathToCampaignFile);
 
-
 }
