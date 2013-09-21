@@ -20,7 +20,6 @@ import static oleksii.filonov.TestConstants.*;
 
 public class WorkbookBuilderIntegrationTest {
 
-	private static final String LINKED_SHEET_NAME = "Body";
 	private static final String BODY_ID_MARKER = "Номер кузова";
 	private static final String VIN_MARKER = "VIN";
 

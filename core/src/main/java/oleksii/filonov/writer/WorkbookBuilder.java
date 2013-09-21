@@ -61,8 +61,8 @@ public class WorkbookBuilder implements DataBuilder {
         final Sheet clientSheet = bodyIdRow.getSheet();
         final int bodyIdRowRowNum = bodyIdRow.getRowNum();
         for (int i = 1; i < vinListIds.size(); i++) {
-            clientSheet.shiftRows(bodyIdRowRowNum + i -1, clientSheet.getLastRowNum(), SHIFT_ROW_OFFSET);
-            final Row newRow = clientSheet.createRow(bodyIdRowRowNum + i -1);
+            clientSheet.shiftRows(bodyIdRowRowNum + i, clientSheet.getLastRowNum(), SHIFT_ROW_OFFSET);
+            final Row newRow = clientSheet.createRow(bodyIdRowRowNum + i);
             addVinListToBodyId(bodyIdColumnIndex, vinListIds.get(i), newRow);
 		}
 	}
