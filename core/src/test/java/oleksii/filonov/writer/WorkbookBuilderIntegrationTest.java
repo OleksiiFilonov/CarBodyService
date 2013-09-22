@@ -63,4 +63,20 @@ public class WorkbookBuilderIntegrationTest {
         assertThat(columnReaderHelper.findColumnIndex(clientIterator, "20CR22"), LINK_COL_INDEX_MATCHER);
     }
 
+    @Test
+    public void read() throws IOException, InvalidFormatException {
+        final Workbook workbookForVerification = WorkbookFactory.create(LINKED_RESULT_PATH.toFile());
+        final Sheet verifyClientSheet = workbookForVerification.getSheetAt(0);
+        final Iterator<Row> clientIterator = verifyClientSheet.rowIterator();
+        while (clientIterator.hasNext()) {
+            Row row = clientIterator.next();
+            Cell cell = row.getCell(6);
+            if (cell != null) {
+                Hyperlink hyperlink = cell.getHyperlink();
+                if (hyperlink != null)
+                    System.out.println(hyperlink.getAddress());
+            }
+        }
+    }
+
 }
