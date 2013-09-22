@@ -28,6 +28,7 @@ public class WorkbookBuilder implements DataBuilder {
 
 	@Override
 	public void saveToFile(final File fileToSave) throws IOException {
+        clientWorkbook.getSheetAt(0).autoSizeColumn(6);
 		final FileOutputStream recordStream = new FileOutputStream(fileToSave);
 		clientWorkbook.write(recordStream);
 		recordStream.close();

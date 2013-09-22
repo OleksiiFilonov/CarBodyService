@@ -9,7 +9,6 @@ import org.apache.poi.ss.usermodel.*;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -45,7 +44,6 @@ public class WorkbookBuilderIntegrationTest {
     }
 
 	@Test
-    @Ignore
 	public void formLinkedDocument() throws IOException, InvalidFormatException {
         final Workbook clientWB = WorkbookFactory.create(CLIENT_FILE);
         final Sheet clientSheet = clientWB.getSheetAt(0);
