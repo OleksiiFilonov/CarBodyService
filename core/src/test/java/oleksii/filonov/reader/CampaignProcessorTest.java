@@ -29,8 +29,9 @@ public class CampaignProcessorTest {
             new StringCell(NO_SUCH_BODY_ID_FIRST_SHEET_ROW_TEN),
             new StringCell(REAL_BODY_ID_MEET_THREE_TIMES_ANOTHER) };
 	private static final String[] COMPAIGN_FILE = new String[] { "src", "test", "resources", "Campaign.xlsx" };
+    private static final int VIN_COLUMN_INDEX = 1;
 
-	private CampaignProcessor processor;
+    private CampaignProcessor processor;
 
 	@Before
 	public void setUp() {
@@ -39,32 +40,38 @@ public class CampaignProcessorTest {
 	}
 
 	@Test
-	public void linkBodyIdWithCampaig() {
-		final ListMultimap<String, String> resultMap = processor.linkBodyIdWithCampaigns(
+	public void linkBodyIdWithCampaign() {
+		final ListMultimap<String, Cell> resultMap = processor.linkBodyIdWithCampaigns(
                 BODY_IDS, TestConstants.CAMPAIGN_FILE, VIN_MARKER);
 		assertThat(processor.getMaxReferenceNumber(), equalTo(MAX_FOUND_LINKS));
 
 		assertThat(resultMap.get(REAL_BODY_ID_MEET_THREE_TIMES).size(), equalTo(3));
-		assertThat(resultMap.get(REAL_BODY_ID_MEET_THREE_TIMES).get(0), equalTo("'10C061'!B122"));
-		assertThat(resultMap.get(REAL_BODY_ID_MEET_THREE_TIMES).get(1), equalTo("'10C116'!B335"));
-		assertThat(resultMap.get(REAL_BODY_ID_MEET_THREE_TIMES).get(2), equalTo("'31C017'!B473"));
+        assertVinListCell(resultMap.get(REAL_BODY_ID_MEET_THREE_TIMES).get(0), "10C061",  121);
+        assertVinListCell(resultMap.get(REAL_BODY_ID_MEET_THREE_TIMES).get(1), "10C116",  334);
+        assertVinListCell(resultMap.get(REAL_BODY_ID_MEET_THREE_TIMES).get(2), "31C017",  472);
 
-		assertThat(resultMap.get(REAL_BODY_ID_FIRST_SHEET_ROW_ONE).size(), equalTo(1));
-		assertThat(resultMap.get(REAL_BODY_ID_FIRST_SHEET_ROW_ONE).get(0), equalTo("'10C029'!B2"));
+        assertThat(resultMap.get(REAL_BODY_ID_FIRST_SHEET_ROW_ONE).size(), equalTo(1));
+        assertVinListCell(resultMap.get(REAL_BODY_ID_FIRST_SHEET_ROW_ONE).get(0), "10C029",  1);
 
-		assertThat(resultMap.get(REAL_BODY_ID_MEET_TWICE).size(), equalTo(2));
-		assertThat(resultMap.get(REAL_BODY_ID_MEET_TWICE).get(0), equalTo("'10C116'!B1085"));
-		assertThat(resultMap.get(REAL_BODY_ID_MEET_TWICE).get(1), equalTo("'10C150'!B684"));
+        assertThat(resultMap.get(REAL_BODY_ID_MEET_TWICE).size(), equalTo(2));
+        assertVinListCell(resultMap.get(REAL_BODY_ID_MEET_TWICE).get(0), "10C116",  1084);
+        assertVinListCell(resultMap.get(REAL_BODY_ID_MEET_TWICE).get(1), "10C150",  683);
 
-		assertThat(resultMap.get(REAL_BODY_ID_FIRST_SHEET_ROW_TEN).size(), equalTo(1));
-		assertThat(resultMap.get(REAL_BODY_ID_FIRST_SHEET_ROW_TEN).get(0), equalTo("'10C029'!B11"));
+        assertThat(resultMap.get(REAL_BODY_ID_FIRST_SHEET_ROW_TEN).size(), equalTo(1));
+        assertVinListCell(resultMap.get(REAL_BODY_ID_FIRST_SHEET_ROW_TEN).get(0), "10C029",  10);
 
-		assertThat(resultMap.get(NO_SUCH_BODY_ID_FIRST_SHEET_ROW_TEN).size(), equalTo(0));
+        assertThat(resultMap.get(NO_SUCH_BODY_ID_FIRST_SHEET_ROW_TEN).size(), equalTo(0));
 
-		assertThat(resultMap.get(REAL_BODY_ID_MEET_THREE_TIMES_ANOTHER).size(), equalTo(3));
-		assertThat(resultMap.get(REAL_BODY_ID_MEET_THREE_TIMES_ANOTHER).get(0), equalTo("'10CR07'!B758"));
-		assertThat(resultMap.get(REAL_BODY_ID_MEET_THREE_TIMES_ANOTHER).get(1), equalTo("'10CR08'!B1045"));
-		assertThat(resultMap.get(REAL_BODY_ID_MEET_THREE_TIMES_ANOTHER).get(2), equalTo("'20CR22'!B10264"));
+        assertThat(resultMap.get(REAL_BODY_ID_MEET_THREE_TIMES_ANOTHER).size(), equalTo(3));
+        assertVinListCell(resultMap.get(REAL_BODY_ID_MEET_THREE_TIMES_ANOTHER).get(0), "10CR07",  757);
+        assertVinListCell(resultMap.get(REAL_BODY_ID_MEET_THREE_TIMES_ANOTHER).get(1), "10CR08",  1044);
+        assertVinListCell(resultMap.get(REAL_BODY_ID_MEET_THREE_TIMES_ANOTHER).get(2), "20CR22",  10263);
 	}
+
+    private void assertVinListCell(final Cell bodyIdFound, final String vinSheetName,final int vinRowIndex) {
+        assertThat(bodyIdFound.getSheet().getSheetName(), equalTo(vinSheetName));
+        assertThat(bodyIdFound.getColumnIndex(), equalTo(VIN_COLUMN_INDEX));
+        assertThat(bodyIdFound.getRowIndex(), equalTo(vinRowIndex));
+    }
 
 }

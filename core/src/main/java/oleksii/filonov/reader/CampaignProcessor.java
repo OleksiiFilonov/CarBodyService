@@ -19,17 +19,14 @@ public class CampaignProcessor {
 
 	private int maxReferenceNumber;
 
-	private static final int OFFSET = 1;
-	private static final char[] COLUMN_INDEXES = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
-			'P', 'Q', 'R', 'S', 'T', 'Y', 'V', 'W', 'X', 'Y', 'Z' };
 
-	public ListMultimap<String, String> linkBodyIdWithCampaigns(final Cell[] bodyIds, final File campaignFile,
+	public ListMultimap<String, Cell> linkBodyIdWithCampaigns(final Cell[] bodyIds, final File campaignFile,
 			final String vinColumnMarker) {
 		final String [] bodyIdsToProcess = new String[bodyIds.length];
         for (int i = 0; i < bodyIds.length; ++i) {
             bodyIdsToProcess[i] = bodyIds[i].getStringCellValue();
         }
-        final ListMultimap<String, String> result = LinkedListMultimap.create(bodyIds.length);
+        final ListMultimap<String, Cell> result = LinkedListMultimap.create(bodyIds.length);
 		Arrays.sort(bodyIdsToProcess);
 		try {
 			final Workbook campaignWB = WorkbookFactory.create(campaignFile);
@@ -45,7 +42,7 @@ public class CampaignProcessor {
 						final int bodyIndex = Arrays.binarySearch(bodyIdsToProcess, vinCell.getStringCellValue());
 						if (bodyIndex > -1) {
 							final String foundBodyId = bodyIdsToProcess[bodyIndex];
-							result.put(foundBodyId, linkToCell(vinCell));
+							result.put(foundBodyId, vinCell);
 							maxReferenceNumber = Math.max(maxReferenceNumber, result.get(foundBodyId).size());
 						}
 					}
@@ -57,21 +54,12 @@ public class CampaignProcessor {
 		return result;
 	}
 
-	private String linkToCell(final Cell vinCell) {
-		return "'" + vinCell.getSheet().getSheetName() + "'!" + COLUMN_INDEXES[vinCell.getColumnIndex()]
-				+ (vinCell.getRowIndex() + OFFSET);
-	}
-
 	public int getMaxReferenceNumber() {
 		return maxReferenceNumber;
 	}
 
 	public void setColumnReaderHelper(final ColumnReaderHelper columnReaderHelper) {
 		this.columnReaderHelper = columnReaderHelper;
-	}
-
-	public ColumnReaderHelper getColumnReaderHelper() {
-		return columnReaderHelper;
 	}
 
 }

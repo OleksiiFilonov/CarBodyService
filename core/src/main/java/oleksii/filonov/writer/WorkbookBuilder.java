@@ -12,6 +12,10 @@ import java.util.List;
 public class WorkbookBuilder implements DataBuilder {
 
     private static final int SHIFT_ROW_OFFSET = 1;
+    private static final int OFFSET = 1;
+    private static final char[] COLUMN_INDEXES = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
+            'P', 'Q', 'R', 'S', 'T', 'Y', 'V', 'W', 'X', 'Y', 'Z' };
+
     private Workbook clientWorkbook;
 	private CellStyle foundCellStyle;
     private CellStyle linkCellStyle;
@@ -89,5 +93,10 @@ public class WorkbookBuilder implements DataBuilder {
         foundCellStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
 		foundCellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
 	}
+
+    private String linkToCell(final Cell vinCell) {
+        return "'" + vinCell.getSheet().getSheetName() + "'!" + COLUMN_INDEXES[vinCell.getColumnIndex()]
+                + (vinCell.getRowIndex() + OFFSET);
+    }
 
 }
