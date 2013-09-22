@@ -1,22 +1,18 @@
 package oleksii.filonov.writer;
 
-import com.google.common.collect.ListMultimap;
-import oleksii.filonov.reader.CampaignProcessor;
-import oleksii.filonov.reader.ColumnExcelReader;
-import oleksii.filonov.reader.ColumnReaderHelper;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.*;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matcher;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Iterator;
-
 import static oleksii.filonov.TestConstants.*;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
+
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
+
+import com.google.common.collect.*;
+import oleksii.filonov.reader.*;
+import org.apache.poi.openxml4j.exceptions.*;
+import org.apache.poi.ss.usermodel.*;
+import org.hamcrest.*;
+import org.junit.*;
 
 public class WorkbookBuilderIntegrationTest {
 
@@ -50,20 +46,21 @@ public class WorkbookBuilderIntegrationTest {
         final Cell[] bodyIds = columnExcelReader.getColumnValues(clientSheet, BODY_ID_MARKER);
         DataBuilder excelBuilder = new WorkbookBuilder();
         excelBuilder.useWorkbook(clientWB);
+        excelBuilder.setPathToCampaignFile(CAMPAIGN_FILE.getName());
 		final ListMultimap<String, Cell> linkedBodyIdWithCampaigns = campaignProcessor.linkBodyIdWithCampaigns(
 				bodyIds, CAMPAIGN_FILE, VIN_MARKER);
-		//excelBuilder.assignTasks(bodyIds, linkedBodyIdWithCampaigns);
+		excelBuilder.assignTasks(bodyIds, linkedBodyIdWithCampaigns);
 		excelBuilder.saveToFile(LINKED_RESULT_PATH.toFile());
         final Workbook workbookForVerification = WorkbookFactory.create(LINKED_RESULT_PATH.toFile());
         final Sheet verifyClientSheet = workbookForVerification.getSheetAt(0);
         final Iterator<Row> clientIterator = verifyClientSheet.rowIterator();
         //check for cell type
-        assertThat(columnReaderHelper.findColumnIndex(clientIterator, "'10C150'!B213"), LINK_COL_INDEX_MATCHER);
-        assertThat(columnReaderHelper.findColumnIndex(clientIterator, "'10C116'!B1085"), LINK_COL_INDEX_MATCHER);
-        assertThat(columnReaderHelper.findColumnIndex(clientIterator, "'10C150'!B684"), LINK_COL_INDEX_MATCHER);
-        assertThat(columnReaderHelper.findColumnIndex(clientIterator, "'10CR07'!B758"), LINK_COL_INDEX_MATCHER);
-        assertThat(columnReaderHelper.findColumnIndex(clientIterator, "'10CR08'!B1045"), LINK_COL_INDEX_MATCHER);
-        assertThat(columnReaderHelper.findColumnIndex(clientIterator, "'20CR22'!B10264"), LINK_COL_INDEX_MATCHER);
+        assertThat(columnReaderHelper.findColumnIndex(clientIterator, "10C150"), LINK_COL_INDEX_MATCHER);
+        assertThat(columnReaderHelper.findColumnIndex(clientIterator, "10C116"), LINK_COL_INDEX_MATCHER);
+        assertThat(columnReaderHelper.findColumnIndex(clientIterator, "10C150"), LINK_COL_INDEX_MATCHER);
+        assertThat(columnReaderHelper.findColumnIndex(clientIterator, "10CR07"), LINK_COL_INDEX_MATCHER);
+        assertThat(columnReaderHelper.findColumnIndex(clientIterator, "10CR08"), LINK_COL_INDEX_MATCHER);
+        assertThat(columnReaderHelper.findColumnIndex(clientIterator, "20CR22"), LINK_COL_INDEX_MATCHER);
     }
 
 }

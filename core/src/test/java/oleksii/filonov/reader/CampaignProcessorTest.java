@@ -1,13 +1,12 @@
 package oleksii.filonov.reader;
 
-import com.google.common.collect.ListMultimap;
-import oleksii.filonov.TestConstants;
-import org.apache.poi.ss.usermodel.Cell;
-import org.junit.Before;
-import org.junit.Test;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import com.google.common.collect.*;
+import oleksii.filonov.*;
+import org.apache.poi.ss.usermodel.*;
+import org.junit.*;
 
 public class CampaignProcessorTest {
 	private static final int MAX_FOUND_LINKS = 3;
@@ -28,7 +27,6 @@ public class CampaignProcessorTest {
             new StringCell(REAL_BODY_ID_FIRST_SHEET_ROW_TEN),
             new StringCell(NO_SUCH_BODY_ID_FIRST_SHEET_ROW_TEN),
             new StringCell(REAL_BODY_ID_MEET_THREE_TIMES_ANOTHER) };
-	private static final String[] COMPAIGN_FILE = new String[] { "src", "test", "resources", "Campaign.xlsx" };
     private static final int VIN_COLUMN_INDEX = 1;
 
     private CampaignProcessor processor;
