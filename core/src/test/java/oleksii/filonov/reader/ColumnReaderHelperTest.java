@@ -20,6 +20,8 @@ public class ColumnReaderHelperTest {
     private static final String BODY_ID_MARKER = "Номер кузова";
     private static final String WRONG_COLUMN_MARKER = "noSuchColumnName";
     private static final int BODY_ID_COLUMN_INDEX = 5;
+    private static final String VIN_LIST_TITLE = "Список VIN";
+    private static final String VIN_DESCRIPTION = "Описание";
 
     private Sheet bodyIdSheet;
 
@@ -67,13 +69,27 @@ public class ColumnReaderHelperTest {
         assertFalse(this.columnReaderHelper.isStringType(stringTypeCell));
     }
 
-    @Ignore
     @Test
-    public void printHyperLinksFromCompaign() throws InvalidFormatException, IOException {
-        final Workbook clientWB = WorkbookFactory.create(CAMPAIGN_FILE);
-        final Sheet campaignSheet = clientWB.getSheetAt(0);
-        final Iterator<Row> rowIterator = campaignSheet.rowIterator();
-        final int columnIndex = this.columnReaderHelper.findCell(rowIterator, "Список VIN").getColumnIndex();
+    public void findCellFrom() throws IOException, InvalidFormatException {
+        final Iterator<Row> rowIterator = getCampaignVinListIterator();
+        final Cell vinLIstTitleCell = columnReaderHelper.findCell(rowIterator, VIN_LIST_TITLE);
+        final Cell descriptionTitleCell = columnReaderHelper.findCellFrom(vinLIstTitleCell, rowIterator, VIN_DESCRIPTION);
+        assertEquals(VIN_DESCRIPTION, descriptionTitleCell.getStringCellValue());
+    }
+
+    @Test(expected = ReadDataException.class)
+    public void shouldNotFindCellFromBecauseOfInvalidOrder() throws IOException, InvalidFormatException {
+        final Iterator<Row> rowIterator = getCampaignVinListIterator();
+        final Cell vinLIstTitleCell = columnReaderHelper.findCell(rowIterator, VIN_DESCRIPTION);
+        final Cell descriptionTitleCell = columnReaderHelper.findCellFrom(vinLIstTitleCell, rowIterator, VIN_LIST_TITLE);
+        assertEquals(VIN_DESCRIPTION, descriptionTitleCell.getStringCellValue());
+    }
+
+    @Test
+    @Ignore
+    public void printHyperLinksFromCampaign() throws InvalidFormatException, IOException {
+        final Iterator<Row> rowIterator = getCampaignVinListIterator();
+        final int columnIndex = this.columnReaderHelper.findCell(rowIterator, VIN_LIST_TITLE).getColumnIndex();
         while(rowIterator.hasNext()) {
             final Row row = rowIterator.next();
             final Cell cell = row.getCell(columnIndex);
@@ -81,6 +97,12 @@ public class ColumnReaderHelperTest {
                 System.out.println(cell.getHyperlink().getAddress());
             }
         }
+    }
+
+    private Iterator<Row> getCampaignVinListIterator() throws IOException, InvalidFormatException {
+        final Workbook campaignWB = WorkbookFactory.create(CAMPAIGN_FILE);
+        final Sheet campaignSheet = campaignWB.getSheetAt(0);
+        return campaignSheet.rowIterator();
     }
 
 
