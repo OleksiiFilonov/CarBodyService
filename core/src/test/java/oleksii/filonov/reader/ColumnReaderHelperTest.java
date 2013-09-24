@@ -1,25 +1,24 @@
 package oleksii.filonov.reader;
 
+import static oleksii.filonov.TestConstants.CAMPAIGN_FILE;
+import static oleksii.filonov.TestConstants.CLIENT_FILE;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+import java.util.Iterator;
+
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.Iterator;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 public class ColumnReaderHelperTest {
 
     private static final String BODY_ID_MARKER = "Номер кузова";
     private static final String WRONG_COLUMN_MARKER = "noSuchColumnName";
-    private static final String[] BODY_ID_SOURCE = new String[] { "src", "test", "resources", "Clients.xls" };
-    private static final String[] COMPAIGN_FILE = new String[] { "src", "test", "resources", "Campaign.xlsx" };
     private static final int BODY_ID_COLUMN_INDEX = 5;
 
     private Sheet bodyIdSheet;
@@ -28,7 +27,7 @@ public class ColumnReaderHelperTest {
 
     @Before
     public void setUp() throws InvalidFormatException, IOException {
-        final Workbook clientWB = WorkbookFactory.create(Paths.get(".", BODY_ID_SOURCE).toFile());
+        final Workbook clientWB = WorkbookFactory.create(CLIENT_FILE);
         this.bodyIdSheet = clientWB.getSheetAt(0);
     }
 
@@ -71,7 +70,7 @@ public class ColumnReaderHelperTest {
     @Ignore
     @Test
     public void printHyperLinksFromCompaign() throws InvalidFormatException, IOException {
-        final Workbook clientWB = WorkbookFactory.create(Paths.get("", COMPAIGN_FILE).toFile());
+        final Workbook clientWB = WorkbookFactory.create(CAMPAIGN_FILE);
         final Sheet compaignSheet = clientWB.getSheetAt(0);
         final Iterator<Row> rows = compaignSheet.rowIterator();
         final int columnIndex = this.columnReaderHelper.findColumnCell(rows, "Список VIN");
