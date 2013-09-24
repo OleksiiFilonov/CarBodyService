@@ -9,26 +9,26 @@ import org.apache.poi.ss.usermodel.Row;
 
 public class ColumnReaderHelper {
 
-	public int findColumnCell(final Iterator<Row> rows, final String lookUpValue) {
-		while (rows.hasNext()) {
-			final Row row = rows.next();
-			final int columnIndex = lookUpColumnId(row, lookUpValue);
-			if (columnIndex > -1) {
-				return columnIndex;
+	public Cell findCell(final Iterator<Row> rowsIterator, final String lookUpValue) {
+		while (rowsIterator.hasNext()) {
+			final Row row = rowsIterator.next();
+			final Cell foundCell = lookUpColumnId(row, lookUpValue);
+			if (foundCell != null) {
+				return foundCell;
 			}
 		}
 		throw new ReadDataException(String.format("Колонка \"%s\" не найдена", lookUpValue));
 	}
 
-	private int lookUpColumnId(final Row row, final String lookUpValue) {
+	private Cell lookUpColumnId(final Row row, final String lookUpValue) {
 		for (final Cell cell : row) {
 			if (cell.getCellType() == CELL_TYPE_STRING) {
 				if (lookUpValue.equalsIgnoreCase(cell.getStringCellValue().trim())) {
-					return cell.getColumnIndex();
+					return cell;
 				}
 			}
 		}
-		return -1;
+        return null;
 	}
 
 	public boolean isStringType(final Cell cell) {

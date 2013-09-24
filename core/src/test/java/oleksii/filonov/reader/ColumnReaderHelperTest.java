@@ -34,14 +34,14 @@ public class ColumnReaderHelperTest {
     @Test
     public void findBodyIdColumnIndex() {
         assertEquals(BODY_ID_COLUMN_INDEX,
-                this.columnReaderHelper.findColumnCell(this.bodyIdSheet.iterator(), BODY_ID_MARKER));
+                this.columnReaderHelper.findCell(this.bodyIdSheet.iterator(), BODY_ID_MARKER).getColumnIndex());
     }
 
     @Test
     public void shouldNotFindBodyIdColumnIndex() {
         final String columnToRead = WRONG_COLUMN_MARKER;
         try {
-            this.columnReaderHelper.findColumnCell(this.bodyIdSheet.iterator(), columnToRead);
+            this.columnReaderHelper.findCell(this.bodyIdSheet.iterator(), columnToRead);
             fail(String.format("The test shouldn't find the column \"%s\" in source file", columnToRead));
         } catch(final ReadDataException exc) {
         }
@@ -71,11 +71,11 @@ public class ColumnReaderHelperTest {
     @Test
     public void printHyperLinksFromCompaign() throws InvalidFormatException, IOException {
         final Workbook clientWB = WorkbookFactory.create(CAMPAIGN_FILE);
-        final Sheet compaignSheet = clientWB.getSheetAt(0);
-        final Iterator<Row> rows = compaignSheet.rowIterator();
-        final int columnIndex = this.columnReaderHelper.findColumnCell(rows, "Список VIN");
-        while(rows.hasNext()) {
-            final Row row = rows.next();
+        final Sheet campaignSheet = clientWB.getSheetAt(0);
+        final Iterator<Row> rowIterator = campaignSheet.rowIterator();
+        final int columnIndex = this.columnReaderHelper.findCell(rowIterator, "Список VIN").getColumnIndex();
+        while(rowIterator.hasNext()) {
+            final Row row = rowIterator.next();
             final Cell cell = row.getCell(columnIndex);
             if(this.columnReaderHelper.isStringType(cell)) {
                 System.out.println(cell.getHyperlink().getAddress());

@@ -31,7 +31,7 @@ public class CampaignProcessor {
 			for (int sheetIndex = 1; sheetIndex < numbersOfSheet; sheetIndex++) {
 				final Sheet vinSheet = campaignWB.getSheetAt(sheetIndex);
 				final Iterator<Row> vinRows = vinSheet.rowIterator();
-				final int vinColumnIndex = columnReaderHelper.findColumnCell(vinRows, vinColumnMarker);
+				final int vinColumnIndex = columnReaderHelper.findCell(vinRows, vinColumnMarker).getColumnIndex();
 				while (vinRows.hasNext()) {
 					final Row vinRow = vinRows.next();
 					final Cell vinCell = vinRow.getCell(vinColumnIndex);

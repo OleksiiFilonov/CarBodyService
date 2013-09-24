@@ -55,12 +55,16 @@ public class WorkbookBuilderIntegrationTest {
         final Sheet verifyClientSheet = workbookForVerification.getSheetAt(0);
         final Iterator<Row> clientIterator = verifyClientSheet.rowIterator();
         //check for cell type
-        assertThat(columnReaderHelper.findColumnCell(clientIterator, "10C150"), LINK_COL_INDEX_MATCHER);
-        assertThat(columnReaderHelper.findColumnCell(clientIterator, "10C116"), LINK_COL_INDEX_MATCHER);
-        assertThat(columnReaderHelper.findColumnCell(clientIterator, "10C150"), LINK_COL_INDEX_MATCHER);
-        assertThat(columnReaderHelper.findColumnCell(clientIterator, "10CR07"), LINK_COL_INDEX_MATCHER);
-        assertThat(columnReaderHelper.findColumnCell(clientIterator, "10CR08"), LINK_COL_INDEX_MATCHER);
-        assertThat(columnReaderHelper.findColumnCell(clientIterator, "20CR22"), LINK_COL_INDEX_MATCHER);
+        assertThat(getColumnIndex(clientIterator, "10C150"), LINK_COL_INDEX_MATCHER);
+        assertThat(getColumnIndex(clientIterator, "10C116"), LINK_COL_INDEX_MATCHER);
+        assertThat(getColumnIndex(clientIterator, "10C150"), LINK_COL_INDEX_MATCHER);
+        assertThat(getColumnIndex(clientIterator, "10CR07"), LINK_COL_INDEX_MATCHER);
+        assertThat(getColumnIndex(clientIterator, "10CR08"), LINK_COL_INDEX_MATCHER);
+        assertThat(getColumnIndex(clientIterator, "20CR22"), LINK_COL_INDEX_MATCHER);
+    }
+
+    private int getColumnIndex(Iterator<Row> clientIterator, String lookUpValue) {
+        return columnReaderHelper.findCell(clientIterator, lookUpValue).getColumnIndex();
     }
 
     @Test
