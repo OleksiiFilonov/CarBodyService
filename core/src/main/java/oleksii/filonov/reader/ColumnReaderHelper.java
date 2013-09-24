@@ -9,7 +9,7 @@ import org.apache.poi.ss.usermodel.Row;
 
 public class ColumnReaderHelper {
 
-	public int findColumnIndex(final Iterator<Row> rows, final String lookUpValue) {
+	public int findColumnCell(final Iterator<Row> rows, final String lookUpValue) {
 		while (rows.hasNext()) {
 			final Row row = rows.next();
 			final int columnIndex = lookUpColumnId(row, lookUpValue);

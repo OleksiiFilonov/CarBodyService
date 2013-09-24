@@ -8,7 +8,7 @@ import org.apache.poi.openxml4j.exceptions.*;
 import org.apache.poi.ss.usermodel.*;
 
 /**
- * Not thread safe!!!
+ * Not a thread safe!!!
  */
 public class CampaignProcessor {
 
@@ -31,7 +31,7 @@ public class CampaignProcessor {
 			for (int sheetIndex = 1; sheetIndex < numbersOfSheet; sheetIndex++) {
 				final Sheet vinSheet = campaignWB.getSheetAt(sheetIndex);
 				final Iterator<Row> vinRows = vinSheet.rowIterator();
-				final int vinColumnIndex = columnReaderHelper.findColumnIndex(vinRows, vinColumnMarker);
+				final int vinColumnIndex = columnReaderHelper.findColumnCell(vinRows, vinColumnMarker);
 				while (vinRows.hasNext()) {
 					final Row vinRow = vinRows.next();
 					final Cell vinCell = vinRow.getCell(vinColumnIndex);
@@ -46,7 +46,7 @@ public class CampaignProcessor {
 				}
 			}
 		} catch (InvalidFormatException | IOException e) {
-			throw new ReadDataException(e);
+			throw new ReadDataException("Exception occurred while opening campaign file", e);
 		}
 		return result;
 	}

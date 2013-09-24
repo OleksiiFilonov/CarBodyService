@@ -15,7 +15,7 @@ public class VinListProcessorTest {
 
     @Test
     public void formVinListIdDescriptionMap() {
-        Map<String, String> vinListDescriptionMap = vinListProcessor.linkVinListIdWithDescription(TestConstants.CAMPAIGN_FILE);
+        Map<String, String> vinListDescriptionMap = vinListProcessor.mapVinListIdToDescription(TestConstants.CAMPAIGN_FILE);
         assertThat(vinListDescriptionMap.size(), equalTo(38));
     }
 }

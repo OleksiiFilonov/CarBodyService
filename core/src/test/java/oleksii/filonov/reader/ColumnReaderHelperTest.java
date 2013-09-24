@@ -1,6 +1,5 @@
 package oleksii.filonov.reader;
 
-import oleksii.filonov.TestConstants;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.junit.Before;
@@ -36,14 +35,14 @@ public class ColumnReaderHelperTest {
     @Test
     public void findBodyIdColumnIndex() {
         assertEquals(BODY_ID_COLUMN_INDEX,
-                this.columnReaderHelper.findColumnIndex(this.bodyIdSheet.iterator(), BODY_ID_MARKER));
+                this.columnReaderHelper.findColumnCell(this.bodyIdSheet.iterator(), BODY_ID_MARKER));
     }
 
     @Test
     public void shouldNotFindBodyIdColumnIndex() {
         final String columnToRead = WRONG_COLUMN_MARKER;
         try {
-            this.columnReaderHelper.findColumnIndex(this.bodyIdSheet.iterator(), columnToRead);
+            this.columnReaderHelper.findColumnCell(this.bodyIdSheet.iterator(), columnToRead);
             fail(String.format("The test shouldn't find the column \"%s\" in source file", columnToRead));
         } catch(final ReadDataException exc) {
         }
@@ -75,7 +74,7 @@ public class ColumnReaderHelperTest {
         final Workbook clientWB = WorkbookFactory.create(Paths.get("", COMPAIGN_FILE).toFile());
         final Sheet compaignSheet = clientWB.getSheetAt(0);
         final Iterator<Row> rows = compaignSheet.rowIterator();
-        final int columnIndex = this.columnReaderHelper.findColumnIndex(rows, "Список VIN");
+        final int columnIndex = this.columnReaderHelper.findColumnCell(rows, "Список VIN");
         while(rows.hasNext()) {
             final Row row = rows.next();
             final Cell cell = row.getCell(columnIndex);

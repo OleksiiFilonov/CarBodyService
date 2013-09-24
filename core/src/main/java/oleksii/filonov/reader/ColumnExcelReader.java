@@ -15,7 +15,7 @@ public class ColumnExcelReader {
     public Cell[] getColumnValues(final Sheet sheetToRead, final String columnMarker) {
         final List<Cell> result = new LinkedList<>();
         final Iterator<Row> rows = sheetToRead.rowIterator();
-        final int columnIndex = this.columnReaderHelper.findColumnIndex(rows, columnMarker);
+        final int columnIndex = this.columnReaderHelper.findColumnCell(rows, columnMarker);
         while(rows.hasNext()) {
             final Row row = rows.next();
             final Cell cell = row.getCell(columnIndex);
