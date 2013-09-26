@@ -50,7 +50,7 @@ public class WorkbookBuilderIntegrationTest {
 		final ListMultimap<String, Cell> linkedBodyIdWithCampaigns = campaignProcessor.linkBodyIdWithCampaigns(
 				bodyIds, CAMPAIGN_FILE, VIN_MARKER);
         final Map<String, String> bodyIdDescriptionMap = new HashMap<>();
-        excelBuilder.assignTasks(bodyIds, bodyIdDescriptionMap, linkedBodyIdWithCampaigns);
+        excelBuilder.assignTasks(bodyIds, linkedBodyIdWithCampaigns);
 		excelBuilder.saveToFile(LINKED_RESULT_PATH.toFile());
         final Workbook workbookForVerification = WorkbookFactory.create(LINKED_RESULT_PATH.toFile());
         final Sheet verifyClientSheet = workbookForVerification.getSheetAt(0);

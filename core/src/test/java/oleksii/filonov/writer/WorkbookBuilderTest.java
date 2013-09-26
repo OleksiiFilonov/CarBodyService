@@ -42,6 +42,7 @@ public class WorkbookBuilderTest {
     private static final String LINK_3_BODY_ID_SHEET_NAME = "link3bodyIdSheetName";
     private static final String LINK_4_BODY_ID_SHEET_NAME = "link4bodyIdSheetName";
     private static final int EXCEL_ROW_OFFSET = 1;
+    private static final String VIN_LIST_1_DESC = "This is the 1 vin list description";
 
     private ColumnReaderHelper columnReaderHelper;
 	private CampaignProcessor campaignProcessor;
@@ -103,6 +104,14 @@ public class WorkbookBuilderTest {
     private Sheet link3bodyIdSheet;
     @Mock
     private Sheet link4bodyIdSheet;
+    @Mock
+    private Cell firstVinDescriptionCell;
+    @Mock
+    private Cell secondVinDescriptionCell;
+    @Mock
+    private Cell fourthVinDescriptionCell;
+    @Mock
+    private Cell anotherVinDescriptionCell;
 
 
     @Before
@@ -159,10 +168,13 @@ public class WorkbookBuilderTest {
         when(foundRow.getSheet()).thenReturn(clientSheet);
         when(foundRow.getRowNum()).thenReturn(FOUND_ROW_INDEX);
         when(foundRow.createCell(FIRST_LINK_COLUMN_INDEX, Cell.CELL_TYPE_STRING)).thenReturn(firstLinkToVinCell);
-        when(clientSheet.createRow(FOUND_ROW_INDEX+1)).thenReturn(rowForHyperLink2);
-        when(clientSheet.createRow(FOUND_ROW_INDEX+2)).thenReturn(rowForHyperLink4);
+        when(foundRow.createCell(SECOND_LINK_COLUMN_INDEX, Cell.CELL_TYPE_STRING)).thenReturn(firstVinDescriptionCell);
+        when(clientSheet.createRow(FOUND_ROW_INDEX + 1)).thenReturn(rowForHyperLink2);
+        when(clientSheet.createRow(FOUND_ROW_INDEX + 2)).thenReturn(rowForHyperLink4);
         when(rowForHyperLink2.createCell(FIRST_LINK_COLUMN_INDEX, Cell.CELL_TYPE_STRING)).thenReturn(secondLinkToVin);
+        when(rowForHyperLink2.createCell(SECOND_LINK_COLUMN_INDEX, Cell.CELL_TYPE_STRING)).thenReturn(secondVinDescriptionCell);
         when(rowForHyperLink4.createCell(FIRST_LINK_COLUMN_INDEX, Cell.CELL_TYPE_STRING)).thenReturn(fourthLinkToVin);
+        when(rowForHyperLink4.createCell(SECOND_LINK_COLUMN_INDEX, Cell.CELL_TYPE_STRING)).thenReturn(fourthVinDescriptionCell);
     }
 
     private void mockAnotherFoundCellBehaviour() {
@@ -171,6 +183,7 @@ public class WorkbookBuilderTest {
         when(foundAnotherBodyIdCell.getColumnIndex()).thenReturn(FOUND_BODY_COLUMN_INDEX);
         when(anotherFoundRow.getSheet()).thenReturn(clientSheet);
         when(anotherFoundRow.createCell(FIRST_LINK_COLUMN_INDEX, Cell.CELL_TYPE_STRING)).thenReturn(linkToAnotherVinCell);
+        when(anotherFoundRow.createCell(SECOND_LINK_COLUMN_INDEX, Cell.CELL_TYPE_STRING)).thenReturn(anotherVinDescriptionCell);
     }
 
     @Test
@@ -182,13 +195,20 @@ public class WorkbookBuilderTest {
         bodyIdLinks.put(ANOTHER_BODY_ID_FOUND, foundBodyIdOnVinList3Cell);
         bodyIdLinks.put(BODY_ID_FOUND, foundBodyIdOnVinList4Cell);
         Map<String, String> bodyIdDescriptionMap = new HashMap<>();
-		excelBuilder.assignTasks(bodyIds, bodyIdDescriptionMap, bodyIdLinks);
+        bodyIdDescriptionMap.put(LINK_1_BODY_ID_SHEET_NAME, VIN_LIST_1_DESC);
+        bodyIdDescriptionMap.put(LINK_2_BODY_ID_SHEET_NAME, "This is the 2 vin list description");
+        bodyIdDescriptionMap.put(LINK_3_BODY_ID_SHEET_NAME, "This is the 3 vin list description");
+        bodyIdDescriptionMap.put(LINK_4_BODY_ID_SHEET_NAME, "This is the 4 vin list description");
+        excelBuilder.setVinListDescriptionMap(bodyIdDescriptionMap);
+		excelBuilder.assignTasks(bodyIds, bodyIdLinks);
+        excelBuilder.saveToFile(LINKED_RESULT_PATH.toFile());
         verifyCreatedDocument();
 	}
 
     private void verifyCreatedDocument() throws IOException {
         verify(firstLinkToVinCell).setCellValue(LINK_1_BODY_ID_SHEET_NAME);
         verify(firstHyperLink).setAddress(PATH_TO_CAMPAIGN_FILE + "#'" + LINK_1_BODY_ID_SHEET_NAME + "'!B" + (VIN_LIST_1_ROW_INDEX + EXCEL_ROW_OFFSET));
+        verify(firstVinDescriptionCell).setCellValue(VIN_LIST_1_DESC);
         verify(clientSheet).shiftRows(eq(FOUND_ROW_INDEX + 1), anyInt(), eq(SHIFT_VALUE));
         verify(secondLinkToVin).setCellValue(LINK_2_BODY_ID_SHEET_NAME);
         verify(secondHyperLink).setAddress(PATH_TO_CAMPAIGN_FILE + "#'" + LINK_2_BODY_ID_SHEET_NAME + "'!B" + (VIN_LIST_2_ROW_INDEX + EXCEL_ROW_OFFSET));
@@ -198,9 +218,6 @@ public class WorkbookBuilderTest {
         verify(notFoundBodyIdCell, never()).getRow();
         verify(linkToAnotherVinCell).setCellValue(LINK_3_BODY_ID_SHEET_NAME);
         verify(thirdHyperLink).setAddress(PATH_TO_CAMPAIGN_FILE + "#'" + LINK_3_BODY_ID_SHEET_NAME + "'!B" + (VIN_LIST_3_ROW_INDEX + EXCEL_ROW_OFFSET));
-        verify(foundRow, never()).createCell(SECOND_LINK_COLUMN_INDEX, Cell.CELL_TYPE_STRING);
-        verify(anotherFoundRow, never()).createCell(SECOND_LINK_COLUMN_INDEX, Cell.CELL_TYPE_STRING);
-        excelBuilder.saveToFile(LINKED_RESULT_PATH.toFile());
         verify(clientWorkbook).write(any(FileOutputStream.class));
     }
 

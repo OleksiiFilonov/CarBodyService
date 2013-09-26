@@ -11,10 +11,11 @@ public interface DataBuilder {
 
 	void useWorkbook(Workbook clientWorkBook) throws IOException, InvalidFormatException;
 
-    void assignTasks(Cell[] bodyIdCells, final Map<String, String> bodyIdDescriptionMap, ListMultimap<String, Cell> linksToBodies);
+    void assignTasks(Cell[] bodyIdCells, ListMultimap<String, Cell> linksToBodies);
 
     void saveToFile(File fileToSave) throws IOException;
 
     void setPathToCampaignFile(String pathToCampaignFile);
 
+    void setVinListDescriptionMap(Map<String, String> vinListDescriptionMap);
 }

@@ -10,7 +10,8 @@ import org.apache.poi.ss.usermodel.*;
 public class WorkbookBuilder implements DataBuilder {
 
     private static final int SHIFT_ROW_OFFSET = 1;
-    private static final int OFFSET = 1;
+    private static final int VIN_LINK_OFFSET = 1;
+    private static final int VIN_DESCRIPTION_OFFSET = 2;
     private static final char[] COLUMN_INDEXES = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
             'P', 'Q', 'R', 'S', 'T', 'Y', 'V', 'W', 'X', 'Y', 'Z' };
     private static final int EXCEL_ROW_OFFSET = 1;
@@ -20,6 +21,7 @@ public class WorkbookBuilder implements DataBuilder {
     private CellStyle linkCellStyle;
 	private CreationHelper creationHelper;
     private String pathToCampaignFile;
+    private Map<String, String> vinListDescriptionMap;
 
     @Override
 	public void useWorkbook(Workbook clientWorkbook) throws IOException, InvalidFormatException {
@@ -43,7 +45,7 @@ public class WorkbookBuilder implements DataBuilder {
     }
 
     @Override
-	public void assignTasks(final Cell[] bodyIdCells, final Map<String, String> bodyIdDescriptionMap, final ListMultimap<String, Cell> linksToBodies) {
+	public void assignTasks(final Cell[] bodyIdCells, final ListMultimap<String, Cell> linksToBodies) {
 		for (final Cell bodyIdCell : bodyIdCells) {
 			final List<Cell> vinLinks = linksToBodies.get(bodyIdCell.getStringCellValue());
 			if (!vinLinks.isEmpty()) {
@@ -60,19 +62,22 @@ public class WorkbookBuilder implements DataBuilder {
 
 	private void linkBodyIdsWithVINLists(final int bodyIdColumnIndex, final List<Cell> foundBodyIdsOnVinLists, final Row bodyIdRow) {
 
-        addVinListToBodyId(bodyIdColumnIndex, foundBodyIdsOnVinLists.get(0), bodyIdRow);
+        createLinkToVinListCell(bodyIdColumnIndex, foundBodyIdsOnVinLists.get(0), bodyIdRow);
 
         final Sheet clientSheet = bodyIdRow.getSheet();
         final int bodyIdRowRowNum = bodyIdRow.getRowNum();
         for (int i = 1; i < foundBodyIdsOnVinLists.size(); i++) {
             clientSheet.shiftRows(bodyIdRowRowNum + i, clientSheet.getLastRowNum(), SHIFT_ROW_OFFSET);
             final Row newRow = clientSheet.createRow(bodyIdRowRowNum + i);
-            addVinListToBodyId(bodyIdColumnIndex, foundBodyIdsOnVinLists.get(i), newRow);
+            final Cell linkVinCell = foundBodyIdsOnVinLists.get(i);
+            createLinkToVinListCell(bodyIdColumnIndex, linkVinCell, newRow);
+            final Cell vinDescriptionCell = bodyIdRow.createCell(bodyIdColumnIndex + VIN_DESCRIPTION_OFFSET, Cell.CELL_TYPE_STRING);
+            vinDescriptionCell.setCellValue(vinListDescriptionMap.get(linkVinCell.getSheet().getSheetName()));
 		}
 	}
 
-    private void addVinListToBodyId(final int bodyIdColumnIndex, final Cell foundBodyIdCellOnVinList, final Row bodyIdRow) {
-        final Cell linkToVin = bodyIdRow.createCell(bodyIdColumnIndex + 1, Cell.CELL_TYPE_STRING);
+    private void createLinkToVinListCell(final int bodyIdColumnIndex, final Cell foundBodyIdCellOnVinList, final Row bodyIdRow) {
+        final Cell linkToVin = bodyIdRow.createCell(bodyIdColumnIndex + VIN_LINK_OFFSET, Cell.CELL_TYPE_STRING);
         linkToVin.setCellValue(foundBodyIdCellOnVinList.getSheet().getSheetName());
         final Hyperlink cellHyperlink = creationHelper.createHyperlink(Hyperlink.LINK_FILE);
         cellHyperlink.setAddress(pathToCampaignFile + '#' + linkToCell(foundBodyIdCellOnVinList));
@@ -97,5 +102,8 @@ public class WorkbookBuilder implements DataBuilder {
         return "'" + bodyIdCellOnVinList.getSheet().getSheetName() + "'!" + COLUMN_INDEXES[bodyIdCellOnVinList.getColumnIndex()]
                 + (bodyIdCellOnVinList.getRowIndex() + EXCEL_ROW_OFFSET);
     }
-
+    @Override
+    public void setVinListDescriptionMap(final Map<String, String> vinListDescriptionMap) {
+        this.vinListDescriptionMap = vinListDescriptionMap;
+    }
 }
