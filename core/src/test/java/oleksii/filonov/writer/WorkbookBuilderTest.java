@@ -8,6 +8,8 @@ import static org.mockito.Mockito.*;
 
 import java.io.*;
 import java.nio.file.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.common.collect.*;
 import oleksii.filonov.reader.*;
@@ -179,7 +181,8 @@ public class WorkbookBuilderTest {
         bodyIdLinks.put(BODY_ID_FOUND, foundBodyIdOnVinList2Cell);
         bodyIdLinks.put(ANOTHER_BODY_ID_FOUND, foundBodyIdOnVinList3Cell);
         bodyIdLinks.put(BODY_ID_FOUND, foundBodyIdOnVinList4Cell);
-		excelBuilder.assignTasks(bodyIds, bodyIdLinks);
+        Map<String, String> bodyIdDescriptionMap = new HashMap<>();
+		excelBuilder.assignTasks(bodyIds, bodyIdDescriptionMap, bodyIdLinks);
         verifyCreatedDocument();
 	}
 

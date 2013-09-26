@@ -35,7 +35,7 @@ public class SaveLinkedResultsListener extends FileChooserListener {
 				linksCalculator.calculate(getFileChooser());
                 Workbook clientWorkBook = WorkbookFactory.create(getFileChooser().getCampaignFile());
                 documentBuilder.useWorkbook(clientWorkBook);
-				documentBuilder.assignTasks(new Cell[] {}, ArrayListMultimap.<String, Cell>create());
+				documentBuilder.assignTasks(new Cell[] {}, bodyIdDescriptionMap, ArrayListMultimap.<String, Cell>create());
 				documentBuilder.saveToFile(getFileChooser().getLinkedBodyFile());
 			} catch (final ReadDataException | InvalidFormatException exc) {
 				System.err.println("Error while calculation links file: " + exc.getLocalizedMessage());

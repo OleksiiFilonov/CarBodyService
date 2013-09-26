@@ -43,9 +43,9 @@ public class WorkbookBuilder implements DataBuilder {
     }
 
     @Override
-	public void assignTasks(final Cell[] bodyIdCells, final ListMultimap<String, Cell> linkedBodies) {
+	public void assignTasks(final Cell[] bodyIdCells, final Map<String, String> bodyIdDescriptionMap, final ListMultimap<String, Cell> linksToBodies) {
 		for (final Cell bodyIdCell : bodyIdCells) {
-			final List<Cell> vinLinks = linkedBodies.get(bodyIdCell.getStringCellValue());
+			final List<Cell> vinLinks = linksToBodies.get(bodyIdCell.getStringCellValue());
 			if (!vinLinks.isEmpty()) {
                 bodyIdCell.setCellStyle(foundCellStyle);
                 final Row bodyIdRow = bodyIdCell.getRow();
