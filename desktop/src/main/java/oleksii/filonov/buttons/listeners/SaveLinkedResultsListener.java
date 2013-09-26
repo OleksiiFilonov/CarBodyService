@@ -1,5 +1,10 @@
 package oleksii.filonov.buttons.listeners;
 
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+import javax.swing.*;
+
+import com.google.common.collect.ArrayListMultimap;
 import oleksii.filonov.gui.MainFileChooser;
 import oleksii.filonov.reader.ReadDataException;
 import oleksii.filonov.writer.DataBuilder;
@@ -8,10 +13,6 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.io.IOException;
 
 public class SaveLinkedResultsListener extends FileChooserListener {
 
@@ -34,7 +35,7 @@ public class SaveLinkedResultsListener extends FileChooserListener {
 				linksCalculator.calculate(getFileChooser());
                 Workbook clientWorkBook = WorkbookFactory.create(getFileChooser().getCampaignFile());
                 documentBuilder.useWorkbook(clientWorkBook);
-				documentBuilder.assignTasks(new Cell[] {}, linksCalculator.getBodyIdLinks());
+				documentBuilder.assignTasks(new Cell[] {}, ArrayListMultimap.<String, Cell>create());
 				documentBuilder.saveToFile(getFileChooser().getLinkedBodyFile());
 			} catch (final ReadDataException | InvalidFormatException exc) {
 				System.err.println("Error while calculation links file: " + exc.getLocalizedMessage());
