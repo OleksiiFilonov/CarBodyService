@@ -24,7 +24,7 @@ public class ColumnReaderHelper {
     public Cell findCellFrom(final Cell startCell, final Iterator<Row> rowsIterator, final String lookUpValue) {
         Cell foundCell = lookupInCurrentRow(startCell, lookUpValue);
         if (foundCell == null) {
-            findCell(rowsIterator,lookUpValue);
+            return findCell(rowsIterator,lookUpValue);
         }
         return foundCell;
     }

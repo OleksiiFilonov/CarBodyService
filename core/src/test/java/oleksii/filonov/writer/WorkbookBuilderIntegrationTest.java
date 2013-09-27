@@ -23,6 +23,9 @@ public class WorkbookBuilderIntegrationTest {
     private static final Matcher<Integer> LINK_COL_INDEX = CoreMatchers.equalTo(VIN_LINK_COLUMN_INDEX);
     private static final Matcher<Integer> DESC_COL_INDEX = CoreMatchers.equalTo(VIN_DESC_COLUMN_INDEX);
     private static final String DESC_10C150 = "УСТРАНЕНИЕ ШУМА ОТ ПЕРЕДНЕГО СИДЕНЬЯ С РУЧНОЙ РЕГУЛИРОВКОЙ(TSB No. In English : HCE11-91-P560-RBMDVF)";
+    private static final String DESC_10C116 = "ЗАМЕНА КЛЕММ КАБЕЛЯ АКБ(TSB No. In English : HCE11-11-P180-RBMDENFDLMTQCMHRNF)";
+    private static final String DESC_10CR07 = "SOLARIS / ACCENT (RBr) ПЛАСТИКОВАЯ ШАЙБА ВЕДУЩЕГО ВАЛА (ОБЕ СТОРОНЫ) СНЯТИЕ";
+    private static final String DESC_10CR08 = "SOLARIS / ACCENT (RBr) ЗАМЕНА РЕЙКИ РУЛЕВОГО УПРАВЛЕНИЯ С УСИЛИТЕЛЕМ В СБОРЕ";
 
     private ColumnReaderHelper columnReaderHelper;
     private ColumnExcelReader columnExcelReader;
@@ -61,14 +64,25 @@ public class WorkbookBuilderIntegrationTest {
         final Sheet verifyClientSheet = workbookForVerification.getSheetAt(0);
         final Iterator<Row> clientIterator = verifyClientSheet.rowIterator();
         //check for cell type
-        Cell cell_10c150_firstOccurrence = columnReaderHelper.findCell(clientIterator, "10C150");
+        final Cell cell_10c150_firstOccurrence = columnReaderHelper.findCell(clientIterator, "10C150");
         assertThat(cell_10c150_firstOccurrence.getColumnIndex(), LINK_COL_INDEX);
         assertThat(columnReaderHelper.findCellFrom(cell_10c150_firstOccurrence, clientIterator, DESC_10C150).getColumnIndex(), DESC_COL_INDEX);
-        assertThat(columnReaderHelper.findCell(clientIterator, "10C116").getColumnIndex(), LINK_COL_INDEX);
-        assertThat(columnReaderHelper.findCell(clientIterator, "10C150").getColumnIndex(), LINK_COL_INDEX);
-        assertThat(columnReaderHelper.findCell(clientIterator, "10CR07").getColumnIndex(), LINK_COL_INDEX);
-        assertThat(columnReaderHelper.findCell(clientIterator, "10CR08").getColumnIndex(), LINK_COL_INDEX);
-        assertThat(columnReaderHelper.findCell(clientIterator, "20CR22").getColumnIndex(), LINK_COL_INDEX);
+        final Cell cell_10C116 = columnReaderHelper.findCell(clientIterator, "10C116");
+        assertThat(cell_10C116.getColumnIndex(), LINK_COL_INDEX);
+        final Cell descCell_10C116 = columnReaderHelper.findCellFrom(cell_10C116, clientIterator, DESC_10C116);
+        assertThat(descCell_10C116.getColumnIndex(), DESC_COL_INDEX);
+        final Cell cell_10C150_secondOccurrence = columnReaderHelper.findCellFrom(descCell_10C116, clientIterator, "10C150");
+        assertThat(cell_10C150_secondOccurrence.getColumnIndex(), LINK_COL_INDEX);
+        assertThat(columnReaderHelper.findCellFrom(cell_10C150_secondOccurrence, clientIterator, DESC_10C150).getColumnIndex(), DESC_COL_INDEX);
+        Cell cell_10CR07 = columnReaderHelper.findCell(clientIterator, "10CR07");
+        assertThat(cell_10CR07.getColumnIndex(), LINK_COL_INDEX);
+        assertThat(columnReaderHelper.findCellFrom(cell_10CR07, clientIterator, DESC_10CR07).getColumnIndex(), DESC_COL_INDEX);
+        Cell cell_10CR08 = columnReaderHelper.findCell(clientIterator, "10CR08");
+        assertThat(cell_10CR08.getColumnIndex(), LINK_COL_INDEX);
+        assertThat(columnReaderHelper.findCellFrom(cell_10CR08, clientIterator, DESC_10CR08).getColumnIndex(), DESC_COL_INDEX);
+        Cell cell_20CR22 = columnReaderHelper.findCell(clientIterator, "20CR22");
+        assertThat(cell_20CR22.getColumnIndex(), LINK_COL_INDEX);
+        assertThat(columnReaderHelper.findCellFrom(cell_20CR22, clientIterator, "Ремонт Бензобака").getColumnIndex(), DESC_COL_INDEX);
     }
 
     @Test
