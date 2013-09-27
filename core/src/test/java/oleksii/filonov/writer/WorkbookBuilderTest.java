@@ -43,6 +43,9 @@ public class WorkbookBuilderTest {
     private static final String LINK_4_BODY_ID_SHEET_NAME = "link4bodyIdSheetName";
     private static final int EXCEL_ROW_OFFSET = 1;
     private static final String VIN_LIST_1_DESC = "This is the 1 vin list description";
+    private static final String VIN_LIST_2_DESC = "This is the 2 vin list description";
+    private static final String VIN_LIST_ANOTHER_FOUND_BODY_DESC = "This is the 3 vin list description";
+    private static final String VIN_LIST_4_DESC = "This is the 4 vin list description";
 
     private ColumnReaderHelper columnReaderHelper;
 	private CampaignProcessor campaignProcessor;
@@ -65,13 +68,13 @@ public class WorkbookBuilderTest {
     @Mock
     private Cell firstLinkToVinCell;
     @Mock
-    private Hyperlink firstHyperLink;
+    private Hyperlink foundBodyFirstHyperLink;
     @Mock
     private Cell secondLinkToVin;
     @Mock
-    private Hyperlink secondHyperLink;
+    private Hyperlink foundBodySecondHyperLink;
     @Mock
-    private Hyperlink thirdHyperLink;
+    private Hyperlink anotherFoundBodyHyperLink;
     @Mock
     private Cell foundAnotherBodyIdCell;
     @Mock
@@ -85,7 +88,7 @@ public class WorkbookBuilderTest {
     @Mock
     private Row rowForHyperLink4;
     @Mock
-    private Hyperlink fourthHyperLink;
+    private Hyperlink foundBodyFourthHyperLink;
     @Mock
     private Cell fourthLinkToVin;
     @Mock
@@ -111,7 +114,7 @@ public class WorkbookBuilderTest {
     @Mock
     private Cell fourthVinDescriptionCell;
     @Mock
-    private Cell anotherVinDescriptionCell;
+    private Cell anotherFoundBodyVinDescriptionCell;
 
 
     @Before
@@ -136,10 +139,10 @@ public class WorkbookBuilderTest {
         mockFoundCellWithThreeLinksBehaviour();
         mockAnotherFoundCellBehaviour();
         when(creationHelper.createHyperlink(Hyperlink.LINK_FILE))
-                .thenReturn(firstHyperLink)
-                .thenReturn(secondHyperLink)
-                .thenReturn(fourthHyperLink)
-                .thenReturn(thirdHyperLink);
+                .thenReturn(foundBodyFirstHyperLink)
+                .thenReturn(foundBodySecondHyperLink)
+                .thenReturn(foundBodyFourthHyperLink)
+                .thenReturn(anotherFoundBodyHyperLink);
         mockFoundBodyIdCellsOnVinLists();
         when(notFoundBodyIdCell.getStringCellValue()).thenReturn("bodyIdNotFound");
     }
@@ -183,7 +186,7 @@ public class WorkbookBuilderTest {
         when(foundAnotherBodyIdCell.getColumnIndex()).thenReturn(FOUND_BODY_COLUMN_INDEX);
         when(anotherFoundRow.getSheet()).thenReturn(clientSheet);
         when(anotherFoundRow.createCell(FIRST_LINK_COLUMN_INDEX, Cell.CELL_TYPE_STRING)).thenReturn(linkToAnotherVinCell);
-        when(anotherFoundRow.createCell(SECOND_LINK_COLUMN_INDEX, Cell.CELL_TYPE_STRING)).thenReturn(anotherVinDescriptionCell);
+        when(anotherFoundRow.createCell(SECOND_LINK_COLUMN_INDEX, Cell.CELL_TYPE_STRING)).thenReturn(anotherFoundBodyVinDescriptionCell);
     }
 
     @Test
@@ -196,9 +199,9 @@ public class WorkbookBuilderTest {
         bodyIdLinks.put(BODY_ID_FOUND, foundBodyIdOnVinList4Cell);
         Map<String, String> bodyIdDescriptionMap = new HashMap<>();
         bodyIdDescriptionMap.put(LINK_1_BODY_ID_SHEET_NAME, VIN_LIST_1_DESC);
-        bodyIdDescriptionMap.put(LINK_2_BODY_ID_SHEET_NAME, "This is the 2 vin list description");
-        bodyIdDescriptionMap.put(LINK_3_BODY_ID_SHEET_NAME, "This is the 3 vin list description");
-        bodyIdDescriptionMap.put(LINK_4_BODY_ID_SHEET_NAME, "This is the 4 vin list description");
+        bodyIdDescriptionMap.put(LINK_2_BODY_ID_SHEET_NAME, VIN_LIST_2_DESC);
+        bodyIdDescriptionMap.put(LINK_3_BODY_ID_SHEET_NAME, VIN_LIST_ANOTHER_FOUND_BODY_DESC);
+        bodyIdDescriptionMap.put(LINK_4_BODY_ID_SHEET_NAME, VIN_LIST_4_DESC);
         excelBuilder.setVinListDescriptionMap(bodyIdDescriptionMap);
 		excelBuilder.assignTasks(bodyIds, bodyIdLinks);
         excelBuilder.saveToFile(LINKED_RESULT_PATH.toFile());
@@ -207,17 +210,20 @@ public class WorkbookBuilderTest {
 
     private void verifyCreatedDocument() throws IOException {
         verify(firstLinkToVinCell).setCellValue(LINK_1_BODY_ID_SHEET_NAME);
-        verify(firstHyperLink).setAddress(PATH_TO_CAMPAIGN_FILE + "#'" + LINK_1_BODY_ID_SHEET_NAME + "'!B" + (VIN_LIST_1_ROW_INDEX + EXCEL_ROW_OFFSET));
+        verify(foundBodyFirstHyperLink).setAddress(PATH_TO_CAMPAIGN_FILE + "#'" + LINK_1_BODY_ID_SHEET_NAME + "'!B" + (VIN_LIST_1_ROW_INDEX + EXCEL_ROW_OFFSET));
         verify(firstVinDescriptionCell).setCellValue(VIN_LIST_1_DESC);
         verify(clientSheet).shiftRows(eq(FOUND_ROW_INDEX + 1), anyInt(), eq(SHIFT_VALUE));
         verify(secondLinkToVin).setCellValue(LINK_2_BODY_ID_SHEET_NAME);
-        verify(secondHyperLink).setAddress(PATH_TO_CAMPAIGN_FILE + "#'" + LINK_2_BODY_ID_SHEET_NAME + "'!B" + (VIN_LIST_2_ROW_INDEX + EXCEL_ROW_OFFSET));
+        verify(foundBodySecondHyperLink).setAddress(PATH_TO_CAMPAIGN_FILE + "#'" + LINK_2_BODY_ID_SHEET_NAME + "'!B" + (VIN_LIST_2_ROW_INDEX + EXCEL_ROW_OFFSET));
+        verify(secondVinDescriptionCell).setCellValue(VIN_LIST_2_DESC);
         verify(clientSheet).shiftRows(eq(FOUND_ROW_INDEX + 2), anyInt(), eq(SHIFT_VALUE));
         verify(fourthLinkToVin).setCellValue(LINK_4_BODY_ID_SHEET_NAME);
-        verify(fourthHyperLink).setAddress(PATH_TO_CAMPAIGN_FILE + "#'" + LINK_4_BODY_ID_SHEET_NAME + "'!B" + (VIN_LIST_4_ROW_INDEX + EXCEL_ROW_OFFSET));
+        verify(foundBodyFourthHyperLink).setAddress(PATH_TO_CAMPAIGN_FILE + "#'" + LINK_4_BODY_ID_SHEET_NAME + "'!B" + (VIN_LIST_4_ROW_INDEX + EXCEL_ROW_OFFSET));
+        verify(fourthVinDescriptionCell).setCellValue(VIN_LIST_4_DESC);
         verify(notFoundBodyIdCell, never()).getRow();
         verify(linkToAnotherVinCell).setCellValue(LINK_3_BODY_ID_SHEET_NAME);
-        verify(thirdHyperLink).setAddress(PATH_TO_CAMPAIGN_FILE + "#'" + LINK_3_BODY_ID_SHEET_NAME + "'!B" + (VIN_LIST_3_ROW_INDEX + EXCEL_ROW_OFFSET));
+        verify(anotherFoundBodyHyperLink).setAddress(PATH_TO_CAMPAIGN_FILE + "#'" + LINK_3_BODY_ID_SHEET_NAME + "'!B" + (VIN_LIST_3_ROW_INDEX + EXCEL_ROW_OFFSET));
+        verify(anotherFoundBodyVinDescriptionCell).setCellValue(VIN_LIST_ANOTHER_FOUND_BODY_DESC);
         verify(clientWorkbook).write(any(FileOutputStream.class));
     }
 

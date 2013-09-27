@@ -15,6 +15,8 @@ public class WorkbookBuilder implements DataBuilder {
     private static final char[] COLUMN_INDEXES = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
             'P', 'Q', 'R', 'S', 'T', 'Y', 'V', 'W', 'X', 'Y', 'Z' };
     private static final int EXCEL_ROW_OFFSET = 1;
+    private static final int VIN_LIST_LINK_COL_INDEX = 6;
+    private static final int VIN_DESC_COL_INDEX = 7;
 
     private Workbook clientWorkbook;
 	private CellStyle foundCellStyle;
@@ -33,7 +35,8 @@ public class WorkbookBuilder implements DataBuilder {
 
 	@Override
 	public void saveToFile(final File fileToSave) throws IOException {
-        clientWorkbook.getSheetAt(0).autoSizeColumn(6);
+        clientWorkbook.getSheetAt(0).autoSizeColumn(VIN_LIST_LINK_COL_INDEX);
+        clientWorkbook.getSheetAt(0).autoSizeColumn(VIN_DESC_COL_INDEX);
 		final FileOutputStream recordStream = new FileOutputStream(fileToSave);
 		clientWorkbook.write(recordStream);
 		recordStream.close();
@@ -71,19 +74,21 @@ public class WorkbookBuilder implements DataBuilder {
             final Row newRow = clientSheet.createRow(bodyIdRowRowNum + i);
             final Cell linkVinCell = foundBodyIdsOnVinLists.get(i);
             createLinkToVinListCell(bodyIdColumnIndex, linkVinCell, newRow);
-            final Cell vinDescriptionCell = bodyIdRow.createCell(bodyIdColumnIndex + VIN_DESCRIPTION_OFFSET, Cell.CELL_TYPE_STRING);
-            vinDescriptionCell.setCellValue(vinListDescriptionMap.get(linkVinCell.getSheet().getSheetName()));
-		}
-	}
+        }
+    }
 
     private void createLinkToVinListCell(final int bodyIdColumnIndex, final Cell foundBodyIdCellOnVinList, final Row bodyIdRow) {
         final Cell linkToVin = bodyIdRow.createCell(bodyIdColumnIndex + VIN_LINK_OFFSET, Cell.CELL_TYPE_STRING);
-        linkToVin.setCellValue(foundBodyIdCellOnVinList.getSheet().getSheetName());
+        String sheetName = foundBodyIdCellOnVinList.getSheet().getSheetName();
+        linkToVin.setCellValue(sheetName);
         final Hyperlink cellHyperlink = creationHelper.createHyperlink(Hyperlink.LINK_FILE);
         cellHyperlink.setAddress(pathToCampaignFile + '#' + linkToCell(foundBodyIdCellOnVinList));
-        cellHyperlink.setLabel(foundBodyIdCellOnVinList.getSheet().getSheetName());
+        cellHyperlink.setLabel(sheetName);
         linkToVin.setHyperlink(cellHyperlink);
         linkToVin.setCellStyle(linkCellStyle);
+        final Cell vinDescriptionCell = bodyIdRow.createCell(bodyIdColumnIndex + VIN_DESCRIPTION_OFFSET, Cell.CELL_TYPE_STRING);
+        vinDescriptionCell.setCellValue(vinListDescriptionMap.get(sheetName));
+        vinDescriptionCell.setCellStyle(linkCellStyle);
     }
 
     private void initLinkCellStyle() {
