@@ -12,18 +12,8 @@ public class MainFileChooser extends JFileChooser {
 
     private File campaignFile;
 
-    private File linkedBodyFile;
-
     public MainFileChooser(final File defaultDirectory) {
         super(defaultDirectory);
-    }
-
-    public File getLinkedBodyFile() {
-        return this.linkedBodyFile;
-    }
-
-    public void setLinkedBodyFile(final File linkedBodyFile) {
-        this.linkedBodyFile = linkedBodyFile;
     }
 
     public File getBodyIdFile() {

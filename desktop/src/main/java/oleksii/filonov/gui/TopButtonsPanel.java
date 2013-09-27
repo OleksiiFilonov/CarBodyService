@@ -1,12 +1,11 @@
 package oleksii.filonov.gui;
 
+import java.nio.file.Paths;
+import javax.swing.*;
+
 import oleksii.filonov.buttons.listeners.CalculateLinksListener;
 import oleksii.filonov.buttons.listeners.OpenCampaignFileListener;
 import oleksii.filonov.buttons.listeners.OpenClientsFileListener;
-import oleksii.filonov.buttons.listeners.SaveLinkedResultsListener;
-
-import javax.swing.*;
-import java.nio.file.Paths;
 
 public class TopButtonsPanel extends JPanel {
 
@@ -24,7 +23,6 @@ public class TopButtonsPanel extends JPanel {
 		final JButton saveResults = new JButton("Сохранить результаты");
 		add(saveResults);
 		saveResults.addActionListener(new CalculateLinksListener(fileChooser, this));
-		saveResults.addActionListener(new SaveLinkedResultsListener(fileChooser, this));
 	}
 
 }
