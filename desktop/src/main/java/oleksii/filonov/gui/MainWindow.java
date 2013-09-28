@@ -1,6 +1,9 @@
 package oleksii.filonov.gui;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ResourceBundle;
 import javax.swing.*;
 
@@ -16,6 +19,22 @@ public class MainWindow {
     private JLabel pathToClientsFileLabel;
     private JLabel pathToCampaignFileLabel;
     private JLabel pathToResultsFileLabel;
+    private File clientsFile;
+    private File campaignFile;
+    private File resultFile;
+    private final JFileChooser fileChooser = new JFileChooser();
+
+    public MainWindow() {
+        clientsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent event) {
+                final int returnValue = fileChooser.showOpenDialog(mainPanel);
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    clientsFile = fileChooser.getSelectedFile();
+                }
+            }
+        });
+    }
 
     public static void main(final String[] args) {
         JFrame frame = new JFrame(resourceBundle.getString("main.window.title"));
