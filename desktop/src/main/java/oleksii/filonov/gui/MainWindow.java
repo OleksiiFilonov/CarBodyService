@@ -7,7 +7,8 @@ import javax.swing.*;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
-public class TestFrame {
+public class MainWindow {
+    private static ResourceBundle resourceBundle = ResourceBundle.getBundle("localization/bundle");
     private JPanel mainPanel;
     private JButton clientsButton;
     private JButton campaignButton;
@@ -17,9 +18,9 @@ public class TestFrame {
     private JLabel pathToResultsFileLabel;
 
     public static void main(final String[] args) {
-        JFrame frame = new JFrame("TestFrame");
+        JFrame frame = new JFrame(resourceBundle.getString("main.window.title"));
         positionFrameToTheCenter(frame);
-        frame.setContentPane(new TestFrame().mainPanel);
+        frame.setContentPane(new MainWindow().mainPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
