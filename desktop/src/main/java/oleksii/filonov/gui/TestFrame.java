@@ -9,16 +9,16 @@ import com.jgoodies.forms.layout.FormLayout;
 
 public class TestFrame {
     private JPanel mainPanel;
-    private JButton openClientsButton;
-    private JButton openCampaignButton;
-    private JButton saveResultsButton;
+    private JButton clientsButton;
+    private JButton campaignButton;
+    private JButton resultsButton;
     private JLabel pathToClientsFileLabel;
     private JLabel pathToCampaignFileLabel;
     private JLabel pathToResultsFileLabel;
 
     public static void main(final String[] args) {
         JFrame frame = new JFrame("TestFrame");
-        //positionFrameToTheCenter(frame);
+        positionFrameToTheCenter(frame);
         frame.setContentPane(new TestFrame().mainPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
@@ -55,30 +55,43 @@ public class TestFrame {
      */
     private void $$$setupUI$$$() {
         mainPanel = new JPanel();
-        mainPanel.setLayout(new FormLayout("fill:85px:noGrow,left:17dlu:noGrow,fill:435px:noGrow", "center:48px:noGrow,top:4dlu:noGrow,center:52px:noGrow,center:4dlu:noGrow,center:56px:noGrow"));
-        openClientsButton = new JButton();
-        this.$$$loadButtonText$$$(openClientsButton, ResourceBundle.getBundle("localization/bundle").getString("open.clients.button.title"));
-        openClientsButton.setToolTipText(ResourceBundle.getBundle("localization/bundle").getString("open.clients.file.tooltip"));
-        CellConstraints cc = new CellConstraints();
-        mainPanel.add(openClientsButton, cc.xy(1, 1));
-        openCampaignButton = new JButton();
-        this.$$$loadButtonText$$$(openCampaignButton, ResourceBundle.getBundle("localization/bundle").getString("open.campaign.button.title"));
-        openCampaignButton.setToolTipText(ResourceBundle.getBundle("localization/bundle").getString("open.campaign.file.tooltip"));
-        mainPanel.add(openCampaignButton, cc.xy(1, 3));
-        saveResultsButton = new JButton();
-        saveResultsButton.setEnabled(true);
-        this.$$$loadButtonText$$$(saveResultsButton, ResourceBundle.getBundle("localization/bundle").getString("save.results.button.title"));
-        saveResultsButton.setToolTipText(ResourceBundle.getBundle("localization/bundle").getString("save.results.tooltip"));
-        mainPanel.add(saveResultsButton, cc.xy(1, 5));
+        mainPanel.setLayout(new FormLayout("fill:15px:noGrow,left:4dlu:noGrow,fill:107px:noGrow,left:17dlu:noGrow,fill:339px:noGrow", "center:19px:noGrow,top:4dlu:noGrow,center:65px:noGrow,top:4dlu:noGrow,center:81px:noGrow,top:4dlu:noGrow,center:86px:noGrow,top:4dlu:noGrow,center:19px:noGrow"));
         pathToClientsFileLabel = new JLabel();
         pathToClientsFileLabel.setText("Path to Clients File");
-        mainPanel.add(pathToClientsFileLabel, cc.xy(3, 1));
+        CellConstraints cc = new CellConstraints();
+        mainPanel.add(pathToClientsFileLabel, cc.xy(5, 3));
         pathToCampaignFileLabel = new JLabel();
         pathToCampaignFileLabel.setText("Path To Campaign File");
-        mainPanel.add(pathToCampaignFileLabel, cc.xy(3, 3));
+        mainPanel.add(pathToCampaignFileLabel, cc.xy(5, 5));
         pathToResultsFileLabel = new JLabel();
         pathToResultsFileLabel.setText("Path to Results File");
-        mainPanel.add(pathToResultsFileLabel, cc.xy(3, 5));
+        mainPanel.add(pathToResultsFileLabel, cc.xy(5, 7));
+        resultsButton = new JButton();
+        resultsButton.setEnabled(true);
+        resultsButton.setHorizontalTextPosition(0);
+        resultsButton.setIcon(new ImageIcon(getClass().getResource("/icons/save.png")));
+        this.$$$loadButtonText$$$(resultsButton, ResourceBundle.getBundle("localization/bundle").getString("save.results.button.title"));
+        resultsButton.setToolTipText(ResourceBundle.getBundle("localization/bundle").getString("save.results.tooltip"));
+        mainPanel.add(resultsButton, cc.xy(3, 7));
+        final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
+        mainPanel.add(spacer1, cc.xy(3, 9, CellConstraints.FILL, CellConstraints.DEFAULT));
+        campaignButton = new JButton();
+        campaignButton.setHorizontalTextPosition(0);
+        campaignButton.setIcon(new ImageIcon(getClass().getResource("/icons/open_folder_yellow.png")));
+        this.$$$loadButtonText$$$(campaignButton, ResourceBundle.getBundle("localization/bundle").getString("open.campaign.button.title"));
+        campaignButton.setToolTipText(ResourceBundle.getBundle("localization/bundle").getString("open.campaign.file.tooltip"));
+        mainPanel.add(campaignButton, cc.xy(3, 5));
+        final com.intellij.uiDesigner.core.Spacer spacer2 = new com.intellij.uiDesigner.core.Spacer();
+        mainPanel.add(spacer2, cc.xywh(1, 1, 2, 9, CellConstraints.DEFAULT, CellConstraints.FILL));
+        final com.intellij.uiDesigner.core.Spacer spacer3 = new com.intellij.uiDesigner.core.Spacer();
+        mainPanel.add(spacer3, cc.xyw(3, 1, 3, CellConstraints.FILL, CellConstraints.DEFAULT));
+        clientsButton = new JButton();
+        clientsButton.setHideActionText(false);
+        clientsButton.setHorizontalTextPosition(0);
+        clientsButton.setIcon(new ImageIcon(getClass().getResource("/icons/open_folder_yellow.png")));
+        this.$$$loadButtonText$$$(clientsButton, ResourceBundle.getBundle("localization/bundle").getString("open.clients.button.title"));
+        clientsButton.setToolTipText(ResourceBundle.getBundle("localization/bundle").getString("open.clients.file.tooltip"));
+        mainPanel.add(clientsButton, cc.xy(3, 3));
     }
 
     /**
