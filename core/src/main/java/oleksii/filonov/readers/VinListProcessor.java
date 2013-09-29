@@ -14,7 +14,7 @@ public class VinListProcessor {
 
     private ColumnReaderHelper columnReaderHelper;
 
-    public Map<String, String> mapVinListIdToDescription(final File campaignFile, final String vinColumnTitle, final String descriptionTitle) {
+    public Map<String, String> mapVinListIdToDescription(final File campaignFile, final String vinColumnTitle, final String descriptionColumnTitle) {
         final Map<String, String> result = new HashMap<>();
         try {
             final Workbook campaignWB = WorkbookFactory.create(campaignFile);
@@ -22,7 +22,7 @@ public class VinListProcessor {
             final Iterator<Row> vinListIterator = vinListSheet.rowIterator();
             final Cell vinTitleCell = columnReaderHelper.findCell(vinListIterator, vinColumnTitle);
             final int vinColumnIndex = vinTitleCell.getColumnIndex();
-            final int descriptionColumnIndex = columnReaderHelper.findCellFrom(vinTitleCell, vinListIterator, descriptionTitle).getColumnIndex();
+            final int descriptionColumnIndex = columnReaderHelper.findCellFrom(vinTitleCell, vinListIterator, descriptionColumnTitle).getColumnIndex();
             while (vinListIterator.hasNext()) {
                 final Row vinListRow = vinListIterator.next();
                 final Cell vinListCell = vinListRow.getCell(vinColumnIndex);

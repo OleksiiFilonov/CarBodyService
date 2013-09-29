@@ -12,7 +12,7 @@ public class CampaignProcessor {
 	private ColumnReaderHelper columnReaderHelper;
 
 	public ListMultimap<String, Cell> linkBodyIdWithCampaigns(final Cell[] bodyIds, final File campaignFile,
-			final String vinColumnMarker) {
+			final String vinColumnTitle) {
 		final String [] bodyIdsToProcess = new String[bodyIds.length];
         for (int i = 0; i < bodyIds.length; ++i) {
             bodyIdsToProcess[i] = bodyIds[i].getStringCellValue();
@@ -25,7 +25,7 @@ public class CampaignProcessor {
 			for (int sheetIndex = 1; sheetIndex < numbersOfSheet; sheetIndex++) {
 				final Sheet vinSheet = campaignWB.getSheetAt(sheetIndex);
 				final Iterator<Row> vinRows = vinSheet.rowIterator();
-				final int vinColumnIndex = columnReaderHelper.findCell(vinRows, vinColumnMarker).getColumnIndex();
+				final int vinColumnIndex = columnReaderHelper.findCell(vinRows, vinColumnTitle).getColumnIndex();
 				while (vinRows.hasNext()) {
 					final Row vinRow = vinRows.next();
 					final Cell vinCell = vinRow.getCell(vinColumnIndex);
