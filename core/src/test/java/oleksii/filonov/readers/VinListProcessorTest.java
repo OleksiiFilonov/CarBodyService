@@ -1,4 +1,4 @@
-package oleksii.filonov.reader;
+package oleksii.filonov.readers;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;

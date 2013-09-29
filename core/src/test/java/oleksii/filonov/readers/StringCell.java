@@ -1,4 +1,4 @@
-package oleksii.filonov.reader;
+package oleksii.filonov.readers;
 
 import org.apache.poi.ss.formula.FormulaParseException;
 import org.apache.poi.ss.usermodel.*;

@@ -1,4 +1,4 @@
-package oleksii.filonov.reader;
+package oleksii.filonov.readers;
 
 public class ReadDataException extends RuntimeException {
 

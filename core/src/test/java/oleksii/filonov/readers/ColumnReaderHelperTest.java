@@ -1,4 +1,4 @@
-package oleksii.filonov.reader;
+package oleksii.filonov.readers;
 
 import static oleksii.filonov.TestConstants.CAMPAIGN_FILE;
 import static oleksii.filonov.TestConstants.CLIENT_FILE;

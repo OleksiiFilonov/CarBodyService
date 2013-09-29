@@ -1,4 +1,4 @@
-package oleksii.filonov.writer;
+package oleksii.filonov.writers;
 
 import java.io.*;
 import java.util.*;

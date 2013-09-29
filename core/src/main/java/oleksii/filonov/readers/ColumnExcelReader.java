@@ -1,4 +1,4 @@
-package oleksii.filonov.reader;
+package oleksii.filonov.readers;
 
 import java.util.Iterator;
 import java.util.LinkedList;

@@ -9,8 +9,8 @@ import javax.swing.*;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
-import oleksii.filonov.writer.DataBuilder;
-import oleksii.filonov.writer.WorkbookBuilder;
+import oleksii.filonov.writers.DataBuilder;
+import oleksii.filonov.writers.WorkbookBuilder;
 
 public class MainWindow {
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle("localization/bundle");

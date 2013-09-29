@@ -1,4 +1,4 @@
-package oleksii.filonov.writer;
+package oleksii.filonov.writers;
 
 import static oleksii.filonov.TestConstants.*;
 import static org.mockito.Matchers.any;
@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.common.collect.*;
-import oleksii.filonov.reader.*;
+import oleksii.filonov.readers.*;
 import org.apache.poi.openxml4j.exceptions.*;
 import org.apache.poi.ss.usermodel.*;
 import org.junit.*;

@@ -1,4 +1,4 @@
-package oleksii.filonov.reader;
+package oleksii.filonov.readers;
 
 import static org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING;
 
