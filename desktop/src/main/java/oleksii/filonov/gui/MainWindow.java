@@ -7,10 +7,11 @@ import java.io.File;
 import java.util.ResourceBundle;
 import javax.swing.*;
 
+import com.intellij.uiDesigner.core.Spacer;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
-import oleksii.filonov.writers.DataBuilder;
-import oleksii.filonov.writers.WorkbookBuilder;
+import oleksii.filonov.processors.DataProcessorFacade;
+import oleksii.filonov.processors.WorkbookProcessorFacade;
 
 public class MainWindow {
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle("localization/bundle");
@@ -25,6 +26,7 @@ public class MainWindow {
     private File campaignFile;
     private File resultFile;
     private final JFileChooser fileChooser = new JFileChooser();
+    final DataProcessorFacade processor = new WorkbookProcessorFacade();
 
     public MainWindow() {
         clientsButton.addActionListener(new ActionListener() {
@@ -33,6 +35,7 @@ public class MainWindow {
                 final int returnValue = fileChooser.showOpenDialog(mainPanel);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     clientsFile = fileChooser.getSelectedFile();
+                    pathToClientsFileLabel.setText(clientsFile.getName());
                 }
             }
         });
@@ -42,6 +45,7 @@ public class MainWindow {
                 final int returnValue = fileChooser.showOpenDialog(mainPanel);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     campaignFile = fileChooser.getSelectedFile();
+                    pathToCampaignFileLabel.setText(campaignFile.getName());
                 }
             }
         });
@@ -51,13 +55,14 @@ public class MainWindow {
                 final int returnValue = fileChooser.showOpenDialog(mainPanel);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     resultFile = fileChooser.getSelectedFile();
-                    DataBuilder resultBuilder = new WorkbookBuilder();
+                    pathToResultsFileLabel.setText(resultFile.getName());
+                    processor.createResultFile(clientsFile, campaignFile, resultFile);
                 }
             }
         });
     }
 
-    public static void main(final String[] args) {
+    public static void fireMainWindow() {
         JFrame frame = new JFrame(resourceBundle.getString("main.window.title"));
         positionFrameToTheCenter(frame);
         frame.setContentPane(new MainWindow().mainPanel);
@@ -98,6 +103,8 @@ public class MainWindow {
         mainPanel = new JPanel();
         mainPanel.setLayout(new FormLayout("fill:15px:noGrow,left:4dlu:noGrow,fill:107px:noGrow,left:17dlu:noGrow,fill:339px:noGrow", "center:19px:noGrow,top:4dlu:noGrow,center:65px:noGrow,top:4dlu:noGrow,center:81px:noGrow,top:4dlu:noGrow,center:86px:noGrow,top:4dlu:noGrow,center:19px:noGrow"));
         pathToClientsFileLabel = new JLabel();
+        pathToClientsFileLabel.setAutoscrolls(true);
+        pathToClientsFileLabel.setEnabled(true);
         pathToClientsFileLabel.setText("Path to Clients File");
         CellConstraints cc = new CellConstraints();
         mainPanel.add(pathToClientsFileLabel, cc.xy(5, 3));
@@ -114,7 +121,7 @@ public class MainWindow {
         this.$$$loadButtonText$$$(resultsButton, ResourceBundle.getBundle("localization/bundle").getString("save.results.button.title"));
         resultsButton.setToolTipText(ResourceBundle.getBundle("localization/bundle").getString("save.results.tooltip"));
         mainPanel.add(resultsButton, cc.xy(3, 7));
-        final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
+        final Spacer spacer1 = new Spacer();
         mainPanel.add(spacer1, cc.xy(3, 9, CellConstraints.FILL, CellConstraints.DEFAULT));
         campaignButton = new JButton();
         campaignButton.setHorizontalTextPosition(0);
@@ -122,9 +129,9 @@ public class MainWindow {
         this.$$$loadButtonText$$$(campaignButton, ResourceBundle.getBundle("localization/bundle").getString("open.campaign.button.title"));
         campaignButton.setToolTipText(ResourceBundle.getBundle("localization/bundle").getString("open.campaign.file.tooltip"));
         mainPanel.add(campaignButton, cc.xy(3, 5));
-        final com.intellij.uiDesigner.core.Spacer spacer2 = new com.intellij.uiDesigner.core.Spacer();
+        final Spacer spacer2 = new Spacer();
         mainPanel.add(spacer2, cc.xywh(1, 1, 2, 9, CellConstraints.DEFAULT, CellConstraints.FILL));
-        final com.intellij.uiDesigner.core.Spacer spacer3 = new com.intellij.uiDesigner.core.Spacer();
+        final Spacer spacer3 = new Spacer();
         mainPanel.add(spacer3, cc.xyw(3, 1, 3, CellConstraints.FILL, CellConstraints.DEFAULT));
         clientsButton = new JButton();
         clientsButton.setHideActionText(false);

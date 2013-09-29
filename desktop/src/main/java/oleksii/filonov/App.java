@@ -1,8 +1,8 @@
 package oleksii.filonov;
 
-import java.awt.EventQueue;
+import java.awt.*;
 
-import oleksii.filonov.gui.MainFrame;
+import oleksii.filonov.gui.MainWindow;
 
 public class App {
     public static void main(final String[] args) {
@@ -10,16 +10,10 @@ public class App {
             @Override
             public void run() {
                 try {
-                    createAndShowGUI();
+                    MainWindow.fireMainWindow();
                 } catch(final Exception e) {
                     e.printStackTrace();
                 }
-            }
-
-            private void createAndShowGUI() {
-                final MainFrame frame = new MainFrame("Демо Версия");
-                frame.pack();
-                frame.setVisible(true);
             }
         });
     }
