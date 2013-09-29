@@ -7,15 +7,9 @@ import com.google.common.collect.*;
 import org.apache.poi.openxml4j.exceptions.*;
 import org.apache.poi.ss.usermodel.*;
 
-/**
- * Not a thread safe!!!
- */
 public class CampaignProcessor {
 
 	private ColumnReaderHelper columnReaderHelper;
-
-	private int maxReferenceNumber;
-
 
 	public ListMultimap<String, Cell> linkBodyIdWithCampaigns(final Cell[] bodyIds, final File campaignFile,
 			final String vinColumnMarker) {
@@ -40,7 +34,6 @@ public class CampaignProcessor {
 						if (bodyIndex > -1) {
 							final String foundBodyId = bodyIdsToProcess[bodyIndex];
 							result.put(foundBodyId, vinCell);
-							maxReferenceNumber = Math.max(maxReferenceNumber, result.get(foundBodyId).size());
 						}
 					}
 				}
@@ -49,10 +42,6 @@ public class CampaignProcessor {
 			throw new ReadDataException("Exception occurred while opening campaign file", e);
 		}
 		return result;
-	}
-
-	public int getMaxReferenceNumber() {
-		return maxReferenceNumber;
 	}
 
 	public void setColumnReaderHelper(final ColumnReaderHelper columnReaderHelper) {

@@ -60,6 +60,10 @@ public class WorkbookBuilderIntegrationTest {
         excelBuilder.setVinListDescriptionMap(bodyIdDescriptionMap);
         excelBuilder.assignTasks(bodyIds, linkedBodyIdWithCampaigns);
 		excelBuilder.saveToFile(LINKED_RESULT_PATH.toFile());
+        verifyResults();
+    }
+
+    private void verifyResults() throws IOException, InvalidFormatException {
         final Workbook workbookForVerification = WorkbookFactory.create(LINKED_RESULT_PATH.toFile());
         final Sheet verifyClientSheet = workbookForVerification.getSheetAt(0);
         final Iterator<Row> clientIterator = verifyClientSheet.rowIterator();
@@ -86,7 +90,8 @@ public class WorkbookBuilderIntegrationTest {
     }
 
     @Test
-    public void read() throws IOException, InvalidFormatException {
+    @Ignore
+    public void printResultFile() throws IOException, InvalidFormatException {
         final Workbook workbookForVerification = WorkbookFactory.create(LINKED_RESULT_PATH.toFile());
         final Sheet verifyClientSheet = workbookForVerification.getSheetAt(0);
         final Iterator<Row> clientIterator = verifyClientSheet.rowIterator();

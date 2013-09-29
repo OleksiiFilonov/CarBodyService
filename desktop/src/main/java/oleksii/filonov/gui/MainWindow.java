@@ -9,6 +9,8 @@ import javax.swing.*;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import oleksii.filonov.writer.DataBuilder;
+import oleksii.filonov.writer.WorkbookBuilder;
 
 public class MainWindow {
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle("localization/bundle");
@@ -31,6 +33,25 @@ public class MainWindow {
                 final int returnValue = fileChooser.showOpenDialog(mainPanel);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     clientsFile = fileChooser.getSelectedFile();
+                }
+            }
+        });
+        campaignButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                final int returnValue = fileChooser.showOpenDialog(mainPanel);
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    campaignFile = fileChooser.getSelectedFile();
+                }
+            }
+        });
+        resultsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                final int returnValue = fileChooser.showOpenDialog(mainPanel);
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    resultFile = fileChooser.getSelectedFile();
+                    DataBuilder resultBuilder = new WorkbookBuilder();
                 }
             }
         });
