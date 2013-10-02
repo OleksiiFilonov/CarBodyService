@@ -5,6 +5,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.ResourceBundle;
 
 import javax.swing.AbstractButton;
@@ -36,9 +37,10 @@ public class MainWindow {
 	private File campaignFile;
 	private File resultFile;
 	private final JFileChooser fileChooser = new JFileChooser();
-	private final DataProcessorFacade processor = new WorkbookProcessorFacade();
+	private final DataProcessorFacade processor;
 
-	public MainWindow() {
+	public MainWindow() throws IOException {
+		processor = new WorkbookProcessorFacade();
 		clientsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(final ActionEvent event) {
@@ -72,7 +74,7 @@ public class MainWindow {
 		});
 	}
 
-	public static void fireMainWindow() {
+	public static void fireMainWindow() throws IOException {
 		final JFrame frame = new JFrame(resourceBundle.getString("main.window.title"));
 		positionFrameToTheCenter(frame);
 		frame.setContentPane(new MainWindow().mainPanel);

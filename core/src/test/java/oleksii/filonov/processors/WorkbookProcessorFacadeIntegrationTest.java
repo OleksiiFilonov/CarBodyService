@@ -4,6 +4,8 @@ import static oleksii.filonov.TestConstants.CAMPAIGN_FILE;
 import static oleksii.filonov.TestConstants.CLIENT_FILE;
 import static oleksii.filonov.TestConstants.LINKED_RESULT_PATH;
 
+import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,7 +14,7 @@ public class WorkbookProcessorFacadeIntegrationTest {
 	private DataProcessorFacade dataProcessorFacade;
 
 	@Before
-	public void setUp() {
+	public void setUp() throws IOException {
 		final WorkbookProcessorFacade workbookProcessorFacade = new WorkbookProcessorFacade();
 		dataProcessorFacade = workbookProcessorFacade;
 	}
