@@ -11,7 +11,6 @@ public class PropertiesLoader {
 
     public Properties loadProperties() throws IOException {
         Properties prop = new Properties();
-        System.out.println("-" + Paths.get("", "src", "main" , "resources", "config", "settings.properties").toAbsolutePath().toString() + "-");
         prop.load(new FileReader(Paths.get("", "src", "main", "resources", "config", "settings.properties").toFile()));
         settings = new Settings();
         settings.setCampaignColumnNumberCampaignTitle(prop.getProperty("campaign.column.title.numberCampaign"));
