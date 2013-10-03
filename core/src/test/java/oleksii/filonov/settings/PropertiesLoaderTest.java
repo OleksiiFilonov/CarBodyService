@@ -12,7 +12,7 @@ public class PropertiesLoaderTest {
 
     @Test
     public void loadProperties() throws IOException {
-        propertiesLoader.loadProperties();
+        propertiesLoader.loadDefaultProperties();
         Settings settings = propertiesLoader.getSettings();
         assertEquals("Номер кампании", settings.getCampaignColumnNumberCampaignTitle());
         assertEquals("Описание", settings.getCampaignColumnDescriptionTitle());

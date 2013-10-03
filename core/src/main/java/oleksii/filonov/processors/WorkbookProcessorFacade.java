@@ -38,7 +38,7 @@ public class WorkbookProcessorFacade implements DataProcessorFacade {
 		vinListProcessor = new VinListProcessor();
 		vinListProcessor.setColumnReaderHelper(columnReaderHelper);
 		final PropertiesLoader loader = new PropertiesLoader();
-		loader.loadProperties();
+		loader.loadDefaultProperties();
 		settings = loader.getSettings();
 
 	}
