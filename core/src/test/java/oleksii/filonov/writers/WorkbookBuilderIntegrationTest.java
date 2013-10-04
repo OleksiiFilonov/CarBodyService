@@ -1,109 +1,129 @@
 package oleksii.filonov.writers;
 
-import static oleksii.filonov.TestConstants.*;
-import static org.junit.Assert.*;
+import static oleksii.filonov.TestConstants.CAMPAIGN_FILE;
+import static oleksii.filonov.TestConstants.CLIENT_FILE;
+import static oleksii.filonov.TestConstants.LINKED_RESULT_PATH;
+import static org.junit.Assert.assertThat;
 
-import java.io.*;
-import java.nio.file.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map;
 
-import com.google.common.collect.*;
-import oleksii.filonov.readers.*;
-import org.apache.poi.openxml4j.exceptions.*;
-import org.apache.poi.ss.usermodel.*;
-import org.hamcrest.*;
-import org.junit.*;
+import oleksii.filonov.readers.CampaignProcessor;
+import oleksii.filonov.readers.ColumnExcelReader;
+import oleksii.filonov.readers.ColumnReaderHelper;
+import oleksii.filonov.readers.VinListProcessor;
+
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Hyperlink;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.Matcher;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import com.google.common.collect.ListMultimap;
 
 public class WorkbookBuilderIntegrationTest {
 
 	private static final String BODY_ID_MARKER = "Номер кузова";
 	private static final String VIN_MARKER = "VIN";
-    private static final int VIN_LINK_COLUMN_INDEX = 6;
-    private static final int VIN_DESC_COLUMN_INDEX = 7;
-    private static final Matcher<Integer> LINK_COL_INDEX = CoreMatchers.equalTo(VIN_LINK_COLUMN_INDEX);
-    private static final Matcher<Integer> DESC_COL_INDEX = CoreMatchers.equalTo(VIN_DESC_COLUMN_INDEX);
-    private static final String DESC_10C150 = "УСТРАНЕНИЕ ШУМА ОТ ПЕРЕДНЕГО СИДЕНЬЯ С РУЧНОЙ РЕГУЛИРОВКОЙ(TSB No. In English : HCE11-91-P560-RBMDVF)";
-    private static final String DESC_10C116 = "ЗАМЕНА КЛЕММ КАБЕЛЯ АКБ(TSB No. In English : HCE11-11-P180-RBMDENFDLMTQCMHRNF)";
-    private static final String DESC_10CR07 = "SOLARIS / ACCENT (RBr) ПЛАСТИКОВАЯ ШАЙБА ВЕДУЩЕГО ВАЛА (ОБЕ СТОРОНЫ) СНЯТИЕ";
-    private static final String DESC_10CR08 = "SOLARIS / ACCENT (RBr) ЗАМЕНА РЕЙКИ РУЛЕВОГО УПРАВЛЕНИЯ С УСИЛИТЕЛЕМ В СБОРЕ";
+	private static final int VIN_LINK_COLUMN_INDEX = 6;
+	private static final int VIN_DESC_COLUMN_INDEX = 7;
+	private static final Matcher<Integer> LINK_COL_INDEX = CoreMatchers.equalTo(VIN_LINK_COLUMN_INDEX);
+	private static final Matcher<Integer> DESC_COL_INDEX = CoreMatchers.equalTo(VIN_DESC_COLUMN_INDEX);
+	private static final String DESC_10C150 = "УСТРАНЕНИЕ ШУМА ОТ ПЕРЕДНЕГО СИДЕНЬЯ С РУЧНОЙ РЕГУЛИРОВКОЙ(TSB No. In English : HCE11-91-P560-RBMDVF)";
+	private static final String DESC_10C116 = "ЗАМЕНА КЛЕММ КАБЕЛЯ АКБ(TSB No. In English : HCE11-11-P180-RBMDENFDLMTQCMHRNF)";
+	private static final String DESC_10CR07 = "SOLARIS / ACCENT (RBr) ПЛАСТИКОВАЯ ШАЙБА ВЕДУЩЕГО ВАЛА (ОБЕ СТОРОНЫ) СНЯТИЕ";
+	private static final String DESC_10CR08 = "SOLARIS / ACCENT (RBr) ЗАМЕНА РЕЙКИ РУЛЕВОГО УПРАВЛЕНИЯ С УСИЛИТЕЛЕМ В СБОРЕ";
 
-    private ColumnReaderHelper columnReaderHelper;
-    private ColumnExcelReader columnExcelReader;
+	private ColumnReaderHelper columnReaderHelper;
+	private ColumnExcelReader columnExcelReader;
 	private CampaignProcessor campaignProcessor;
-    private VinListProcessor vinListProcessor;
+	private VinListProcessor vinListProcessor;
 
-    @Before
+	@Before
 	public void setUp() throws InvalidFormatException, IOException {
-        if(!Files.exists(TARGET_RESOURCE)) {
-            Files.createDirectory(TARGET_RESOURCE);
-        }
 		columnReaderHelper = new ColumnReaderHelper();
 		campaignProcessor = new CampaignProcessor();
 		campaignProcessor.setColumnReaderHelper(columnReaderHelper);
-        columnExcelReader = new ColumnExcelReader();
-        columnExcelReader.setColumnReaderHelper(columnReaderHelper);
-        vinListProcessor = new VinListProcessor();
-        vinListProcessor.setColumnReaderHelper(columnReaderHelper);
-    }
+		columnExcelReader = new ColumnExcelReader();
+		columnExcelReader.setColumnReaderHelper(columnReaderHelper);
+		vinListProcessor = new VinListProcessor();
+		vinListProcessor.setColumnReaderHelper(columnReaderHelper);
+	}
 
 	@Test
 	public void formLinkedDocument() throws IOException, InvalidFormatException {
-        final Workbook clientWB = WorkbookFactory.create(CLIENT_FILE);
-        final Sheet clientSheet = clientWB.getSheetAt(0);
-        final Cell[] bodyIds = columnExcelReader.getColumnValues(clientSheet, BODY_ID_MARKER);
-        DataBuilder excelBuilder = new WorkbookBuilder();
-        excelBuilder.useWorkbook(clientWB);
-        excelBuilder.setPathToCampaignFile(CAMPAIGN_FILE.getName());
-		final ListMultimap<String, Cell> linkedBodyIdWithCampaigns = campaignProcessor.linkBodyIdWithCampaigns(
-				bodyIds, CAMPAIGN_FILE, VIN_MARKER);
-        final Map<String, String> bodyIdDescriptionMap = vinListProcessor.mapVinListIdToDescription(CAMPAIGN_FILE, "Номер кампании", "Описание");
-        excelBuilder.setVinListDescriptionMap(bodyIdDescriptionMap);
-        excelBuilder.assignTasks(bodyIds, linkedBodyIdWithCampaigns);
+		final Workbook clientWB = WorkbookFactory.create(CLIENT_FILE);
+		final Sheet clientSheet = clientWB.getSheetAt(0);
+		final Cell[] bodyIds = columnExcelReader.getColumnValues(clientSheet, BODY_ID_MARKER);
+		final DataBuilder excelBuilder = new WorkbookBuilder();
+		excelBuilder.useWorkbook(clientWB);
+		excelBuilder.setPathToCampaignFile(CAMPAIGN_FILE.getName());
+		final ListMultimap<String, Cell> linkedBodyIdWithCampaigns = campaignProcessor.linkBodyIdWithCampaigns(bodyIds,
+				CAMPAIGN_FILE, VIN_MARKER);
+		final Map<String, String> bodyIdDescriptionMap = vinListProcessor.mapVinListIdToDescription(CAMPAIGN_FILE,
+				"Номер кампании", "Описание");
+		excelBuilder.setVinListDescriptionMap(bodyIdDescriptionMap);
+		excelBuilder.assignTasks(bodyIds, linkedBodyIdWithCampaigns);
 		excelBuilder.saveToFile(LINKED_RESULT_PATH.toFile());
-        verifyResults();
-    }
+		verifyResults();
+	}
 
-    private void verifyResults() throws IOException, InvalidFormatException {
-        final Workbook workbookForVerification = WorkbookFactory.create(LINKED_RESULT_PATH.toFile());
-        final Sheet verifyClientSheet = workbookForVerification.getSheetAt(0);
-        final Iterator<Row> clientIterator = verifyClientSheet.rowIterator();
-        //check for cell type
-        final Cell cell_10c150_firstOccurrence = columnReaderHelper.findCell(clientIterator, "10C150");
-        assertThat(cell_10c150_firstOccurrence.getColumnIndex(), LINK_COL_INDEX);
-        assertThat(columnReaderHelper.findCellFrom(cell_10c150_firstOccurrence, clientIterator, DESC_10C150).getColumnIndex(), DESC_COL_INDEX);
-        final Cell cell_10C116 = columnReaderHelper.findCell(clientIterator, "10C116");
-        assertThat(cell_10C116.getColumnIndex(), LINK_COL_INDEX);
-        final Cell descCell_10C116 = columnReaderHelper.findCellFrom(cell_10C116, clientIterator, DESC_10C116);
-        assertThat(descCell_10C116.getColumnIndex(), DESC_COL_INDEX);
-        final Cell cell_10C150_secondOccurrence = columnReaderHelper.findCellFrom(descCell_10C116, clientIterator, "10C150");
-        assertThat(cell_10C150_secondOccurrence.getColumnIndex(), LINK_COL_INDEX);
-        assertThat(columnReaderHelper.findCellFrom(cell_10C150_secondOccurrence, clientIterator, DESC_10C150).getColumnIndex(), DESC_COL_INDEX);
-        Cell cell_10CR07 = columnReaderHelper.findCell(clientIterator, "10CR07");
-        assertThat(cell_10CR07.getColumnIndex(), LINK_COL_INDEX);
-        assertThat(columnReaderHelper.findCellFrom(cell_10CR07, clientIterator, DESC_10CR07).getColumnIndex(), DESC_COL_INDEX);
-        Cell cell_10CR08 = columnReaderHelper.findCell(clientIterator, "10CR08");
-        assertThat(cell_10CR08.getColumnIndex(), LINK_COL_INDEX);
-        assertThat(columnReaderHelper.findCellFrom(cell_10CR08, clientIterator, DESC_10CR08).getColumnIndex(), DESC_COL_INDEX);
-        Cell cell_20CR22 = columnReaderHelper.findCell(clientIterator, "20CR22");
-        assertThat(cell_20CR22.getColumnIndex(), LINK_COL_INDEX);
-        assertThat(columnReaderHelper.findCellFrom(cell_20CR22, clientIterator, "Ремонт Бензобака").getColumnIndex(), DESC_COL_INDEX);
-    }
+	private void verifyResults() throws IOException, InvalidFormatException {
+		final Workbook workbookForVerification = WorkbookFactory.create(LINKED_RESULT_PATH.toFile());
+		final Sheet verifyClientSheet = workbookForVerification.getSheetAt(0);
+		final Iterator<Row> clientIterator = verifyClientSheet.rowIterator();
+		// check for cell type
+		final Cell cell_10c150_firstOccurrence = columnReaderHelper.findCell(clientIterator, "10C150");
+		assertThat(cell_10c150_firstOccurrence.getColumnIndex(), LINK_COL_INDEX);
+		assertThat(columnReaderHelper.findCellFrom(cell_10c150_firstOccurrence, clientIterator, DESC_10C150)
+				.getColumnIndex(), DESC_COL_INDEX);
+		final Cell cell_10C116 = columnReaderHelper.findCell(clientIterator, "10C116");
+		assertThat(cell_10C116.getColumnIndex(), LINK_COL_INDEX);
+		final Cell descCell_10C116 = columnReaderHelper.findCellFrom(cell_10C116, clientIterator, DESC_10C116);
+		assertThat(descCell_10C116.getColumnIndex(), DESC_COL_INDEX);
+		final Cell cell_10C150_secondOccurrence = columnReaderHelper.findCellFrom(descCell_10C116, clientIterator,
+				"10C150");
+		assertThat(cell_10C150_secondOccurrence.getColumnIndex(), LINK_COL_INDEX);
+		assertThat(columnReaderHelper.findCellFrom(cell_10C150_secondOccurrence, clientIterator, DESC_10C150)
+				.getColumnIndex(), DESC_COL_INDEX);
+		final Cell cell_10CR07 = columnReaderHelper.findCell(clientIterator, "10CR07");
+		assertThat(cell_10CR07.getColumnIndex(), LINK_COL_INDEX);
+		assertThat(columnReaderHelper.findCellFrom(cell_10CR07, clientIterator, DESC_10CR07).getColumnIndex(),
+				DESC_COL_INDEX);
+		final Cell cell_10CR08 = columnReaderHelper.findCell(clientIterator, "10CR08");
+		assertThat(cell_10CR08.getColumnIndex(), LINK_COL_INDEX);
+		assertThat(columnReaderHelper.findCellFrom(cell_10CR08, clientIterator, DESC_10CR08).getColumnIndex(),
+				DESC_COL_INDEX);
+		final Cell cell_20CR22 = columnReaderHelper.findCell(clientIterator, "20CR22");
+		assertThat(cell_20CR22.getColumnIndex(), LINK_COL_INDEX);
+		assertThat(columnReaderHelper.findCellFrom(cell_20CR22, clientIterator, "Ремонт Бензобака").getColumnIndex(),
+				DESC_COL_INDEX);
+	}
 
-    @Test
-    @Ignore
-    public void printResultFile() throws IOException, InvalidFormatException {
-        final Workbook workbookForVerification = WorkbookFactory.create(LINKED_RESULT_PATH.toFile());
-        final Sheet verifyClientSheet = workbookForVerification.getSheetAt(0);
-        final Iterator<Row> clientIterator = verifyClientSheet.rowIterator();
-        while (clientIterator.hasNext()) {
-            Row row = clientIterator.next();
-            Cell cell = row.getCell(6);
-            if (cell != null) {
-                Hyperlink hyperlink = cell.getHyperlink();
-                if (hyperlink != null)
-                    System.out.println(hyperlink.getAddress());
-            }
-        }
-    }
+	@Test
+	@Ignore
+	public void printResultFile() throws IOException, InvalidFormatException {
+		final Workbook workbookForVerification = WorkbookFactory.create(LINKED_RESULT_PATH.toFile());
+		final Sheet verifyClientSheet = workbookForVerification.getSheetAt(0);
+		final Iterator<Row> clientIterator = verifyClientSheet.rowIterator();
+		while (clientIterator.hasNext()) {
+			final Row row = clientIterator.next();
+			final Cell cell = row.getCell(6);
+			if (cell != null) {
+				final Hyperlink hyperlink = cell.getHyperlink();
+				if (hyperlink != null) {
+					System.out.println(hyperlink.getAddress());
+				}
+			}
+		}
+	}
 
 }
