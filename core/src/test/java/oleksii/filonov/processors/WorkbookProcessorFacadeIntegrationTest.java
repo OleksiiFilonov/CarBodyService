@@ -2,7 +2,7 @@ package oleksii.filonov.processors;
 
 import static oleksii.filonov.TestConstants.CAMPAIGN_FILE2;
 import static oleksii.filonov.TestConstants.CLIENT_FILE2;
-import static oleksii.filonov.TestConstants.LINKED_RESULT_PATH;
+import static oleksii.filonov.TestConstants.LINKED_RESULT_PATH2;
 
 import java.io.IOException;
 
@@ -21,6 +21,6 @@ public class WorkbookProcessorFacadeIntegrationTest {
 
 	@Test
 	public void createResultFile() {
-		dataProcessorFacade.createResultFile(CLIENT_FILE2, CAMPAIGN_FILE2, LINKED_RESULT_PATH.toFile());
+		dataProcessorFacade.createResultFile(CLIENT_FILE2, CAMPAIGN_FILE2, LINKED_RESULT_PATH2.toFile());
 	}
 }
