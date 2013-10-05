@@ -27,7 +27,7 @@ public class WorkbookProcessorFacade implements DataProcessorFacade {
 	private final CampaignProcessor campaignProcessor;
 	private final VinListProcessor vinListProcessor;
 	private final ColumnExcelReader columnExcelReader;
-	private final Settings settings;
+	private Settings settings;
 
 	public WorkbookProcessorFacade() throws IOException {
 		final ColumnReaderHelper columnReaderHelper = new ColumnReaderHelper();
@@ -38,9 +38,7 @@ public class WorkbookProcessorFacade implements DataProcessorFacade {
 		vinListProcessor = new VinListProcessor();
 		vinListProcessor.setColumnReaderHelper(columnReaderHelper);
 		final PropertiesLoader loader = new PropertiesLoader();
-		loader.loadDefaultProperties();
-		settings = loader.getSettings();
-
+		settings = loader.loadDefaultProperties();
 	}
 
 	@Override
@@ -64,4 +62,9 @@ public class WorkbookProcessorFacade implements DataProcessorFacade {
 			throw new ReadDataException("Exception happened while processing result file", exc);
 		}
 	}
+
+    @Override
+    public void setSettings(final Settings settings) {
+        this.settings = settings;
+    }
 }

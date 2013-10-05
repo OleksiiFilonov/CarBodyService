@@ -1,10 +1,12 @@
 package oleksii.filonov.settings;
 
+import static oleksii.filonov.TestConstants.ALTERNATIVE_SETTINGS_PATH;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.nio.file.Paths;
 
+import oleksii.filonov.TestConstants;
 import org.junit.Test;
 
 public class PropertiesLoaderTest {
@@ -13,8 +15,7 @@ public class PropertiesLoaderTest {
 
 	@Test
 	public void loadDefaultProperties() throws IOException {
-		propertiesLoader.loadDefaultProperties();
-		final Settings settings = propertiesLoader.getSettings();
+        final Settings settings = propertiesLoader.loadDefaultProperties();
 		assertEquals("Номер кампании", settings.getCampaignColumnNumberCampaignTitle());
 		assertEquals("Описание", settings.getCampaignColumnDescriptionTitle());
 		assertEquals("VIN", settings.getCampaignColumnVinListIdTitle());
@@ -23,9 +24,7 @@ public class PropertiesLoaderTest {
 
 	@Test
 	public void loadPropertiesFrom() throws IOException {
-		propertiesLoader.loadPropertiesFrom(Paths.get("", "src", "test", "resources", "config",
-				"path_to_settings.properties"));
-		final Settings settings = propertiesLoader.getSettings();
+        final Settings settings = propertiesLoader.loadPropertiesFrom(ALTERNATIVE_SETTINGS_PATH);
 		assertEquals("Номер кампании", settings.getCampaignColumnNumberCampaignTitle());
 		assertEquals("Описание", settings.getCampaignColumnDescriptionTitle());
 		assertEquals("VIN", settings.getCampaignColumnVinListIdTitle());

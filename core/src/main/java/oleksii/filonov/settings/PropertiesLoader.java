@@ -11,29 +11,25 @@ public class PropertiesLoader {
 
 	private Settings settings;
 
-	public Properties loadDefaultProperties() throws IOException {
+	public Settings loadDefaultProperties() throws IOException {
 		final Properties prop = new Properties();
 		prop.load(getClass().getResourceAsStream(Paths.get("/", "config", "settings.properties").toString()));
-		populateSettings(prop);
-		return prop;
+		return populateSettings(prop);
 	}
 
-	public Properties loadPropertiesFrom(final Path pathToPropertiesFile) throws FileNotFoundException, IOException {
+	public Settings loadPropertiesFrom(final Path pathToPropertiesFile) throws FileNotFoundException, IOException {
 		final Properties prop = new Properties();
 		prop.load(new FileReader(pathToPropertiesFile.toFile()));
-		populateSettings(prop);
-		return prop;
+		return populateSettings(prop);
 	}
 
-	private void populateSettings(final Properties prop) {
+	private Settings populateSettings(final Properties prop) {
 		settings = new Settings();
 		settings.setCampaignColumnNumberCampaignTitle(prop.getProperty("campaign.column.title.numberCampaign"));
 		settings.setCampaignColumnDescriptionTitle(prop.getProperty("campaign.column.title.description"));
 		settings.setCampaignColumnVinListIdTitle(prop.getProperty("campaign.column.title.vinListId"));
 		settings.setClientColumnBodyNumber(prop.getProperty("client.column.title.bodyNumber"));
+        return settings;
 	}
 
-	public Settings getSettings() {
-		return settings;
-	}
 }

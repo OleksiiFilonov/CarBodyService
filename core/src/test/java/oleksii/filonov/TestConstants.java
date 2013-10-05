@@ -13,4 +13,6 @@ public class TestConstants {
 	public static final File CLIENT_FILE = RESOURCE_PATH.resolve("Clients.xls").toFile();
 	public static final File CAMPAIGN_FILE2 = RESOURCE_PATH.resolve("Campaign2.xlsx").toFile();
 	public static final File CLIENT_FILE2 = RESOURCE_PATH.resolve("Clients2.xlsx").toFile();
+    private static final Path ALTERNATIVE_SETTINGS_SHORT_PATH = Paths.get("config", "path_to_settings.properties");
+    public static final Path ALTERNATIVE_SETTINGS_PATH = RESOURCE_PATH.resolve(ALTERNATIVE_SETTINGS_SHORT_PATH);
 }
