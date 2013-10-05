@@ -147,7 +147,7 @@ public class WorkbookBuilderTest {
 		excelBuilder.useWorkbook(clientWorkbook);
 		mockFoundCellWithThreeLinksBehaviour();
 		mockAnotherFoundCellBehaviour();
-		when(creationHelper.createHyperlink(Hyperlink.LINK_FILE)).thenReturn(foundBodyFirstHyperLink)
+		when(creationHelper.createHyperlink(Hyperlink.LINK_DOCUMENT)).thenReturn(foundBodyFirstHyperLink)
 				.thenReturn(foundBodySecondHyperLink).thenReturn(foundBodyFourthHyperLink)
 				.thenReturn(anotherFoundBodyHyperLink);
 		mockFoundBodyIdCellsOnVinLists();
