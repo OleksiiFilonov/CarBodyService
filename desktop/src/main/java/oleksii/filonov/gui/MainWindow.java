@@ -4,13 +4,13 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
 import javax.swing.*;
 
 import oleksii.filonov.processors.DataProcessorFacade;
+import oleksii.filonov.processors.FilesToProcess;
 import oleksii.filonov.processors.WorkbookProcessorFacade;
 
 import com.intellij.uiDesigner.core.Spacer;
@@ -26,9 +26,7 @@ public class MainWindow {
     private JLabel pathToClientsFileLabel;
     private JLabel pathToCampaignFileLabel;
     private JLabel pathToResultsFileLabel;
-    private File clientsFile;
-    private File campaignFile;
-    private File resultFile;
+    private FilesToProcess filesToProcess = new FilesToProcess();
     private final JFileChooser fileChooser = new JFileChooser();
     private final DataProcessorFacade processor;
 
@@ -39,8 +37,8 @@ public class MainWindow {
             public void actionPerformed(final ActionEvent event) {
                 final int returnValue = fileChooser.showOpenDialog(mainPanel);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
-                    clientsFile = fileChooser.getSelectedFile();
-                    pathToClientsFileLabel.setText(clientsFile.getName());
+                    filesToProcess.setClientsFile(fileChooser.getSelectedFile());
+                    pathToClientsFileLabel.setText(filesToProcess.getClientsFile().getName());
                 }
             }
         });
@@ -49,8 +47,8 @@ public class MainWindow {
             public void actionPerformed(final ActionEvent e) {
                 final int returnValue = fileChooser.showOpenDialog(mainPanel);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
-                    campaignFile = fileChooser.getSelectedFile();
-                    pathToCampaignFileLabel.setText(campaignFile.getName());
+                    filesToProcess.setCampaignFile(fileChooser.getSelectedFile());
+                    pathToCampaignFileLabel.setText(filesToProcess.getCampaignFile().getName());
                 }
             }
         });
@@ -59,9 +57,9 @@ public class MainWindow {
             public void actionPerformed(final ActionEvent e) {
                 final int returnValue = fileChooser.showOpenDialog(mainPanel);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
-                    resultFile = fileChooser.getSelectedFile();
-                    pathToResultsFileLabel.setText(resultFile.getName());
-                    processor.createResultFile(clientsFile, campaignFile, resultFile);
+                    filesToProcess.setResultFile(fileChooser.getSelectedFile());
+                    pathToResultsFileLabel.setText(filesToProcess.getResultFile().getName());
+                    processor.createResultFile(filesToProcess);
                 }
             }
         });

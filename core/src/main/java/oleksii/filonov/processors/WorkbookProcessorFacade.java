@@ -1,6 +1,5 @@
 package oleksii.filonov.processors;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
@@ -42,22 +41,22 @@ public class WorkbookProcessorFacade implements DataProcessorFacade {
 	}
 
 	@Override
-	public void createResultFile(final File clientsFile, final File campaignFile, final File resultFile) {
+	public void createResultFile(FilesToProcess filesToProcess) {
 		try {
-			final Workbook clientsWb = WorkbookFactory.create(clientsFile);
+			final Workbook clientsWb = WorkbookFactory.create(filesToProcess.getClientsFile());
 			final Sheet clientsSheet = clientsWb.getSheetAt(0);
 			final Cell[] bodyIds = columnExcelReader
 					.getColumnValues(clientsSheet, settings.getClientColumnBodyNumber());
 			final DataBuilder excelBuilder = new WorkbookBuilder();
 			excelBuilder.useWorkbook(clientsWb);
-			excelBuilder.setPathToCampaignFile(campaignFile.getName());
+			excelBuilder.setPathToCampaignFile(filesToProcess.getCampaignFile().getName());
 			final ListMultimap<String, Cell> linkedBodyIdWithCampaigns = campaignProcessor.linkBodyIdWithCampaigns(
-					bodyIds, campaignFile, settings.getCampaignColumnVinListIdTitle());
-			final Map<String, String> bodyIdDescriptionMap = vinListProcessor.mapVinListIdToDescription(campaignFile,
+					bodyIds, filesToProcess.getCampaignFile(), settings.getCampaignColumnVinListIdTitle());
+			final Map<String, String> bodyIdDescriptionMap = vinListProcessor.mapVinListIdToDescription(filesToProcess.getCampaignFile(),
 					settings.getCampaignColumnNumberCampaignTitle(), settings.getCampaignColumnDescriptionTitle());
 			excelBuilder.setVinListDescriptionMap(bodyIdDescriptionMap);
 			excelBuilder.assignTasks(bodyIds, linkedBodyIdWithCampaigns);
-			excelBuilder.saveToFile(resultFile);
+			excelBuilder.saveToFile(filesToProcess.getResultFile());
 		} catch (IOException | InvalidFormatException exc) {
 			throw new ReadDataException("Exception happened while processing result file", exc);
 		}
