@@ -3,7 +3,6 @@ package oleksii.filonov.settings;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Properties;
 
 public class PropertiesLoader {
@@ -12,7 +11,7 @@ public class PropertiesLoader {
 
 	public Settings loadDefaultProperties() throws IOException {
 		final Properties prop = new Properties();
-		prop.load(getClass().getClassLoader().getResourceAsStream(Paths.get("/", "config", "settings.properties").toString()));
+		prop.load(getClass().getResourceAsStream("/config/settings.properties"));
 		return populateSettings(prop);
 	}
 
