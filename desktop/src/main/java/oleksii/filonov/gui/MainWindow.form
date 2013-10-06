@@ -16,7 +16,7 @@
     <colspec value="left:17dlu:noGrow"/>
     <colspec value="fill:339px:noGrow"/>
     <constraints>
-      <xy x="20" y="30" width="493" height="300"/>
+      <xy x="20" y="30" width="498" height="294"/>
     </constraints>
     <properties/>
     <border type="none"/>
