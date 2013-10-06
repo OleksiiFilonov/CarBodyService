@@ -16,6 +16,8 @@ import oleksii.filonov.processors.WorkbookProcessorFacade;
 import com.intellij.uiDesigner.core.Spacer;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import oleksii.filonov.settings.PropertiesLoader;
+import oleksii.filonov.settings.Settings;
 
 public class MainWindow {
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle("localization/bundle");
@@ -29,9 +31,11 @@ public class MainWindow {
     private FilesToProcess filesToProcess = new FilesToProcess();
     private final JFileChooser fileChooser = new JFileChooser();
     private final DataProcessorFacade processor;
+    private Settings settings;
 
     public MainWindow() throws IOException {
         processor = new WorkbookProcessorFacade();
+        settings = PropertiesLoader.loadDefaultProperties();
         clientsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent event) {
@@ -59,7 +63,7 @@ public class MainWindow {
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     filesToProcess.setResultFile(fileChooser.getSelectedFile());
                     pathToResultsFileLabel.setText(filesToProcess.getResultFile().getName());
-                    processor.createResultFile(filesToProcess);
+                    processor.createResultFile(settings, filesToProcess);
                 }
             }
         });

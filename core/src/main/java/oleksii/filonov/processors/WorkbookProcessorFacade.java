@@ -26,7 +26,6 @@ public class WorkbookProcessorFacade implements DataProcessorFacade {
 	private final CampaignProcessor campaignProcessor;
 	private final VinListProcessor vinListProcessor;
 	private final ColumnExcelReader columnExcelReader;
-	private Settings settings;
 
 	public WorkbookProcessorFacade() throws IOException {
 		final ColumnReaderHelper columnReaderHelper = new ColumnReaderHelper();
@@ -36,12 +35,10 @@ public class WorkbookProcessorFacade implements DataProcessorFacade {
 		campaignProcessor.setColumnReaderHelper(columnReaderHelper);
 		vinListProcessor = new VinListProcessor();
 		vinListProcessor.setColumnReaderHelper(columnReaderHelper);
-		final PropertiesLoader loader = new PropertiesLoader();
-		settings = loader.loadDefaultProperties();
 	}
 
 	@Override
-	public void createResultFile(FilesToProcess filesToProcess) {
+	public void createResultFile(Settings settings, FilesToProcess filesToProcess) {
 		try {
 			final Workbook clientsWb = WorkbookFactory.create(filesToProcess.getClientsFile());
 			final Sheet clientsSheet = clientsWb.getSheetAt(0);
@@ -62,8 +59,4 @@ public class WorkbookProcessorFacade implements DataProcessorFacade {
 		}
 	}
 
-    @Override
-    public void setSettings(final Settings settings) {
-        this.settings = settings;
-    }
 }

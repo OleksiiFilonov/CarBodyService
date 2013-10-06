@@ -38,7 +38,8 @@ public class WorkbookProcessorFacadeIntegrationTest {
 
 	@Test
 	public void createResultFileWithDefaultSettings() throws InvalidFormatException, IOException {
-		dataProcessorFacade.createResultFile(new FilesToProcess(CLIENT_FILE2, CAMPAIGN_FILE2, LINKED_RESULT_PATH2.toFile()));
+        final Settings settings = PropertiesLoader.loadDefaultProperties();
+		dataProcessorFacade.createResultFile(settings, new FilesToProcess(CLIENT_FILE2, CAMPAIGN_FILE2, LINKED_RESULT_PATH2.toFile()));
 
         verifyResultsWhenDefaultSettingsLoaded();
 	}
@@ -57,10 +58,8 @@ public class WorkbookProcessorFacadeIntegrationTest {
 
     @Test
     public void createResultFileWithReloadedSettings() throws IOException, InvalidFormatException {
-        final PropertiesLoader propertiesLoader = new PropertiesLoader();
-        final Settings settings = propertiesLoader.loadPropertiesFrom(ALTERNATIVE_SETTINGS_PATH);
-        dataProcessorFacade.setSettings(settings);
-        dataProcessorFacade.createResultFile(new FilesToProcess(CLIENT_FILE, CAMPAIGN_FILE, LINKED_RESULT_PATH.toFile()));
+        final Settings settings = PropertiesLoader.loadPropertiesFrom(ALTERNATIVE_SETTINGS_PATH);
+        dataProcessorFacade.createResultFile(settings, new FilesToProcess(CLIENT_FILE, CAMPAIGN_FILE, LINKED_RESULT_PATH.toFile()));
 
         verifyResultsWhenExplicitlySetSettingsLoaded();
 

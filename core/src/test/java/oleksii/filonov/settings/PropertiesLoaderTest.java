@@ -11,11 +11,9 @@ import org.junit.Test;
 
 public class PropertiesLoaderTest {
 
-	private final PropertiesLoader propertiesLoader = new PropertiesLoader();
-
 	@Test
 	public void loadDefaultProperties() throws IOException {
-        final Settings settings = propertiesLoader.loadDefaultProperties();
+        final Settings settings = PropertiesLoader.loadDefaultProperties();
 		assertEquals("Номер кампании", settings.getCampaignColumnNumberCampaignTitle());
 		assertEquals("Описание", settings.getCampaignColumnDescriptionTitle());
 		assertEquals("VIN", settings.getCampaignColumnVinListIdTitle());
@@ -24,7 +22,7 @@ public class PropertiesLoaderTest {
 
 	@Test
 	public void loadPropertiesFrom() throws IOException {
-        final Settings settings = propertiesLoader.loadPropertiesFrom(ALTERNATIVE_SETTINGS_PATH);
+        final Settings settings = PropertiesLoader.loadPropertiesFrom(ALTERNATIVE_SETTINGS_PATH);
 		assertEquals("Номер кампании", settings.getCampaignColumnNumberCampaignTitle());
 		assertEquals("Описание", settings.getCampaignColumnDescriptionTitle());
 		assertEquals("VIN", settings.getCampaignColumnVinListIdTitle());
