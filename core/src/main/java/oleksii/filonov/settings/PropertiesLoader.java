@@ -1,6 +1,5 @@
 package oleksii.filonov.settings;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -13,11 +12,11 @@ public class PropertiesLoader {
 
 	public Settings loadDefaultProperties() throws IOException {
 		final Properties prop = new Properties();
-		prop.load(getClass().getResourceAsStream(Paths.get("/", "config", "settings.properties").toString()));
+		prop.load(getClass().getClassLoader().getResourceAsStream(Paths.get("/", "config", "settings.properties").toString()));
 		return populateSettings(prop);
 	}
 
-	public Settings loadPropertiesFrom(final Path pathToPropertiesFile) throws FileNotFoundException, IOException {
+	public Settings loadPropertiesFrom(final Path pathToPropertiesFile) throws IOException {
 		final Properties prop = new Properties();
 		prop.load(new FileReader(pathToPropertiesFile.toFile()));
 		return populateSettings(prop);

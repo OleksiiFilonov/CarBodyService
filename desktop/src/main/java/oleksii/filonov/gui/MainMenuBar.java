@@ -12,9 +12,8 @@ public class MainMenuBar extends JMenuBar {
 
 
     public MainMenuBar() {
-        JMenu settingsMenu = new JMenu(resourceBundle.getString("menu.title.settings"));
+        final JMenu settingsMenu = new JMenu(resourceBundle.getString("menu.title.settings"));
         add(settingsMenu);
-        settingsMenu.
         settingsMenu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
