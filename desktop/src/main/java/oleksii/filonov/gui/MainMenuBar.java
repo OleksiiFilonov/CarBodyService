@@ -4,22 +4,24 @@ package oleksii.filonov.gui;
 import javax.swing.*;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
 public class MainMenuBar extends JMenuBar {
 
+
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle("localization/bundle");
 
 
-    public MainMenuBar() {
+    public MainMenuBar(final Frame owner) {
         final JMenu settingsMenu = new JMenu(resourceBundle.getString("menu.title.settings"));
         add(settingsMenu);
         settingsMenu.addMenuListener(new MenuListener() {
             @Override
             public void menuSelected(MenuEvent e) {
-                SettingsDialog.fireSettingsDialog();
+                SettingsDialog.fireSettingsDialog(owner);
             }
 
             @Override

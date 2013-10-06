@@ -73,7 +73,7 @@ public class MainWindow {
         final JFrame frame = new JFrame(resourceBundle.getString("main.window.title"));
         positionFrameToTheCenter(frame);
         frame.setContentPane(new MainWindow().mainPanel);
-        frame.setJMenuBar(new MainMenuBar());
+        frame.setJMenuBar(new MainMenuBar(frame));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
