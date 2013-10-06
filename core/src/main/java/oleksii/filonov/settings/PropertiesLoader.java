@@ -7,8 +7,6 @@ import java.util.Properties;
 
 public class PropertiesLoader {
 
-	private Settings settings;
-
 	public Settings loadDefaultProperties() throws IOException {
 		final Properties prop = new Properties();
 		prop.load(getClass().getResourceAsStream("/config/settings.properties"));
@@ -22,7 +20,7 @@ public class PropertiesLoader {
 	}
 
 	private Settings populateSettings(final Properties prop) {
-		settings = new Settings();
+		Settings settings = new Settings();
 		settings.setCampaignColumnNumberCampaignTitle(prop.getProperty("campaign.column.title.numberCampaign"));
 		settings.setCampaignColumnDescriptionTitle(prop.getProperty("campaign.column.title.description"));
 		settings.setCampaignColumnVinListIdTitle(prop.getProperty("campaign.column.title.vinListId"));

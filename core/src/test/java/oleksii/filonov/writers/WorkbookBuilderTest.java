@@ -60,10 +60,7 @@ public class WorkbookBuilderTest {
 	private static final String VIN_LIST_ANOTHER_FOUND_BODY_DESC = "This is the 3 vin list description";
 	private static final String VIN_LIST_4_DESC = "This is the 4 vin list description";
 
-	private ColumnReaderHelper columnReaderHelper;
-	private CampaignProcessor campaignProcessor;
-
-	private WorkbookBuilder excelBuilder;
+    private WorkbookBuilder excelBuilder;
 	@Mock
 	private Workbook clientWorkbook;
 	@Mock
@@ -133,8 +130,8 @@ public class WorkbookBuilderTest {
 	public void setUp() throws IOException, InvalidFormatException {
 		excelBuilder = new WorkbookBuilder();
 		excelBuilder.setPathToCampaignFile(PATH_TO_CAMPAIGN_FILE);
-		columnReaderHelper = new ColumnReaderHelper();
-		campaignProcessor = new CampaignProcessor();
+        ColumnReaderHelper columnReaderHelper = new ColumnReaderHelper();
+        CampaignProcessor campaignProcessor = new CampaignProcessor();
 		campaignProcessor.setColumnReaderHelper(columnReaderHelper);
 		populateMocks();
 	}
