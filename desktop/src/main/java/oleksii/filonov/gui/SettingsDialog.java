@@ -51,7 +51,7 @@ public class SettingsDialog extends JDialog {
         dispose();
     }
 
-    public static void main(String[] args) {
+    public static void fireSettingsDialog() {
         SettingsDialog dialog = new SettingsDialog();
         dialog.pack();
         dialog.setVisible(true);
