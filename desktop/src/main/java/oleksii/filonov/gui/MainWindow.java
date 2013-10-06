@@ -1,7 +1,6 @@
 package oleksii.filonov.gui;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -16,6 +15,7 @@ import oleksii.filonov.processors.WorkbookProcessorFacade;
 import com.intellij.uiDesigner.core.Spacer;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import oleksii.filonov.readers.ReadDataException;
 import oleksii.filonov.settings.PropertiesLoader;
 import oleksii.filonov.singleton.SettingsStorage;
 
@@ -32,7 +32,7 @@ public class MainWindow {
     private final JFileChooser fileChooser = new JFileChooser();
     private final DataProcessorFacade processor;
 
-    public MainWindow() throws IOException {
+    public MainWindow(final Frame mainFrame) throws IOException {
         processor = new WorkbookProcessorFacade();
         SettingsStorage.setSettings(PropertiesLoader.loadDefaultProperties());
         clientsButton.addActionListener(new ActionListener() {
@@ -62,7 +62,13 @@ public class MainWindow {
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     filesToProcess.setResultFile(fileChooser.getSelectedFile());
                     pathToResultsFileLabel.setText(filesToProcess.getResultFile().getName());
-                    processor.createResultFile(SettingsStorage.getSettings(), filesToProcess);
+                    try {
+                        processor.createResultFile(SettingsStorage.getSettings(), filesToProcess);
+                    } catch (ReadDataException rdExc) {
+                        JOptionPane.showMessageDialog(mainFrame, rdExc.getLocalizedMessage(),
+                                resourceBundle.getString("errorbox.title"),
+                                JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         });
@@ -72,7 +78,7 @@ public class MainWindow {
     public static void fireMainWindow() throws IOException {
         final JFrame frame = new JFrame(resourceBundle.getString("main.window.title"));
         positionFrameToTheCenter(frame);
-        frame.setContentPane(new MainWindow().mainPanel);
+        frame.setContentPane(new MainWindow(frame).mainPanel);
         frame.setJMenuBar(new MainMenuBar(frame));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
