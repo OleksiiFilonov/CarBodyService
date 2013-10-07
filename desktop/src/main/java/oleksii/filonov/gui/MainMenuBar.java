@@ -12,7 +12,7 @@ import java.util.ResourceBundle;
 public class MainMenuBar extends JMenuBar {
 
 
-    private static ResourceBundle resourceBundle = ResourceBundle.getBundle("localization/bundle");
+    private static ResourceBundle resourceBundle = ResourceBundle.getBundle("localization/bundle", new EncodedControl());
 
 
     public MainMenuBar(final Frame owner) {

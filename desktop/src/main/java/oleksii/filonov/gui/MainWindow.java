@@ -20,7 +20,7 @@ import oleksii.filonov.settings.PropertiesLoader;
 import oleksii.filonov.singleton.SettingsStorage;
 
 public class MainWindow {
-    private static ResourceBundle resourceBundle = ResourceBundle.getBundle("localization/bundle");
+    private static ResourceBundle resourceBundle = ResourceBundle.getBundle("localization/bundle", new EncodedControl());
     private JPanel mainPanel;
     private JButton clientsButton;
     private JButton campaignButton;
