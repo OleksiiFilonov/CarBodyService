@@ -24,8 +24,9 @@ public class WorkbookProcessorFacadeIntegrationTest {
 
 	private static final String DESC_10C116 = "ЗАМЕНА КЛЕММ КАБЕЛЯ АКБ(TSB No. In English : HCE11-11-P180-RBMDENFDLMTQCMHRNF)";
     private static final String DESC_10C150 = "УСТРАНЕНИЕ ШУМА ОТ ПЕРЕДНЕГО СИДЕНЬЯ С РУЧНОЙ РЕГУЛИРОВКОЙ(TSB No. In English : HCE11-91-P560-RBMDVF)";
+    private static final int VIN_LIST_COLUMN_INDEX = 5;
 
-	private DataProcessorFacade dataProcessorFacade;
+    private DataProcessorFacade dataProcessorFacade;
 
 	private ColumnReaderHelper columnReaderHelper;
 
@@ -51,6 +52,7 @@ public class WorkbookProcessorFacadeIntegrationTest {
         final Cell cell_KMHSH81XDBU763142 = columnReaderHelper.findCell(clientIterator, "KMHSH81XDBU763142");
         final Cell cell_KMHSH81XDBU763142_vinLIst = columnReaderHelper.findCellFrom(cell_KMHSH81XDBU763142,
                 clientIterator, "10C116");
+        assertThat(cell_KMHSH81XDBU763142_vinLIst.getColumnIndex(), equalTo(VIN_LIST_COLUMN_INDEX));
         final Cell cell_KMHSH81XDBU763142_description = columnReaderHelper.findCellFrom(cell_KMHSH81XDBU763142_vinLIst,
                 clientIterator, DESC_10C116);
         assertThat(cell_KMHSH81XDBU763142_description.getRowIndex(), equalTo(cell_KMHSH81XDBU763142.getRowIndex()));

@@ -9,13 +9,15 @@ import org.apache.poi.ss.usermodel.*;
 
 public interface DataBuilder {
 
-	void useWorkbook(Workbook clientWorkBook) throws IOException, InvalidFormatException;
+    void useWorkbook(final Workbook clientWorkBook) throws IOException, InvalidFormatException;
 
-    void assignTasks(Cell[] bodyIdCells, ListMultimap<String, Cell> linksToBodies);
+    void assignTasks(final Cell[] bodyIdCells,final ListMultimap<String, Cell> linksToBodies);
 
-    void saveToFile(File fileToSave) throws IOException;
+    void saveToFile(final File fileToSave) throws IOException;
 
-    void setPathToCampaignFile(String pathToCampaignFile);
+    void setPathToCampaignFile(final String pathToCampaignFile);
 
-    void setVinListDescriptionMap(Map<String, String> vinListDescriptionMap);
+    void setVinListDescriptionMap(final Map<String, String> vinListDescriptionMap);
+
+    public void setTaskOffset(final int taskOffset);
 }

@@ -12,7 +12,7 @@ public class ColumnExcelReader {
 
     private ColumnReaderHelper columnReaderHelper;
 
-    public Cell[] getColumnValues(final Sheet sheetToRead, final String columnMarker) {
+    public Cell[] getColumnCells(final Sheet sheetToRead, final String columnMarker) {
         final List<Cell> result = new LinkedList<>();
         final Iterator<Row> rows = sheetToRead.rowIterator();
         final int columnIndex = this.columnReaderHelper.findCell(rows, columnMarker).getColumnIndex();
@@ -24,6 +24,12 @@ public class ColumnExcelReader {
             }
         }
         return result.toArray(new Cell[] {});
+    }
+
+    public int findDistanceToEndFrom(final String fromCellValue, final Sheet sheetToRead) {
+        final Iterator<Row> rows = sheetToRead.rowIterator();
+        final Cell fromCell = columnReaderHelper.findCell(rows, fromCellValue);
+        return fromCell.getRow().getLastCellNum() -1 - fromCell.getColumnIndex();
     }
 
     public void setColumnReaderHelper(final ColumnReaderHelper columnReaderHelper) {

@@ -21,8 +21,8 @@ import com.google.common.collect.ListMultimap;
 public class WorkbookBuilder implements DataBuilder {
 
 	private static final int SHIFT_ROW_OFFSET = 1;
-	private static final int VIN_LINK_OFFSET = 1;
-	private static final int VIN_DESCRIPTION_OFFSET = 2;
+	private static final int VIN_LINK_COLUMN_INDEX_OFFSET = 1;
+	private static final int VIN_DESCRIPTION_COLUMN_INDEX_OFFSET = 2;
 	private static final char[] COLUMN_INDEXES = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
 			'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'Y', 'V', 'W', 'X', 'Y', 'Z' };
 	private static final int EXCEL_ROW_OFFSET = 1;
@@ -35,6 +35,8 @@ public class WorkbookBuilder implements DataBuilder {
 	private CreationHelper creationHelper;
 	private String pathToCampaignFile;
 	private Map<String, String> vinListDescriptionMap;
+    //distance between vin body id number column and last column
+    private int taskOffset = 0;
 
 	@Override
 	public void useWorkbook(final Workbook clientWorkbook) throws IOException, InvalidFormatException {
@@ -57,6 +59,10 @@ public class WorkbookBuilder implements DataBuilder {
 	public void setPathToCampaignFile(final String pathToCampaignFile) {
 		this.pathToCampaignFile = pathToCampaignFile;
 	}
+
+    public void setTaskOffset(final int taskOffset) {
+        this.taskOffset = taskOffset;
+    }
 
 	@Override
 	public void assignTasks(final Cell[] bodyIdCells, final ListMultimap<String, Cell> linksToBodies) {
@@ -91,7 +97,7 @@ public class WorkbookBuilder implements DataBuilder {
 
 	private void createLinkToVinListCell(final int bodyIdColumnIndex, final Cell foundBodyIdCellOnVinList,
 			final Row bodyIdRow) {
-		final Cell linkToVin = bodyIdRow.createCell(bodyIdColumnIndex + VIN_LINK_OFFSET, Cell.CELL_TYPE_STRING);
+		final Cell linkToVin = bodyIdRow.createCell(bodyIdColumnIndex + taskOffset + VIN_LINK_COLUMN_INDEX_OFFSET, Cell.CELL_TYPE_STRING);
 		final String sheetName = foundBodyIdCellOnVinList.getSheet().getSheetName();
 		linkToVin.setCellValue(sheetName);
 		final Hyperlink cellHyperlink = creationHelper.createHyperlink(Hyperlink.LINK_DOCUMENT);
@@ -99,7 +105,7 @@ public class WorkbookBuilder implements DataBuilder {
 		cellHyperlink.setLabel(sheetName);
 		linkToVin.setHyperlink(cellHyperlink);
 		linkToVin.setCellStyle(linkCellStyle);
-		final Cell vinDescriptionCell = bodyIdRow.createCell(bodyIdColumnIndex + VIN_DESCRIPTION_OFFSET,
+		final Cell vinDescriptionCell = bodyIdRow.createCell(bodyIdColumnIndex + taskOffset + VIN_DESCRIPTION_COLUMN_INDEX_OFFSET,
 				Cell.CELL_TYPE_STRING);
 		vinDescriptionCell.setCellValue(vinListDescriptionMap.get(sheetName));
 		vinDescriptionCell.setCellStyle(linkCellStyle);

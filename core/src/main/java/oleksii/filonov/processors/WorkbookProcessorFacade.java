@@ -8,7 +8,6 @@ import oleksii.filonov.readers.ColumnExcelReader;
 import oleksii.filonov.readers.ColumnReaderHelper;
 import oleksii.filonov.readers.ReadDataException;
 import oleksii.filonov.readers.VinListProcessor;
-import oleksii.filonov.settings.PropertiesLoader;
 import oleksii.filonov.settings.Settings;
 import oleksii.filonov.writers.DataBuilder;
 import oleksii.filonov.writers.WorkbookBuilder;
@@ -42,8 +41,8 @@ public class WorkbookProcessorFacade implements DataProcessorFacade {
 		try {
 			final Workbook clientsWb = WorkbookFactory.create(filesToProcess.getClientsFile());
 			final Sheet clientsSheet = clientsWb.getSheetAt(0);
-			final Cell[] bodyIds = columnExcelReader
-					.getColumnValues(clientsSheet, settings.getClientColumnBodyNumber());
+			final Cell[] bodyIds = columnExcelReader.getColumnCells(
+                    clientsSheet, settings.getClientColumnBodyNumber());
 			final DataBuilder excelBuilder = new WorkbookBuilder();
 			excelBuilder.useWorkbook(clientsWb);
 			excelBuilder.setPathToCampaignFile(filesToProcess.getCampaignFile().getName());
@@ -52,6 +51,7 @@ public class WorkbookProcessorFacade implements DataProcessorFacade {
 			final Map<String, String> bodyIdDescriptionMap = vinListProcessor.mapVinListIdToDescription(filesToProcess.getCampaignFile(),
 					settings.getCampaignColumnNumberCampaignTitle(), settings.getCampaignColumnDescriptionTitle());
 			excelBuilder.setVinListDescriptionMap(bodyIdDescriptionMap);
+            excelBuilder.setTaskOffset(columnExcelReader.findDistanceToEndFrom(settings.getClientColumnBodyNumber(), clientsSheet));
 			excelBuilder.assignTasks(bodyIds, linkedBodyIdWithCampaigns);
 			excelBuilder.saveToFile(filesToProcess.getResultFile());
 		} catch (IOException | InvalidFormatException exc) {

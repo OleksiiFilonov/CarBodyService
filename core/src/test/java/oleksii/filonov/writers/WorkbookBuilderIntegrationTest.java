@@ -31,7 +31,8 @@ import com.google.common.collect.ListMultimap;
 public class WorkbookBuilderIntegrationTest {
 
     private static final String BODY_ID_MARKER = "Номер кузова";
-	private static final String VIN_MARKER = "VIN";
+    private static final String BODY_ID_MARKER2 = "VIN номер автомобиля";
+    private static final String VIN_MARKER = "VIN";
     private static final int VIN_LINK_COLUMN_INDEX = 6;
 	private static final int VIN_DESC_COLUMN_INDEX = 7;
 	private static final Matcher<Integer> LINK_COL_INDEX = CoreMatchers.equalTo(VIN_LINK_COLUMN_INDEX);
@@ -64,7 +65,7 @@ public class WorkbookBuilderIntegrationTest {
 	public void addTasksToClientsWithoutOffset() throws IOException, InvalidFormatException {
 		final Workbook clientWB = WorkbookFactory.create(CLIENT_FILE);
 		final Sheet clientSheet = clientWB.getSheetAt(0);
-		final Cell[] bodyIds = columnExcelReader.getColumnValues(clientSheet, BODY_ID_MARKER);
+		final Cell[] bodyIds = columnExcelReader.getColumnCells(clientSheet, BODY_ID_MARKER);
 		final DataBuilder excelBuilder = new WorkbookBuilder();
 		excelBuilder.useWorkbook(clientWB);
 		excelBuilder.setPathToCampaignFile(CAMPAIGN_FILE.getName());
@@ -114,7 +115,7 @@ public class WorkbookBuilderIntegrationTest {
     public void addTasksToClientsWithOffset() throws Exception {
         final Workbook clientWB = WorkbookFactory.create(CLIENT_FILE2);
         final Sheet clientSheet = clientWB.getSheetAt(0);
-        final Cell[] bodyIds = columnExcelReader.getColumnValues(clientSheet, "VIN номер автомобиля");
+        final Cell[] bodyIds = columnExcelReader.getColumnCells(clientSheet, BODY_ID_MARKER2);
         final DataBuilder excelBuilder = new WorkbookBuilder();
         excelBuilder.useWorkbook(clientWB);
         excelBuilder.setPathToCampaignFile(CAMPAIGN_FILE2.getName());
@@ -123,6 +124,7 @@ public class WorkbookBuilderIntegrationTest {
         final Map<String, String> bodyIdDescriptionMap = vinListProcessor.mapVinListIdToDescription(CAMPAIGN_FILE2,
                 CAMPAIGN_NUMBER_TITLE, CAMPAIGN_DESCRIPTION_TITLE);
         excelBuilder.setVinListDescriptionMap(bodyIdDescriptionMap);
+        excelBuilder.setTaskOffset(columnExcelReader.findDistanceToEndFrom(BODY_ID_MARKER2, clientSheet));
         excelBuilder.assignTasks(bodyIds, linkedBodyIdWithCampaigns);
         excelBuilder.saveToFile(LINKED_RESULT_PATH2.toFile());
 

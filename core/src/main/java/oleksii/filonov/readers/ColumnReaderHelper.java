@@ -30,7 +30,7 @@ public class ColumnReaderHelper {
     }
 
     private Cell lookupInCurrentRow(final Cell startCell, final String lookUpValue) {
-        Row currentRow = startCell.getRow();
+        final Row currentRow = startCell.getRow();
         for (int i = startCell.getColumnIndex(); i < currentRow.getLastCellNum(); ++i) {
             if (equals(lookUpValue, currentRow.getCell(i))) {
                 return currentRow.getCell(i);

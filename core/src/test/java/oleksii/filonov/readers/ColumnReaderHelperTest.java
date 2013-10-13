@@ -2,10 +2,10 @@ package oleksii.filonov.readers;
 
 import static oleksii.filonov.TestConstants.CAMPAIGN_FILE;
 import static oleksii.filonov.TestConstants.CLIENT_FILE;
+import static oleksii.filonov.TestConstants.CLIENT_FILE2;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -30,28 +30,28 @@ public class ColumnReaderHelperTest {
 	private static final String VIN_LIST_TITLE = "Список VIN";
 	private static final String VIN_DESCRIPTION = "Описание";
 
-	private Sheet bodyIdSheet;
+	private Sheet bodyIdSheetFirstClient;
 
 	private final ColumnReaderHelper columnReaderHelper = new ColumnReaderHelper();
 
 	@Before
 	public void setUp() throws InvalidFormatException, IOException {
 		final Workbook clientWB = WorkbookFactory.create(CLIENT_FILE);
-		bodyIdSheet = clientWB.getSheetAt(0);
+		bodyIdSheetFirstClient = clientWB.getSheetAt(0);
 	}
 
 	@Test
 	public void findBodyIdColumnIndex() {
-		assertEquals(BODY_ID_COLUMN_INDEX, columnReaderHelper.findCell(bodyIdSheet.iterator(), BODY_ID_MARKER)
-				.getColumnIndex());
+        assertEquals(BODY_ID_COLUMN_INDEX, columnReaderHelper.findCell(bodyIdSheetFirstClient.iterator(), BODY_ID_MARKER)
+                .getColumnIndex());
 	}
 
 	@Test
 	public void shouldNotFindBodyIdColumnIndex() {
 		final String columnToRead = WRONG_COLUMN_MARKER;
 		try {
-			columnReaderHelper.findCell(bodyIdSheet.iterator(), columnToRead);
-			fail(String.format("The test shouldn't find the column \"%s\" in source file", columnToRead));
+			columnReaderHelper.findCell(bodyIdSheetFirstClient.iterator(), columnToRead);
+			org.junit.Assert.fail(String.format("The test shouldn't find the column \"%s\" in source file", columnToRead));
 		} catch (final ReadDataException exc) {
 		}
 	}
@@ -94,7 +94,7 @@ public class ColumnReaderHelperTest {
 		assertEquals(VIN_DESCRIPTION, descriptionTitleCell.getStringCellValue());
 	}
 
-	@Test
+    @Test
 	@Ignore
 	public void printHyperLinksFromCampaign() throws InvalidFormatException, IOException {
 		final Iterator<Row> rowIterator = getCampaignVinListIterator();
