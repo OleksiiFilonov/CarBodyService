@@ -41,8 +41,8 @@ public class WorkbookProcessorFacade implements DataProcessorFacade {
 		try {
 			final Workbook clientsWb = WorkbookFactory.create(filesToProcess.getClientsFile());
 			final Sheet clientsSheet = clientsWb.getSheetAt(0);
-			final Cell[] bodyIds = columnExcelReader.getColumnCells(
-                    clientsSheet, settings.getClientColumnBodyNumber());
+			final Cell[] bodyIds = columnExcelReader.extractCellsFromColumn(
+                    settings.getClientColumnBodyNumber(), clientsSheet);
 			final ListMultimap<String, Cell> linkedBodyIdWithCampaigns = campaignProcessor.linkBodyIdWithCampaigns(
 					bodyIds, filesToProcess.getCampaignFile(), settings.getCampaignColumnVinListIdTitle());
             final Map<String, String> bodyIdDescriptionMap = vinListProcessor.mapVinListIdToDescription(filesToProcess.getCampaignFile(),

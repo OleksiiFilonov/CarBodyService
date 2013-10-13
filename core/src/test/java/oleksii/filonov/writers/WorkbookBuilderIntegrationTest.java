@@ -65,7 +65,7 @@ public class WorkbookBuilderIntegrationTest {
 	public void addTasksToClientsWithoutOffset() throws IOException, InvalidFormatException {
 		final Workbook clientWB = WorkbookFactory.create(CLIENT_FILE);
 		final Sheet clientSheet = clientWB.getSheetAt(0);
-		final Cell[] bodyIds = columnExcelReader.getColumnCells(clientSheet, BODY_ID_MARKER);
+		final Cell[] bodyIds = columnExcelReader.extractCellsFromColumn(BODY_ID_MARKER, clientSheet);
 		final DataBuilder excelBuilder = new WorkbookBuilder();
 		excelBuilder.useWorkbook(clientWB);
 		excelBuilder.setPathToCampaignFile(CAMPAIGN_FILE.getName());
@@ -115,7 +115,7 @@ public class WorkbookBuilderIntegrationTest {
     public void addTasksToClientsWithOffset() throws Exception {
         final Workbook clientWB = WorkbookFactory.create(CLIENT_FILE2);
         final Sheet clientSheet = clientWB.getSheetAt(0);
-        final Cell[] bodyIds = columnExcelReader.getColumnCells(clientSheet, BODY_ID_MARKER2);
+        final Cell[] bodyIds = columnExcelReader.extractCellsFromColumn(BODY_ID_MARKER2, clientSheet);
         final DataBuilder excelBuilder = new WorkbookBuilder();
         excelBuilder.useWorkbook(clientWB);
         excelBuilder.setPathToCampaignFile(CAMPAIGN_FILE2.getName());
