@@ -4,6 +4,7 @@ import static oleksii.filonov.TestConstants.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -40,15 +41,17 @@ public class WorkbookProcessorFacadeIntegrationTest {
 	@Test
 	public void createResultFileWithDefaultSettings() throws InvalidFormatException, IOException {
         final Settings settings = PropertiesLoader.loadDefaultProperties();
-		dataProcessorFacade.createResultFile(settings, new FilesToProcess(CLIENT_FILE2, CAMPAIGN_FILE2, LINKED_RESULT_PATH2.toFile()));
+        final FilesToProcess filesToProcess = new FilesToProcess();
+        filesToProcess.setClientsFile(CLIENT_FILE2);
+        filesToProcess.setCampaignFile(CAMPAIGN_FILE2);
+        filesToProcess.setResultFile(LINKED_RESULT_PATH2.toFile());
+		dataProcessorFacade.createResultFile(settings, filesToProcess);
 
         verifyResultsWhenDefaultSettingsLoaded();
 	}
 
     private void verifyResultsWhenDefaultSettingsLoaded() throws IOException, InvalidFormatException {
-        final Workbook workbookForVerification = WorkbookFactory.create(LINKED_RESULT_PATH2.toFile());
-        final Sheet verifyClientSheet = workbookForVerification.getSheetAt(0);
-        final Iterator<Row> clientIterator = verifyClientSheet.rowIterator();
+        final Iterator<Row> clientIterator = getClientsRowIterator(LINKED_RESULT_PATH2.toFile());
         final Cell cell_KMHSH81XDBU763142 = columnReaderHelper.findCell(clientIterator, "KMHSH81XDBU763142");
         final Cell cell_KMHSH81XDBU763142_vinLIst = columnReaderHelper.findCellFrom(cell_KMHSH81XDBU763142,
                 clientIterator, "10C116");
@@ -58,20 +61,26 @@ public class WorkbookProcessorFacadeIntegrationTest {
         assertThat(cell_KMHSH81XDBU763142_description.getRowIndex(), equalTo(cell_KMHSH81XDBU763142.getRowIndex()));
     }
 
+    private Iterator<Row> getClientsRowIterator(final File file) throws IOException, InvalidFormatException {
+        final Workbook workbookForVerification = WorkbookFactory.create(file);
+        final Sheet verifyClientSheet = workbookForVerification.getSheetAt(0);
+        return verifyClientSheet.rowIterator();
+    }
+
     @Test
     public void createResultFileWithReloadedSettings() throws IOException, InvalidFormatException {
         final Settings settings = PropertiesLoader.loadPropertiesFrom(ALTERNATIVE_SETTINGS_PATH);
-        dataProcessorFacade.createResultFile(settings, new FilesToProcess(CLIENT_FILE, CAMPAIGN_FILE, LINKED_RESULT_PATH.toFile()));
+        final FilesToProcess filesToProcess = new FilesToProcess();
+        filesToProcess.setClientsFile(CLIENT_FILE);
+        filesToProcess.setCampaignFile(CAMPAIGN_FILE);
+        filesToProcess.setResultFile(LINKED_RESULT_PATH.toFile());
+        dataProcessorFacade.createResultFile(settings, filesToProcess);
 
         verifyResultsWhenExplicitlySetSettingsLoaded();
-
-
     }
 
     private void verifyResultsWhenExplicitlySetSettingsLoaded() throws IOException, InvalidFormatException {
-        final Workbook workbookForVerification = WorkbookFactory.create(LINKED_RESULT_PATH.toFile());
-        final Sheet verifyClientSheet = workbookForVerification.getSheetAt(0);
-        final Iterator<Row> clientIterator = verifyClientSheet.rowIterator();
+        final Iterator<Row> clientIterator = getClientsRowIterator(LINKED_RESULT_PATH.toFile());
         final Cell cell_10c150_firstOccurrence = columnReaderHelper.findCell(clientIterator, "10C150");
         assertThat(cell_10c150_firstOccurrence.getColumnIndex(), equalTo(6));
         assertThat(columnReaderHelper.findCellFrom(cell_10c150_firstOccurrence, clientIterator, DESC_10C150)

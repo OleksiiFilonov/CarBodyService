@@ -43,14 +43,14 @@ public class WorkbookProcessorFacade implements DataProcessorFacade {
 			final Sheet clientsSheet = clientsWb.getSheetAt(0);
 			final Cell[] bodyIds = columnExcelReader.getColumnCells(
                     clientsSheet, settings.getClientColumnBodyNumber());
-			final DataBuilder excelBuilder = new WorkbookBuilder();
-			excelBuilder.useWorkbook(clientsWb);
-			excelBuilder.setPathToCampaignFile(filesToProcess.getCampaignFile().getName());
 			final ListMultimap<String, Cell> linkedBodyIdWithCampaigns = campaignProcessor.linkBodyIdWithCampaigns(
 					bodyIds, filesToProcess.getCampaignFile(), settings.getCampaignColumnVinListIdTitle());
-			final Map<String, String> bodyIdDescriptionMap = vinListProcessor.mapVinListIdToDescription(filesToProcess.getCampaignFile(),
+            final Map<String, String> bodyIdDescriptionMap = vinListProcessor.mapVinListIdToDescription(filesToProcess.getCampaignFile(),
 					settings.getCampaignColumnNumberCampaignTitle(), settings.getCampaignColumnDescriptionTitle());
-			excelBuilder.setVinListDescriptionMap(bodyIdDescriptionMap);
+            final DataBuilder excelBuilder = new WorkbookBuilder();
+            excelBuilder.useWorkbook(clientsWb);
+            excelBuilder.setPathToCampaignFile(filesToProcess.getCampaignFile().getName());
+            excelBuilder.setVinListDescriptionMap(bodyIdDescriptionMap);
             excelBuilder.setTaskOffset(columnExcelReader.findDistanceToEndFrom(settings.getClientColumnBodyNumber(), clientsSheet));
 			excelBuilder.assignTasks(bodyIds, linkedBodyIdWithCampaigns);
 			excelBuilder.saveToFile(filesToProcess.getResultFile());
