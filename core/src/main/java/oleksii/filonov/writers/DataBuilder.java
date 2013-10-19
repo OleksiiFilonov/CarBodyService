@@ -1,17 +1,19 @@
 package oleksii.filonov.writers;
 
-import java.io.*;
-import java.util.Map;
+import com.google.common.collect.ListMultimap;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Workbook;
 
-import com.google.common.collect.*;
-import org.apache.poi.openxml4j.exceptions.*;
-import org.apache.poi.ss.usermodel.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 
 public interface DataBuilder {
 
-    void useWorkbook(final Workbook clientWorkBook) throws IOException, InvalidFormatException;
+    void useWorkbook(final Workbook clientWorkBook);
 
-    void assignTasks(final Cell[] bodyIdCells,final ListMultimap<String, Cell> linksToBodies);
+    void assignTasks(final Cell[] bodyIdCells, final ListMultimap<String, Cell> linksToBodies);
 
     void saveToFile(final File fileToSave) throws IOException;
 

@@ -7,12 +7,12 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import java.util.Calendar;
 import java.util.Date;
 
-public class StringCell implements Cell {
+class StringCell implements Cell {
 
     private final String value;
 
-    public StringCell (final String value) {
-         this.value = value;
+    public StringCell(final String value) {
+        this.value = value;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class StringCell implements Cell {
     }
 
     @Override
-    public void setCellType(int cellType) {
+    public void setCellType(final int cellType) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -51,32 +51,32 @@ public class StringCell implements Cell {
     }
 
     @Override
-    public void setCellValue(double value) {
+    public void setCellValue(final double value) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public void setCellValue(Date value) {
+    public void setCellValue(final Date value) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public void setCellValue(Calendar value) {
+    public void setCellValue(final Calendar value) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public void setCellValue(RichTextString value) {
+    public void setCellValue(final RichTextString value) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public void setCellValue(String value) {
+    public void setCellValue(final String value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setCellFormula(String formula) throws FormulaParseException {
+    public void setCellFormula(final String formula) throws FormulaParseException {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -106,12 +106,12 @@ public class StringCell implements Cell {
     }
 
     @Override
-    public void setCellValue(boolean value) {
+    public void setCellValue(final boolean value) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public void setCellErrorValue(byte value) {
+    public void setCellErrorValue(final byte value) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -126,7 +126,7 @@ public class StringCell implements Cell {
     }
 
     @Override
-    public void setCellStyle(CellStyle style) {
+    public void setCellStyle(final CellStyle style) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -141,7 +141,7 @@ public class StringCell implements Cell {
     }
 
     @Override
-    public void setCellComment(Comment comment) {
+    public void setCellComment(final Comment comment) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -161,7 +161,7 @@ public class StringCell implements Cell {
     }
 
     @Override
-    public void setHyperlink(Hyperlink link) {
+    public void setHyperlink(final Hyperlink link) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 

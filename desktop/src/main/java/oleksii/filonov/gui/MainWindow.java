@@ -20,7 +20,7 @@ import oleksii.filonov.settings.PropertiesLoader;
 import oleksii.filonov.singleton.SettingsStorage;
 
 public class MainWindow {
-    private static ResourceBundle resourceBundle = ResourceBundle.getBundle("localization/bundle", new EncodedControl());
+    private static final ResourceBundle resourceBundle = ResourceBundle.getBundle("localization/bundle", new EncodedControl());
     private JPanel mainPanel;
     private JButton clientsButton;
     private JButton campaignButton;
@@ -28,7 +28,7 @@ public class MainWindow {
     private JLabel pathToClientsFileLabel;
     private JLabel pathToCampaignFileLabel;
     private JLabel pathToResultsFileLabel;
-    private FilesToProcess filesToProcess = new FilesToProcess();
+    private final FilesToProcess filesToProcess = new FilesToProcess();
     private final JFileChooser fileChooser = new JFileChooser();
     private final DataProcessorFacade processor;
 
@@ -93,10 +93,6 @@ public class MainWindow {
         final int y = (dim.height) / 6;
         // Move the window
         frame.setLocation(x, y);
-    }
-
-    private void createUIComponents() {
-
     }
 
     {

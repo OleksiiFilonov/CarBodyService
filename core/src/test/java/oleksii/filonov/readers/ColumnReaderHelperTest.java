@@ -1,117 +1,110 @@
 package oleksii.filonov.readers;
 
-import static oleksii.filonov.TestConstants.CAMPAIGN_FILE;
-import static oleksii.filonov.TestConstants.CLIENT_FILE;
-import static oleksii.filonov.TestConstants.CLIENT_FILE2;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.util.Iterator;
-
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.*;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.util.Iterator;
+
+import static oleksii.filonov.TestConstants.CAMPAIGN_FILE;
+import static oleksii.filonov.TestConstants.CLIENT_FILE;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 public class ColumnReaderHelperTest {
 
-	private static final String BODY_ID_MARKER = "Номер кузова";
-	private static final String WRONG_COLUMN_MARKER = "noSuchColumnName";
-	private static final int BODY_ID_COLUMN_INDEX = 5;
-	private static final String VIN_LIST_TITLE = "Список VIN";
-	private static final String VIN_DESCRIPTION = "Описание";
+    private static final String BODY_ID_MARKER = "Номер кузова";
+    private static final String WRONG_COLUMN_MARKER = "noSuchColumnName";
+    private static final int BODY_ID_COLUMN_INDEX = 5;
+    private static final String VIN_LIST_TITLE = "Список VIN";
+    private static final String VIN_DESCRIPTION = "Описание";
 
-	private Sheet bodyIdSheetFirstClient;
+    private Sheet bodyIdSheetFirstClient;
 
-	private final ColumnReaderHelper columnReaderHelper = new ColumnReaderHelper();
+    private final ColumnReaderHelper columnReaderHelper = new ColumnReaderHelper();
 
-	@Before
-	public void setUp() throws InvalidFormatException, IOException {
-		final Workbook clientWB = WorkbookFactory.create(CLIENT_FILE);
-		bodyIdSheetFirstClient = clientWB.getSheetAt(0);
-	}
-
-	@Test
-	public void findBodyIdColumnIndex() {
-        assertEquals(BODY_ID_COLUMN_INDEX, columnReaderHelper.findCell(bodyIdSheetFirstClient.iterator(), BODY_ID_MARKER)
-                .getColumnIndex());
-	}
-
-	@Test
-	public void shouldNotFindBodyIdColumnIndex() {
-		final String columnToRead = WRONG_COLUMN_MARKER;
-		try {
-			columnReaderHelper.findCell(bodyIdSheetFirstClient.iterator(), columnToRead);
-			org.junit.Assert.fail(String.format("The test shouldn't find the column \"%s\" in source file", columnToRead));
-		} catch (final ReadDataException exc) {
-		}
-	}
-
-	@Test
-	public void checkCellStringType() {
-		final Cell stringTypeCell = mock(Cell.class);
-		when(stringTypeCell.getCellType()).thenReturn(Cell.CELL_TYPE_STRING);
-		assertTrue(columnReaderHelper.isStringType(stringTypeCell));
-	}
-
-	@Test
-	public void checkCellIsNull() {
-		final Cell nullCell = null;
-		assertFalse(columnReaderHelper.isStringType(nullCell));
-	}
-
-	@Test
-	public void checkNumericType() {
-		final Cell stringTypeCell = mock(Cell.class);
-		when(stringTypeCell.getCellType()).thenReturn(Cell.CELL_TYPE_NUMERIC);
-		assertFalse(columnReaderHelper.isStringType(stringTypeCell));
-	}
-
-	@Test
-	public void findCellFrom() throws IOException, InvalidFormatException {
-		final Iterator<Row> rowIterator = getCampaignVinListIterator();
-		final Cell vinLIstTitleCell = columnReaderHelper.findCell(rowIterator, VIN_LIST_TITLE);
-		final Cell descriptionTitleCell = columnReaderHelper.findCellFrom(vinLIstTitleCell, rowIterator,
-				VIN_DESCRIPTION);
-		assertEquals(VIN_DESCRIPTION, descriptionTitleCell.getStringCellValue());
-	}
-
-	@Test(expected = ReadDataException.class)
-	public void shouldNotFindCellFromBecauseOfInvalidOrder() throws IOException, InvalidFormatException {
-		final Iterator<Row> rowIterator = getCampaignVinListIterator();
-		final Cell vinLIstTitleCell = columnReaderHelper.findCell(rowIterator, VIN_DESCRIPTION);
-		final Cell descriptionTitleCell = columnReaderHelper
-				.findCellFrom(vinLIstTitleCell, rowIterator, VIN_LIST_TITLE);
-		assertEquals(VIN_DESCRIPTION, descriptionTitleCell.getStringCellValue());
-	}
+    @Before
+    public void setUp() throws InvalidFormatException, IOException {
+        final Workbook clientWB = WorkbookFactory.create(CLIENT_FILE);
+        bodyIdSheetFirstClient = clientWB.getSheetAt(0);
+    }
 
     @Test
-	@Ignore
-	public void printHyperLinksFromCampaign() throws InvalidFormatException, IOException {
-		final Iterator<Row> rowIterator = getCampaignVinListIterator();
-		final int columnIndex = columnReaderHelper.findCell(rowIterator, VIN_LIST_TITLE).getColumnIndex();
-		while (rowIterator.hasNext()) {
-			final Row row = rowIterator.next();
-			final Cell cell = row.getCell(columnIndex);
-			if (columnReaderHelper.isStringType(cell)) {
-				System.out.println(cell.getHyperlink().getAddress());
-			}
-		}
-	}
+    public void findBodyIdColumnIndex() {
+        assertEquals(BODY_ID_COLUMN_INDEX, columnReaderHelper.findCell(bodyIdSheetFirstClient.iterator(), BODY_ID_MARKER)
+                .getColumnIndex());
+    }
 
-	private Iterator<Row> getCampaignVinListIterator() throws IOException, InvalidFormatException {
-		final Workbook campaignWB = WorkbookFactory.create(CAMPAIGN_FILE);
-		final Sheet campaignSheet = campaignWB.getSheetAt(0);
-		return campaignSheet.rowIterator();
-	}
+    @Test
+    public void shouldNotFindBodyIdColumnIndex() {
+        final String columnToRead = WRONG_COLUMN_MARKER;
+        try {
+            columnReaderHelper.findCell(bodyIdSheetFirstClient.iterator(), columnToRead);
+            org.junit.Assert.fail(String.format("The test shouldn't find the column \"%s\" in source file", columnToRead));
+        } catch (final ReadDataException exc) {
+        }
+    }
+
+    @Test
+    public void checkCellStringType() {
+        final Cell stringTypeCell = mock(Cell.class);
+        when(stringTypeCell.getCellType()).thenReturn(Cell.CELL_TYPE_STRING);
+        assertTrue(columnReaderHelper.isStringType(stringTypeCell));
+    }
+
+    @Test
+    public void checkCellIsNull() {
+        final Cell nullCell = null;
+        assertFalse(columnReaderHelper.isStringType(nullCell));
+    }
+
+    @Test
+    public void checkNumericType() {
+        final Cell stringTypeCell = mock(Cell.class);
+        when(stringTypeCell.getCellType()).thenReturn(Cell.CELL_TYPE_NUMERIC);
+        assertFalse(columnReaderHelper.isStringType(stringTypeCell));
+    }
+
+    @Test
+    public void findCellFrom() throws IOException, InvalidFormatException {
+        final Iterator<Row> rowIterator = getCampaignVinListIterator();
+        final Cell vinLIstTitleCell = columnReaderHelper.findCell(rowIterator, VIN_LIST_TITLE);
+        final Cell descriptionTitleCell = columnReaderHelper.findCellFrom(vinLIstTitleCell, rowIterator,
+                VIN_DESCRIPTION);
+        assertEquals(VIN_DESCRIPTION, descriptionTitleCell.getStringCellValue());
+    }
+
+    @Test(expected = ReadDataException.class)
+    public void shouldNotFindCellFromBecauseOfInvalidOrder() throws IOException, InvalidFormatException {
+        final Iterator<Row> rowIterator = getCampaignVinListIterator();
+        final Cell vinLIstTitleCell = columnReaderHelper.findCell(rowIterator, VIN_DESCRIPTION);
+        final Cell descriptionTitleCell = columnReaderHelper
+                .findCellFrom(vinLIstTitleCell, rowIterator, VIN_LIST_TITLE);
+        assertEquals(VIN_DESCRIPTION, descriptionTitleCell.getStringCellValue());
+    }
+
+    @Test
+    @Ignore
+    public void printHyperLinksFromCampaign() throws InvalidFormatException, IOException {
+        final Iterator<Row> rowIterator = getCampaignVinListIterator();
+        final int columnIndex = columnReaderHelper.findCell(rowIterator, VIN_LIST_TITLE).getColumnIndex();
+        while (rowIterator.hasNext()) {
+            final Row row = rowIterator.next();
+            final Cell cell = row.getCell(columnIndex);
+            if (columnReaderHelper.isStringType(cell)) {
+                System.out.println(cell.getHyperlink().getAddress());
+            }
+        }
+    }
+
+    private Iterator<Row> getCampaignVinListIterator() throws IOException, InvalidFormatException {
+        final Workbook campaignWB = WorkbookFactory.create(CAMPAIGN_FILE);
+        final Sheet campaignSheet = campaignWB.getSheetAt(0);
+        return campaignSheet.rowIterator();
+    }
 
 }

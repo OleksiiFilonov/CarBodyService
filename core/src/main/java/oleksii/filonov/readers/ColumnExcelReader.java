@@ -1,12 +1,12 @@
 package oleksii.filonov.readers;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ColumnExcelReader {
 
@@ -20,16 +20,16 @@ public class ColumnExcelReader {
 
     private Cell[] extractCellsForColumnIndex(final int columnIndex, final Iterator<Row> rows) {
         final List<Cell> result = new LinkedList<>();
-        while(rows.hasNext()) {
+        while (rows.hasNext()) {
             fillIndexedCellToExtracted(columnIndex, rows, result);
         }
-        return result.toArray(new Cell[] {});
+        return result.toArray(new Cell[result.size()]);
     }
 
     private void fillIndexedCellToExtracted(final int columnIndex, final Iterator<Row> rows, final List<Cell> result) {
         final Row row = rows.next();
         final Cell cell = row.getCell(columnIndex);
-        if( this.columnReaderHelper.isStringType(cell)) {
+        if (this.columnReaderHelper.isStringType(cell)) {
             result.add(cell);
         }
     }

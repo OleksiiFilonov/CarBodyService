@@ -11,9 +11,9 @@ import java.util.*;
 public class EncodedControl extends ResourceBundle.Control {
 
     @Override
-    public List<String> getFormats(String basename) {
+    public List<String> getFormats(final String baseName) {
 
-        if (basename == null) {
+        if (baseName == null) {
             throw new NullPointerException();
         }
         return Arrays.asList("properties");
@@ -38,7 +38,7 @@ public class EncodedControl extends ResourceBundle.Control {
 
             try {
                 if (reload) {
-                    URL url = loader.getResource(resourceName);
+                    final URL url = loader.getResource(resourceName);
                     if (url != null) {
                         final URLConnection connection = url.openConnection();
                         if (connection != null) {

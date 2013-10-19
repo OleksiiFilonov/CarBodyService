@@ -19,20 +19,20 @@ public class SettingsDialog extends JDialog {
 
     private JTextField clientBodyIdColumnTitle;
 
-    public SettingsDialog(Frame owner) {
+    public SettingsDialog(final Frame owner) {
         super(owner);
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
         buttonOK.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 onOK();
             }
         });
 
         buttonCancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 onCancel();
             }
         });
@@ -40,14 +40,14 @@ public class SettingsDialog extends JDialog {
 // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
+            public void windowClosing(final WindowEvent e) {
                 onCancel();
             }
         });
 
 // call onCancel() on ESCAPE
         contentPane.registerKeyboardAction(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 onCancel();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
@@ -68,8 +68,8 @@ public class SettingsDialog extends JDialog {
     }
 
 
-    public static void fireSettingsDialog(Frame owner) {
-        SettingsDialog dialog = new SettingsDialog(owner);
+    public static void fireSettingsDialog(final Frame owner) {
+        final SettingsDialog dialog = new SettingsDialog(owner);
         dialog.getClientBodyIdColumnTitle().setText(SettingsStorage.getSettings().getClientColumnBodyNumber());
         dialog.setLocationRelativeTo(owner);
         dialog.setModal(true);

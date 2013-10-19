@@ -12,7 +12,7 @@ import java.util.ResourceBundle;
 public class MainMenuBar extends JMenuBar {
 
 
-    private static ResourceBundle resourceBundle = ResourceBundle.getBundle("localization/bundle", new EncodedControl());
+    private static final ResourceBundle resourceBundle = ResourceBundle.getBundle("localization/bundle", new EncodedControl());
 
 
     public MainMenuBar(final Frame owner) {
@@ -20,17 +20,17 @@ public class MainMenuBar extends JMenuBar {
         add(settingsMenu);
         settingsMenu.addMenuListener(new MenuListener() {
             @Override
-            public void menuSelected(MenuEvent e) {
+            public void menuSelected(final MenuEvent e) {
                 SettingsDialog.fireSettingsDialog(owner);
             }
 
             @Override
-            public void menuDeselected(MenuEvent e) {
+            public void menuDeselected(final MenuEvent e) {
                 //To change body of implemented methods use File | Settings | File Templates.
             }
 
             @Override
-            public void menuCanceled(MenuEvent e) {
+            public void menuCanceled(final MenuEvent e) {
                 //To change body of implemented methods use File | Settings | File Templates.
             }
         });

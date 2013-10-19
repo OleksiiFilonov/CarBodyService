@@ -1,14 +1,14 @@
 package oleksii.filonov.readers;
 
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.*;
 
 public class VinListProcessor {
 
@@ -26,12 +26,12 @@ public class VinListProcessor {
             while (vinListIterator.hasNext()) {
                 final Row vinListRow = vinListIterator.next();
                 final Cell vinListCell = vinListRow.getCell(vinColumnIndex);
-                Cell descriptionCell = vinListRow.getCell(descriptionColumnIndex);
-                if(vinListCell != null && descriptionCell != null) {
+                final Cell descriptionCell = vinListRow.getCell(descriptionColumnIndex);
+                if (vinListCell != null && descriptionCell != null) {
                     result.put(vinListCell.getStringCellValue().trim(), descriptionCell.getStringCellValue().trim());
                 }
             }
-        } catch (IOException  | InvalidFormatException e) {
+        } catch (IOException | InvalidFormatException e) {
             throw new ReadDataException("Exception occurred while opening campaign file", e);
         }
         return result;

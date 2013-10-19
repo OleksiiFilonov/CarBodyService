@@ -66,6 +66,7 @@
               <forms/>
             </constraints>
             <properties>
+              <labelFor value="2e241"/>
               <text resource-bundle="localization/bundle" key="client.column.title.bodyNumber"/>
             </properties>
           </component>

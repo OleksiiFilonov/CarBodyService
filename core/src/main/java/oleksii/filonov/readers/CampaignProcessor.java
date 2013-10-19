@@ -1,33 +1,28 @@
 package oleksii.filonov.readers;
 
+import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.ListMultimap;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-
-import com.google.common.collect.LinkedListMultimap;
-import com.google.common.collect.ListMultimap;
-
 public class CampaignProcessor {
 
-	private ColumnReaderHelper columnReaderHelper;
+    private ColumnReaderHelper columnReaderHelper;
 
-	public ListMultimap<String, Cell> linkBodyIdWithCampaigns(final Cell[] bodyIds, final File campaignFile,
-			final String vinColumnTitle) {
+    public ListMultimap<String, Cell> linkBodyIdWithCampaigns(final Cell[] bodyIds, final File campaignFile,
+                                                              final String vinColumnTitle) {
         final String[] bodyIdsToProcess = extractBodyIdValues(bodyIds);
         try {
             return linkBodyIdWithCampaigns(campaignFile, vinColumnTitle, bodyIdsToProcess);
         } catch (InvalidFormatException | IOException e) {
             throw new ReadDataException("Exception occurred while opening campaign file", e);
         }
-	}
+    }
 
     private String[] extractBodyIdValues(final Cell[] bodyIds) {
         final String[] bodyIdsToProcess = new String[bodyIds.length];
@@ -62,7 +57,7 @@ public class CampaignProcessor {
     }
 
     public void setColumnReaderHelper(final ColumnReaderHelper columnReaderHelper) {
-		this.columnReaderHelper = columnReaderHelper;
-	}
+        this.columnReaderHelper = columnReaderHelper;
+    }
 
 }

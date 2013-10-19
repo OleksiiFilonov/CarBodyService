@@ -1,54 +1,48 @@
 package oleksii.filonov.processors;
 
-import static oleksii.filonov.TestConstants.*;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import oleksii.filonov.readers.ColumnReaderHelper;
+import oleksii.filonov.settings.PropertiesLoader;
+import oleksii.filonov.settings.Settings;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
-import oleksii.filonov.readers.ColumnReaderHelper;
-
-import oleksii.filonov.settings.PropertiesLoader;
-import oleksii.filonov.settings.Settings;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.junit.Before;
-import org.junit.Test;
+import static oleksii.filonov.TestConstants.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
 
 public class WorkbookProcessorFacadeIntegrationTest {
 
-	private static final String DESC_10C116 = "ЗАМЕНА КЛЕММ КАБЕЛЯ АКБ(TSB No. In English : HCE11-11-P180-RBMDENFDLMTQCMHRNF)";
+    private static final String DESC_10C116 = "ЗАМЕНА КЛЕММ КАБЕЛЯ АКБ(TSB No. In English : HCE11-11-P180-RBMDENFDLMTQCMHRNF)";
     private static final String DESC_10C150 = "УСТРАНЕНИЕ ШУМА ОТ ПЕРЕДНЕГО СИДЕНЬЯ С РУЧНОЙ РЕГУЛИРОВКОЙ(TSB No. In English : HCE11-91-P560-RBMDVF)";
     private static final int VIN_LIST_COLUMN_INDEX = 5;
 
     private DataProcessorFacade dataProcessorFacade;
 
-	private ColumnReaderHelper columnReaderHelper;
+    private ColumnReaderHelper columnReaderHelper;
 
-	@Before
-	public void setUp() throws IOException {
-		final WorkbookProcessorFacade workbookProcessorFacade = new WorkbookProcessorFacade();
-		dataProcessorFacade = workbookProcessorFacade;
-		columnReaderHelper = new ColumnReaderHelper();
-	}
+    @Before
+    public void setUp() throws IOException {
+        dataProcessorFacade = new WorkbookProcessorFacade();
+        columnReaderHelper = new ColumnReaderHelper();
+    }
 
-	@Test
-	public void createResultFileWithDefaultSettings() throws InvalidFormatException, IOException {
+    @Test
+    public void createResultFileWithDefaultSettings() throws InvalidFormatException, IOException {
         final Settings settings = PropertiesLoader.loadDefaultProperties();
         final FilesToProcess filesToProcess = new FilesToProcess();
         filesToProcess.setClientsFile(CLIENT_FILE2);
         filesToProcess.setCampaignFile(CAMPAIGN_FILE2);
         filesToProcess.setResultFile(LINKED_RESULT_PATH2.toFile());
-		dataProcessorFacade.createResultFile(settings, filesToProcess);
+        dataProcessorFacade.createResultFile(settings, filesToProcess);
 
         verifyResultsWhenDefaultSettingsLoaded();
-	}
+    }
 
     private void verifyResultsWhenDefaultSettingsLoaded() throws IOException, InvalidFormatException {
         final Iterator<Row> clientIterator = getClientsRowIterator(LINKED_RESULT_PATH2.toFile());

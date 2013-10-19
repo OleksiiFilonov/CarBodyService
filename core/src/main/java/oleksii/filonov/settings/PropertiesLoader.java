@@ -7,25 +7,27 @@ import java.util.Properties;
 
 public final class PropertiesLoader {
 
-	public static Settings loadDefaultProperties() throws IOException {
-		final Properties prop = new Properties();
-		prop.load(PropertiesLoader.class.getResourceAsStream("/config/settings.properties"));
-		return populateSettings(prop);
-	}
+    private static final String DEFAULT_CONFIG_PATH = "/config/settings.properties";
 
-	public static Settings loadPropertiesFrom(final Path pathToPropertiesFile) throws IOException {
-		final Properties prop = new Properties();
-		prop.load(new FileReader(pathToPropertiesFile.toFile()));
-		return populateSettings(prop);
-	}
+    public static Settings loadDefaultProperties() throws IOException {
+        final Properties prop = new Properties();
+        prop.load(PropertiesLoader.class.getResourceAsStream(DEFAULT_CONFIG_PATH));
+        return populateSettings(prop);
+    }
 
-	private static Settings populateSettings(final Properties prop) {
-		Settings settings = new Settings();
-		settings.setCampaignColumnNumberCampaignTitle(prop.getProperty("campaign.column.title.numberCampaign"));
-		settings.setCampaignColumnDescriptionTitle(prop.getProperty("campaign.column.title.description"));
-		settings.setCampaignColumnVinListIdTitle(prop.getProperty("campaign.column.title.vinListId"));
-		settings.setClientColumnBodyNumber(prop.getProperty("client.column.title.bodyNumber"));
+    public static Settings loadPropertiesFrom(final Path pathToPropertiesFile) throws IOException {
+        final Properties prop = new Properties();
+        prop.load(new FileReader(pathToPropertiesFile.toFile()));
+        return populateSettings(prop);
+    }
+
+    private static Settings populateSettings(final Properties prop) {
+        final Settings settings = new Settings();
+        settings.setCampaignColumnNumberCampaignTitle(prop.getProperty("campaign.column.title.numberCampaign"));
+        settings.setCampaignColumnDescriptionTitle(prop.getProperty("campaign.column.title.description"));
+        settings.setCampaignColumnVinListIdTitle(prop.getProperty("campaign.column.title.vinListId"));
+        settings.setClientColumnBodyNumber(prop.getProperty("client.column.title.bodyNumber"));
         return settings;
-	}
+    }
 
 }

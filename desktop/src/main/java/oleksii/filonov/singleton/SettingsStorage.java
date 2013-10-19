@@ -2,7 +2,7 @@ package oleksii.filonov.singleton;
 
 import oleksii.filonov.settings.Settings;
 
-public class SettingsStorage {
+public final class SettingsStorage {
 
     private static Settings settings;
 

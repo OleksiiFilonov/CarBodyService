@@ -14,7 +14,7 @@ public class FilesToProcess {
         return clientsFile;
     }
 
-    public void setClientsFile(File clientsFile) {
+    public void setClientsFile(final File clientsFile) {
         this.clientsFile = clientsFile;
     }
 
@@ -22,7 +22,7 @@ public class FilesToProcess {
         return campaignFile;
     }
 
-    public void setCampaignFile(File campaignFile) {
+    public void setCampaignFile(final File campaignFile) {
         this.campaignFile = campaignFile;
     }
 
@@ -30,7 +30,7 @@ public class FilesToProcess {
         return resultFile;
     }
 
-    public void setResultFile(File resultFile) {
+    public void setResultFile(final File resultFile) {
         this.resultFile = resultFile;
     }
 }
